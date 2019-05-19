@@ -7,7 +7,7 @@
 \usepackage{amsmath,mathrsfs,amsfonts,amssymb}
 \usepackage{braket} %$\set{|}$, $\Set{|}$
 \usepackage{framed} %\begin{leftbar}\end{leftbar}, \begin{framed}\end{framed}
-%
+
 %newcommand-------
 %N, Z, Q, R, C
 \newcommand{\nat}{\mathbb{N}}
@@ -68,6 +68,64 @@
     \newpage    
     
     \section{数学の公理化}
+    そもそも, 数学とはどのような行為かを思い返してみると,
+    \begin{itemize}
+        \item 数学的な対象を定義する
+        \item 定義された対象が満たす, 定理を証明する
+    \end{itemize}
+    ことの繰り返しでした. 証明には一切の曖昧さを排し, 定義やこれまでに示した定理しか用いてはいけません. しかし素朴集合論の教えるところでは, そもそも集合の定義が厳密には与えられていませんでした.\\
+    今回は完全に公理化された集合論の体系を構築することで, 曖昧さを一切取り除くことにしましょう. この方法で数学は, 集合とは何か, 元が集合に属するとは何かについて言及することなしに証明という手続きによって定式化されます.
+    
+    \subsection{式と文}
+    \begin{defn}
+        次に列挙するものを総称して\textbf{記号}という.
+        \begin{enumerate}
+            \item $\forall$ 全称量化
+            \item $\exists$ 存在量化
+            \item $\land$ 論理積
+            \item $\lor$ 論理和
+            \item $\lnot$ 論理否定
+            \item $\to$ 含意
+            \item $=$ 等号
+            \item $\in$ 所属
+            \item （, ） 括弧
+            \item $x_1, x_2, \dots$ 変数
+        \end{enumerate}
+        \textbf{量化子}と言えば$\forall, \exists$, \textbf{結合子}と言えば$\land, \lor, \lnot, \to$, \textbf{述語}と言えば$=, \in$を表す.
+    \end{defn}
+    \begin{defn}    
+        次の規則によって再帰的に定まる記号の列を\textbf{式}という.
+        \begin{enumerate}
+            \item 「変数, 述語, 変数」の形の記号列. （原子式）
+            \item 「（, 式, ）, 結合子, （, 式, ）」の形の記号列. （結合）
+            \item 「量化子, 変数, （, 式, ）」の形の記号列. （量化）
+        \end{enumerate}
+        式が変数から始まっているか, 括弧から始まっているか, 量化子から始まっているかに注目すると, 式が2通り以上のやり方で形成されることはないことがわかる. この一意的な式の形成の途中の式のことを, 元の式の\textbf{部分式}という.
+    \end{defn}
+    \begin{defn}
+        式$F$の中に量化子$Q$が現れているとする. $Q$の$F$における\textbf{スコープ}とは, 式$F$の形成において$Q$が量化の手順で導入されたときの, 「$Q$, 変数, （, 式, ）」なる$F$の部分式のこと.
+    \end{defn}
+    \begin{defn}
+        式の中のある変数$x$について, それが\textbf{束縛されている}とは, ある量化子のスコープにあることをいう. それが\textbf{自由である}とは, 束縛されていないことをいう.\\
+        式が\textbf{文}であるとは, その式の中の全ての変数が自由であることをいう.
+    \end{defn}
+    
+    \subsection{証明}
+    \begin{defn}
+        
+    \end{defn}
+    
+    
+    % \begin{rem}
+    % ここまでで, \begin{itemize}
+    %     \item 記号の定義に, 変数が「\underline{無限個}」あること
+    %     \item 式の定義の「再帰的」などといった言い回し
+    % \end{itemize}
+    % に厳密でないような気分を感じた人がいるかもしれません.
+    % しかし, 私たちは\underline{式全体の集まり}を定義したのではなく, \underline{式の形成アルゴリズム}を定義したことに注意してください.\\ 与えられた記号列が式であるかを判定できて, それさえできれば十分です.
+    % \end{rem}
+    
+    
     \section{順序数論}
     \section{基数論}
     \section{応用}
