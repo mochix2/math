@@ -59,9 +59,9 @@
     \subsection*{記法}
     \begin{itemize}
         \item \textbf{ON}のように, クラスは太字で記述する. 通常の字体で記述されているものは集合である.
-        \item インフォーマルな議論, すなわち「気持ち」を述べた正確でない議論には下線をつける.
+        % \item インフォーマルな議論, すなわち「気持ち」を述べた正確でない議論には下線をつける.
         
-        \underline{これはインフォーマルな議論です.}
+        % \underline{これはインフォーマルな議論です.}
     \end{itemize}
     \newpage
     \tableofcontents
@@ -92,47 +92,95 @@
             \item  ） 右括弧
             \item $x_1, x_2, \dots$ 変数
         \end{enumerate}
-        \textbf{量化子}と言えば$\forall, \exists$, \textbf{結合子}と言えば$\land, \lor, \lnot, \to$, \textbf{述語}と言えば$=, \in$, \textbf{括弧}と言えば（, ）を表す.
+        \textbf{量化子}と言えば$\forall, \exists$,
+        \textbf{結合子}と言えば$\land, \lor, \lnot, \to$, \textbf{述語}と言えば$=, \in$, \textbf{括弧}と言えば（, ）を表す.
     \end{defn}
     \begin{defn}    
         次の規則によって再帰的に定まる記号の列を\textbf{式}という.
         \begin{enumerate}
             \item 「変数, 述語, 変数」の形の記号列. （原子式）
-            \item 「（, 式, ）, 結合子, （, 式, ）」の形の記号列. （式の結合）
+            \item 「（, 式, ）, 否定以外の結合子, （, 式, ）」の形の記号列. （式の結合）
+            \item 「否定記号, 式」の形の記号列. （式の否定）
             \item 「量化子, 変数, （, 式, ）」の形の記号列. （式の量化）
         \end{enumerate}
-        式が変数から始まっているか, 左括弧から始まっているか, 量化子から始まっているかに注目すると, 式が2通り以上のやり方で形成されることはないことがわかる. この一意的な式の形成の途中の式のことを, 元の式の\textbf{部分式}という.
+        式に含まれる左括弧と右括弧の数と順番が整合的であること, そして        式が変数から始まっているか, 左括弧から始まっているか, 否定記号から始まっているか, 量化子から始まっているかに注目すると, 式が2通り以上のやり方で形成されることはないことがわかる. この一意的な式の形成の途中の式のことを, 元の式の\textbf{部分式}という.
     \end{defn}
     \begin{defn}
-        式$F$の中の量化子$Q$の出現位置について, その\textbf{量化変数}とは, その位置の直後に出現する変数のことをいう.  その\textbf{スコープ}とは, 式$F$の形成において, その$Q$が量化の手順で導入されたときの, 「$Q$, 変数, （, 式, ）」なる$F$の部分式のこと.
+        式$F$の中の量化子$Q$の出現について, その\textbf{量化変数}とは, その位置の直後に出現する変数のことをいう.  その\textbf{スコープ}とは, 式$F$の形成において, その$Q$が量化の手順で導入されたときの, 「$Q$, 変数, （, 式, ）」なる$F$の部分式のこと.
     \end{defn}
     \begin{defn}
-        式の中の変数$x$の出現位置について,  それが\textbf{束縛されている}とは, $x$を量化変数とする, ある量化子のスコープにあることをいう. それが\textbf{自由である}とは, 束縛されていないことをいう.\\
+        式の中の変数$x$の出現について,  それが\textbf{束縛されている}とは, $x$を量化変数とする, ある量化子のスコープにあることをいう. それが\textbf{自由である}とは, 束縛されていないことをいう.\\
         式が\textbf{文}であるとは, その式の中の全ての変数が自由であることをいう.
     \end{defn}
     \begin{rem}
-        出現位置という言葉を用いたのは, 式に複数回同じ量化子や変数が現れてもそれを区別できるようにするためである.\\
-        ゆえにスコープとは, 式に量化子が出現するたびに個別に定まる概念であることに注意せよ. 例えば, 式$\forall x_1 ((x_1=x_2) \land (\forall x_2 (x_2 \in x_3)))$ において1つ目の全称量化子のスコープはこの式全体で, 2つ目の全称量化子のスコープは$\forall x_2 (x_2 \in x_3)$ である.\\
-        また, 束縛されていること, 自由であることも式に変数が出現するたびに定まる概念であることに注意せよ. 例えば, 今の例では1つ目の$x_2$は自由だが, 2つ目と3つ目の$x_2$は束縛されている.
+        出現という言葉を用いたのは, 式に複数回同じ量化子や変数が現れてもそれを区別できるようにするためである.\\
+        よってスコープとは, 式に量化子が出現するたびに個別に定まる概念であることに注意せよ. 例えば, 式$\forall x_1 ((x_1=x_2) \land (\forall x_2 (x_2 \in x_3)))$ において1つ目の全称量化子のスコープはこの式全体で, 2つ目の全称量化子のスコープは$\forall x_2 (x_2 \in x_3)$ である.\\
+        また, 束縛されていること, 自由であることも式に変数が出現するたびに定まる概念であることに注意せよ. 例えば, 今の例では1つ目の$x_2$は自由だが, 2つ目と3つ目の$x_2$は束縛されている.\\
+        % 括弧を省略しても混乱が生じないときは, 括弧を省略して書く場合がある.
     \end{rem}
     \subsection{論理の公理}
     \begin{defn}
-        文が\textbf{等号の公理}であるとは, 変数$x,y,z,w$によって以下の形をしていることをいう.
+        式が\textbf{equality axiom, 等号の公理}であるとは, 変数$x,y,z,w$によって以下の形をしていることをいう.
         \begin{itemize}
-            \item $\forall x (x=x)$
-            \item $\forall x (\forall y ((x=y) \to (y=x)))$
-            \item $\forall x (\forall y (\forall z (((x=y) \land (y=z)) \to (x=z))))$
-            \item $\forall x (\forall y (\forall z (\forall w ((((x=y)\land(z=w))\to((x\in z)\to(y\in w)))))))$
+            \item $x=x$
+            \item $(x=y) \to (y=x)$
+            \item $((x=y) \land (y=z)) \to (x=z)$
+            \item $((x=y) \land (z=w)) \to ((x \in z) \to (y \in w))$
+            % \item $\forall x (x=x)$
+            % \item $\forall x (\forall y ((x=y) \to (y=x)))$
+            % \item $\forall x (\forall y (\forall z (((x=y) \land (y=z)) \to (x=z))))$
+            % \item $\forall x (\forall y (\forall z (\forall w ((((x=y)\land(z=w))\to((x\in z)\to(y\in w)))))))$
             
             
-            % x,y,z,wを入れ替えた24通り必要？
-            % i.e. \forallの順序が入れ替えるとnontriv.
         \end{itemize}
+        
+        例えば$x_1 = x_1$は等号の公理である. 一方, $(x_1 = x_2) \to (x_1 = x_2)$は等号の公理ではない. 
     \end{defn}
     \begin{defn}
-        文が\textbf{命題論理のトートロジー}であるとは, 次のように定義される.\\
+        式$F$が\textbf{propositional axiom, 命題論理の公理}であるとは, 次のように定義される.
         
+        \begin{itemize}
+            \item $F$はいくつかの式$F_1 \dots F_n$の式の結合, 否定によって作られている.
+            \item 今の$F_1 \dots F_n$に対し, 任意に$0$あるいは$1$の値を与えるとする(すなわち, $2^n$通り). このとき, 以下の表によって帰納的に計算される$F$の値が$1$となっている.
+        \end{itemize}
+        
+        \begin{table}[htbp]
+            \centering
+            \begin{tabular}{c|c|c|c|c|c}
+                $p$ & $q$ & $p \land q$ & $p \lor q$ & $p \to q$ & $\lnot p$ \\ \hline
+                1 & 1 & 1 & 1 & 1 & 0 \\ \hline
+                1 & 0 & 0 & 1 & 0 & 0 \\ \hline
+                0 & 1 & 0 & 1 & 1 & 1 \\ \hline
+                0 & 0 & 0 & 0 & 1 & 1 \\ \hline
+            \end{tabular}
+        \end{table}
+        
+        例えば$(x_1 = x_2) \to (x_1 = x_2)$は命題論理の公理である. 一方, $(\forall x_1 (x_1 = x_1)) \to (\exists x_1 (x_1 = x_1))$は命題論理の公理ではない.
     \end{defn}
+    \begin{defn}
+        式$F$と変数$x, y$について, $F[x := y]$で, $F$中の全ての自由な$x$の出現を$y$で置き換えた式を表す.
+    \end{defn}
+    \begin{defn}
+        式$F$上変数$y$が変数$x$について自由とは, $F$において自由な$x$の出現を含む「量化子, $y$, （, 式, ）」の形の$F$の部分式が存在しないことをいう.
+    \end{defn}
+    \begin{rem}
+        雑に言えば, これは$x$に$y$を代入したときに意図にそぐわない代入とならないような制約条件である.
+    \end{rem}
+    \begin{defn}
+        式が\textbf{quantifier axiom, 量化の公理}であるとは, $F$上$y$が$x$について自由となるような変数$x,y$と式$F$によって以下の形をしていることをいう.
+        \begin{itemize}
+            \item $(F[x := y]) \to (\exists x (F))$
+            \item $(\forall x (F)) \to (F[x := y])$
+        \end{itemize}
+        
+        例えば$(\forall x_1 (x_1 \in x_3)) \to (x_2 \in x_3)$は量化の公理. 一方. $(\forall x_1 (\exists x_2 (x_1 \in x_2))) \to (\exists x_2 (x_2 \in x_2))$は量化の公理でない($F$上$y$が$x$について自由でないから).
+    \end{defn}
+    \begin{defn}
+        式が\textbf{logical axiom, 論理の公理}であるとは等号の公理, 命題論理の公理, 量化の公理のいずれかであることをいう.
+    \end{defn}
+    
+    
+    
     
     
     % \begin{rem}
@@ -143,8 +191,11 @@
     % に厳密でないような気分を感じた人がいるかもしれません.
     % しかし, 私たちは\underline{式全体の集まり}を定義したのではなく, \underline{式の形成アルゴリズム}を定義したことに注意してください.\\ 与えられた記号列が式であるかを判定できて, それさえできれば十分です.
     % \end{rem}
+    \subsection{集合論の公理}
+        % 外延性、空、ツイ、和、冪、痴漢、∞、正則、選択
+    \subsection{推論と証明}
     
-    
+    \section{集合論}
     \section{順序数論}
     \section{基数論}
     \section{応用}
@@ -155,5 +206,7 @@
     \begin{thebibliography}{9}
     \bibitem{matsuzaka} 松坂和夫, 『集合・位相入門』, 岩波書店, 1968.
     
+    
+    % https://faculty.math.illinois.edu/~vddries/main.pdf
     \end{thebibliography}
 \end{document} 
