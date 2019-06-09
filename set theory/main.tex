@@ -7,6 +7,7 @@
 \usepackage{amsmath,mathrsfs,amsfonts,amssymb}
 \usepackage{braket} %$\set{|}$, $\Set{|}$
 \usepackage{framed} %\begin{leftbar}\end{leftbar}, \begin{framed}\end{framed}
+\usepackage{fancyhdr}
 
 %newcommand-------
 %N, Z, Q, R, C
@@ -31,11 +32,10 @@
 \newtheorem{thm}{定理}[section]
 \newtheorem{prop}[thm]{命題}
 \newtheorem{defn}[thm]{定義}
-\newtheorem{lemm}[thm]{補題}
+\newtheorem{lem}[thm]{補題}
 \newtheorem{cor}[thm]{系}
 \newtheorem{exm}[thm]{例}
 \newtheorem{rem}[thm]{注意}
-\newtheorem{axiom}[thm]{公理}
 \newtheorem{thms}[thm]{定理図式}
 
 %--------------------
@@ -43,39 +43,33 @@
 \title{数学の基礎}
 \author{nessinverse}
 \date{\today}
+\pagestyle{fancy}
+\lhead{\rightmark}
+\rhead{\thepage}
+\cfoot{\thepage}
 
 \begin{document}
     \maketitle
-    
+    \newpage
     \section*{まえがき}
     \subsection*{内容}
-    ZFCにより展開される, 公理的集合論の初歩について扱う. 
-    % もっと詳しい内容
+        ZFCにより展開される, 公理的集合論の初歩について扱う. 順序数の通常の数学への応用などをみたり, 圏論の基礎論的な懸念事項を調べて終わる.
     \subsection*{モチベーション}
-    % 語る
+    「集合とは何か」に対し, 「ものの集まり」と返すしかないのは, いささか曖昧過ぎではないだろうか. この曖昧さは普段の数学展開には問題ないが, しかし何故この推論が正しいのか, 何故この推論が「基礎論的に危うい」のか, そういった問題を考えていくと避けて通れないことが分かってくる. 特に「基礎論的に危うい」問題に対し, 立ち向かえるだけの基礎知識をつけておくことは大事である.\\
+    本稿で取り扱う公理的集合論の初歩は, 「無意味な形式化」ではなく, むしろ数学を調べるための道具を提供してくれる. 筆者はこれを, 数学を行う人なら知っておくべき教養だと信じている. 実際transfinite inductionやtransfinite recursionはいろんな分野で（気付かぬうちに）使っていることが多い.\\
+    数学の形式化には,  今述べたような利点があるだけではなく, パラドックスを回避するという役目もある. (ラッセルの逆理$\colon$  「自分自身を含まない集合全体のなす集合を$R$とすれば, $R \in R$としても$\lnot R \in R$としてもおかしくなり, 矛盾する」. これは$R$という集合が存在しない, という形で解決される. ) \\
+    また, 基礎論そのものに興味がある人にとっては, 本稿で触れるような基礎事項が役に立つだろう. 順序数は言葉となるから, その基本的な性質の整備は必須である.
     
     \subsection*{前提知識}
-    \cite{matsuzaka}程度の素朴集合論. すなわち, 素朴な集合, 関数, 関係, 順序の概念について既知であることが望ましい.
+        \cite{matsuzaka}程度の素朴集合論. すなわち, 素朴な集合, 関数, 関係, 順序の概念について既知であることが望ましい. しかし, 何も知らなくとも読めるようになっている(はずである).
     \subsection*{記法}
     \begin{itemize}
-        \item \textbf{ON}のように, クラスは太字で記述する. 通常の字体で記述されているものは集合である.
-        % \item インフォーマルな議論, すなわち「気持ち」を述べた正確でない議論には下線をつける.
-        
-        % \underline{これはインフォーマルな議論です.}
+        \item \textbf{ON}のように, クラスは太字大文字で記述する.  (クラスとは何か分からなければ気にしなくて良い. )
     \end{itemize}
     \newpage
     \tableofcontents
     \newpage    
-    
     \section{数学の公理化}
-    % そもそも, 数学とはどのような行為かを思い返してみると,
-    % \begin{itemize}
-    %     \item 数学的な対象を定義する
-    %     \item 定義された対象が満たす, 定理を証明する
-    % \end{itemize}
-    % ことの繰り返しでした. 証明には一切の曖昧さを排し, 定義やこれまでに示した定理しか用いてはいけません. しかし素朴集合論の教えるところでは, そもそも集合の定義が厳密には与えられていませんでした.\\
-    % 今回は完全に公理化された集合論の体系を構築することで, 曖昧さを一切取り除くことにしましょう. この方法で数学は, 集合とは何か, 元が集合に属するとは何かについて言及することなしに証明という手続きによって定式化されます.
-    
     \subsection{式と文}
     \begin{defn}
         次に列挙するものを総称して\textbf{記号}という.
@@ -116,31 +110,28 @@
         出現という言葉を用いたのは, 式に複数回同じ量化子や変数が現れてもそれを区別できるようにするためである.\\
         よってスコープとは, 式に量化子が出現するたびに個別に定まる概念であることに注意せよ. 例えば, 式$\forall x_1 ((x_1=x_2) \land (\forall x_2 (x_2 \in x_3)))$ において1つ目の全称量化子のスコープはこの式全体で, 2つ目の全称量化子のスコープは$\forall x_2 (x_2 \in x_3)$ である.\\
         また, 束縛されていること, 自由であることも式に変数が出現するたびに定まる概念であることに注意せよ. 例えば, 今の例では1つ目の$x_2$は自由だが, 2つ目と3つ目の$x_2$は束縛されている.\\
-        % 括弧を省略しても混乱が生じないときは, 括弧を省略して書く場合がある.
     \end{rem}
     \subsection{論理の公理}
     \begin{defn}
-        式が\textbf{equality axiom, 等号の公理}であるとは, 変数$x,y,z,w$によって以下の形をしていることをいう.
+        文が式$F$の全称閉包とは, その文がいくつかの変数$x_{n_1} \dots x_{n_m}$によって$\forall x_{n_1} (\dots (\forall x_{n_m} (F)) \dots)$と書かれることをいう. 
+    \end{defn}
+    \begin{defn}
+        文が\textbf{等号の公理}であるとは, 変数$x,y,z,w$によって表される以下の形の式の全称閉包であることをいう.
         \begin{itemize}
             \item $x=x$
             \item $(x=y) \to (y=x)$
             \item $((x=y) \land (y=z)) \to (x=z)$
             \item $((x=y) \land (z=w)) \to ((x \in z) \to (y \in w))$
-            % \item $\forall x (x=x)$
-            % \item $\forall x (\forall y ((x=y) \to (y=x)))$
-            % \item $\forall x (\forall y (\forall z (((x=y) \land (y=z)) \to (x=z))))$
-            % \item $\forall x (\forall y (\forall z (\forall w ((((x=y)\land(z=w))\to((x\in z)\to(y\in w)))))))$
-            
             
         \end{itemize}
         
-        例えば$x_1 = x_1$は等号の公理である. 一方, $(x_1 = x_2) \to (x_1 = x_2)$は等号の公理ではない. 
+        例えば$\forall x_1 (x_1 = x_1)$は等号の公理である. 一方, $\forall x_1 (\forall x_2 ((x_1 = x_2) \to (x_1 = x_2)))$は等号の公理ではない. 
     \end{defn}
     \begin{defn}
-        式$F$が\textbf{propositional axiom, 命題論理の公理}であるとは, 次のように定義される.
+        文$F$が\textbf{命題論理の公理}であるとは, 次のように定義される.
         
         \begin{itemize}
-            \item $F$はいくつかの式$F_1 \dots F_n$の式の結合, 否定によって作られている.
+            \item $F$はいくつかの文$F_1 \dots F_n$の式の結合, 否定によって作られている. ($F$の中に2回以上同じ$F_i$が出てきても良い. 例えば, $((F_1) \land (F_2)) \lor (F_1)$など. )
             \item 今の$F_1 \dots F_n$に対し, 任意に$0$あるいは$1$の値を与えるとする(すなわち, $2^n$通り). このとき, 以下の表によって帰納的に計算される$F$の値が$1$となっている.
         \end{itemize}
         
@@ -155,7 +146,16 @@
             \end{tabular}
         \end{table}
         
-        例えば$(x_1 = x_2) \to (x_1 = x_2)$は命題論理の公理である. 一方, $(\forall x_1 (x_1 = x_1)) \to (\exists x_1 (x_1 = x_1))$は命題論理の公理ではない.
+        例えば$(\forall x_1 (x_1 = x_1)) \to (\forall x_1 (x_1 = x_2))$は命題論理の公理である. 一方, $(\forall x_1 (x_1 = x_1)) \to (\exists x_1 (x_1 = x_1))$は命題論理の公理ではない.
+    \end{defn}
+    \begin{defn}
+        文が\textbf{量化の公理}とは, 式$F, G$と変数$x$によって表される以下の形の式の全称閉包であることをいう.
+        \begin{itemize}
+            \item $(\forall x (\lnot F)) \to (\lnot \exists x (F))$
+            \item $(\exists x (\lnot F)) \to (\lnot \forall x (F))$
+            \item $(\forall x ((F) \to (G)) \to ((\forall x (F)) \to (\forall x (G)))$
+            \item $x$が$F$で自由でないときの, $(F) \to (\forall x (F))$
+        \end{itemize}
     \end{defn}
     \begin{defn}
         式$F$と変数$x, y$について, $F[x := y]$で, $F$中の全ての自由な$x$の出現を$y$で置き換えた式を表す.
@@ -167,46 +167,183 @@
         雑に言えば, これは$x$に$y$を代入したときに意図にそぐわない代入とならないような制約条件である.
     \end{rem}
     \begin{defn}
-        式が\textbf{quantifier axiom, 量化の公理}であるとは, $F$上$y$が$x$について自由となるような変数$x,y$と式$F$によって以下の形をしていることをいう.
+        文が\textbf{代入の公理}であるとは, $F$上$y$が$x$について自由となるような変数$x,y$と式$F$によって表される以下の形の式の全称閉包であることをいう.
         \begin{itemize}
             \item $(F[x := y]) \to (\exists x (F))$
             \item $(\forall x (F)) \to (F[x := y])$
         \end{itemize}
         
-        例えば$(\forall x_1 (x_1 \in x_3)) \to (x_2 \in x_3)$は量化の公理. 一方. $(\forall x_1 (\exists x_2 (x_1 \in x_2))) \to (\exists x_2 (x_2 \in x_2))$は量化の公理でない($F$上$y$が$x$について自由でないから).
+        例えば$(\forall x_1 (x_1 \in x_3)) \to (x_2 \in x_3)$の全称閉包のひとつは代入の公理. 一方. $(\forall x_1 (\exists x_2 (x_1 \in x_2))) \to (\exists x_2 (x_2 \in x_2))$の全称閉包のひとつは代入の公理でない($F$上$y$が$x$について自由でないから).
     \end{defn}
     \begin{defn}
-        式が\textbf{logical axiom, 論理の公理}であるとは等号の公理, 命題論理の公理, 量化の公理のいずれかであることをいう.
+        式が\textbf{論理の公理}であるとは等号の公理, 命題論理の公理, 量化の公理, 代入の公理のいずれかであることをいう.
     \end{defn}
     
-    
-    
-    
-    
-    % \begin{rem}
-    % ここまでで, \begin{itemize}
-    %     \item 記号の定義に, 変数が「\underline{無限個}」あること
-    %     \item 式の定義の「再帰的」などといった言い回し
-    % \end{itemize}
-    % に厳密でないような気分を感じた人がいるかもしれません.
-    % しかし, 私たちは\underline{式全体の集まり}を定義したのではなく, \underline{式の形成アルゴリズム}を定義したことに注意してください.\\ 与えられた記号列が式であるかを判定できて, それさえできれば十分です.
-    % \end{rem}
+    \begin{rem}
+        はたしてここに述べた公理だけで, 数学を展開するのに十分かどうかが心配である. ここではインフォーマルな議論により今までの公理を検証する.\\
+        命題論理の公理により, 結合子・否定が「想定通り」に働くことはよいだろう. 一方量化子が「想定通り」に動くとは, 言ってしまえば次のような議論が回ることだろう. 
+        \begin{itemize}
+            \item 全称導入$\colon$ 任意の$x$によって$P(x)$が示されれば, $\forall x (P(x))$が言える.
+            \item 全称消去$\colon$ $\forall x (P(x))$ならば, どの$x$についても$P(x)$が言える.
+            \item 存在導入$\colon$ ある$x$が存在して$P(x)$が示されれば, $\exists x P(x)$が言える.
+            \item 存在消去$\colon$ $\exists x (P(x))$ならば, ある$x$が存在して$P(x)$が言える.
+        \end{itemize}
+        このうち全称消去, 存在導入は代入の公理の帰結として得られ, 全称導入, 存在消去は量化の公理を用いた議論で行うことができる. 
+        \footnote{誤魔化した. 量化の公理でどう全称導入, 存在消去を行うかという方法は自明ではない. そもそも全称導入, 存在消去が「正確には」どういう意味かということを述べるには, 一階述語論理の言葉が必要になる. しかし今の段階ではまだその整備ができていないため, 「頑張ればできる」と受け入れてもらう. ここが気になる人は, \cite{kunenfound}の2章11節, 特に補題2.11.8を読み込むと具体的にどう議論(=証明を構成)をすればいいかがわかるだろう. }\\
+        等号の公理によって「等号が持つべき性質」も満たされていることがわかる. 続いて集合論の公理により, 「所属記号が持つべき性質」が満たされていることを見よう.
+    \end{rem}
     \subsection{集合論の公理}
-        % 外延性、空、ツイ、和、冪、痴漢、∞、正則、選択
+        この節では$a, \dots$で任意の変数を表す. $F(x,y)$を変数$a, \dots$が出現していないただ2つの自由変数を持つ式とする.
+        \begin{defn}
+        文が\textbf{axiom of extensionality, 外延性公理}であるとは,
+        \[\forall a (\forall b ((\forall c (((c\in a)\to(c\in b))\land((c\in b)\to(c\in a)))) \to (a=b)))\]
+        なる形をしていること.\\
+        すなわち, 「同じ元を持つ集合$a, b$は等しい.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of empty set, 空集合公理}であるとは,
+        \[\exists a (\forall b (\lnot b \in a))\]
+        なる形をしていること.\\
+        すなわち, 「何も元としてもたない集合$a$が存在する.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of pair set, 対集合公理}であるとは,
+        \[\forall a (\forall b (\exists c ((a\in c)\land (b\in c))))\]
+        なる形をしていること.\\
+        すなわち, 「二つの集合$a, b$の対集合$c$が作れる.\footnote{これは微妙に嘘だが, 後述する置換公理（から得られる内包公理）によって実際そうなる. これ以降の公理も同様.}」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of union set, 和集合公理}であるとは,
+        \[\forall a (\exists b (\forall c (\forall d (((d\in c) \land (c\in a)) \to (d\in b)))))\]
+        なる形をしていること.\\
+        すなわち, 「与えられた集合族$a$の和集合$b$が作れる.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of power set, 冪集合公理}であるとは,
+        \[\forall a (\exists b (\forall c ((\forall d ((d \in c) \to (d \in a))) \to (c \in b))))\]
+        なる形をしていること.\\
+        すなわち, 「与えられた集合$a$の冪集合$b$が作れる.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of replacement, 置換公理}であるとは,
+        \begin{align*}
+            (\forall a ((\exists b (F(a,b)))\land (\forall c (\forall d (((F(a,c))\land(F(a,d)))\to(c=d))))))\to(\forall e (\exists f (\forall g (    \\((g \in f)\to(\exists h ((h\in e)\land(F(h,g)))))\land((\exists i ((i\in e)\land(F(i,g))))\to(g\in f))        ))))
+        \end{align*}
+        の形をしていること.\\
+        すなわち, 「集合$e$の関数$F$\footnote{式の前半は, 各$x$に対し$F(x,y)$が真となるような一意的な$y$が存在することを述べている. すなわち関数である. 後半は, そのような$F$による$e$の像が$f$という形で実現されていることを述べている.}による置換先$f$は再び集合.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of infinity, 無限公理}であるとは,
+        \begin{align*}
+            \exists a ((\exists c ((c\in a) \land (\forall d (\lnot d \in c))))        \land (\forall b ((b \in a) \to         (\exists e (        (\forall f (((f\in e) \to \\ ((f\in b) \lor (f=b)))\land(((f\in b) \lor (f=b))\to (f\in e))))        \land (e\in a))))))
+        \end{align*} 
+        の形をしていること.\\
+        すなわち, 「無限集合$a$が存在する. 具体的には, $\varnothing$を元に持ち, かつ元$b$を持つなら元$b\cup \{b\}$も持っている.
+        \footnote{後に, 順序数の演算として$b\cup\{b\}$は「プラス1」を意味するものだとわかる. ゆえにこの無限集合の定義は適当に選んだわけではないことを指摘しておく.}」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of regularity, 正則性公理}であるとは,
+        \[\forall a ((\exists b (b \in a)) \to (\exists c ((c \in a)\land (\lnot \exists d (((d \in c) \land (d \in a)))))))\]
+        の形をしていること.\\
+        すなわち, 「空でない集合$a$には,それ自身とdisjointな元$c$が存在する.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of choice, 選択公理}であるとは,
+        \begin{align*}
+            \forall a (        ((\forall b ((b\in a)\to(\exists c (c \in b))))\land(\forall d (\forall e        ((((d \in a) \and (e \in a)) \land (\lnot d=e)) \to \\(\lnot \exists f        ((f \in d) \and (f \in e)))))))        \to                 (\exists g (\forall h         ((h\in a)\to        ((\exists i ((i\in g)\land (i\in h)))\\\land         (        \forall j (        \forall k (        (        (((j\in g)\land (j\in h ))\land((k \in g)\land (k \in h) )        )        \to        (j=k)))))    ))        ))        )
+        \end{align*}
+        の形をしていること.\\
+        すなわち, 「各集合が空集合でない, disjointな集合族$a$が与えられたらその選択集合$g$が存在する. $g$は$a$の各元とただ一点からなる交叉をもつ.」
+        \end{defn}
+        \begin{rem}
+            この公理を見ればわかる通り, 今回の数学の形式化によって「集合とその元」という「型」は失われていることがわかる. すべての数学的対象は集合であり, 関数, 関係, 全てが集合として記述される.\\
+            これを「物事がわかりずらくなる」「形式化によるナンセンス」だと感じるかもしれないが, むしろこの単純さによって今後述べる理論が明快になると言える. 
+        \end{rem}
+        \begin{rem}
+        ここで, 各公理を振り返る. 公理というからには真理としてふさわしい明快さをもっているべきであろう. 外延性などはわかりやすく受け入れやすい. 一方, 複雑・不明瞭なものとして置換, 正則性, 選択が挙げられる. インフォーマルな議論によって, その正当性を調べてみよう.
+        \begin{itemize}
+            \item 置換$\colon$ 置換公理は, 集合にサイズの概念を与え, 「サイズが大きすぎない集まりが集合である」ことを保証してくれる公理である. 集合が関数$F$によって置き換わる先の集まりは, また集合サイズであるというのである.\\
+            この公理は分出公理(集合論の章で説明する)を出すために必要である. また, 整列集合と順序数の間に自然な対応があることを見る際などに用いられる.\footnote{順序数$\omega \cdot 2$を作るのに必要なことが知られている.} 
+            \item 正則性$\colon$ 正則性公理は,  「全ての集合は空集合に冪や和をとる操作を超限回繰り返すことで得られる」ということを主張する.\footnote{このことは全く自明ではない.} つまり, 分かりやすい集合しか存在しないということである. この公理は例えば,$x={x}$となるような集合$x$の存在を除外する. このような集合が存在しても, 普通の数学を展開する上で支障はない. しかし, 良く分からない集合の存在を許可する理由もない. そこでこの公理を採用する. 正則性があると集合のrankなどの概念が定まり, 少し面白い.
+            \item 選択$\colon$ 選択公理は, 「無限個の集合から同時に元を選択する」ことを可能にする公理である. これがないと通常の数学の展開に支障をきたし, 自然に成り立つべき同値性（全射と右逆写像の関係など）が崩れてしまう. もっとも, Lebesgue非可測集合の存在やBanach-Tarskiのパラドックスなどの現象がおこってしまうが. この公理は通常の数学でもよく使うので, 必要であると言える.
+        \end{itemize}
+        これらの公理から出てくる応用は, 次の章から詳しく調べよう.
+        \end{rem}
     \subsection{推論と証明}
-    
+        \begin{defn}
+            文$F$と$(F) \to (G)$から$G$を導出することを, \textbf{Modus Ponens}といい, MPで表す. 
+        \end{defn}
+        \begin{defn}
+            文$F$の\textbf{証明}とは, 次の条件を満たす文$F_1 \dots F_n$のことをいう.\\
+            各$F_i$は,次のいずれかである.
+            \begin{itemize}
+                \item 公理である.
+                \item $j, k < i$なる$F_j, F_k$からのMPによる推論.
+             \end{itemize}
+            証明が存在する文を, \textbf{集合論の定理}という.
+        \end{defn}
+        
+        \begin{rem}
+            \textbf{集合}とは, インフォーマルに言えば式の変数が「動く」対象たちのことである. ここで, 数学の言葉 = 式によって「$x$は集合である」という形のことを主張できないことに注意せよ.\\
+            今後, 式を用いる際に混乱の恐れがない場合は括弧を省略したり, 変数記号として$x_i$以外のものを用いる. また, 証明は通常の数学と同じように行う. 新たな述語を定義して用いたりする. しかし, 「定義通りの」証明に書き換えることは原理上可能なので, 細部にはこだわらないことにする.
+        \end{rem}
+        \begin{rem}
+        怪しげな点にコメントしておく.\\
+        まず, 数学の公理化の方法はこれだけではない. ZFC以外に数学を公理化する方法は考えられている. しかし, 今回は現代の主流であるZFCによる定式化を採用した.\\
+        また, 記号とはなにか, 算術や自然数論を整備する前に$i < j$などを用いてよいか, 「帰納的」とは何かという疑問がある. これは哲学の領域であり, 数学の領分ではないため今回は「人間同士が理解しあい, 数学の基礎について曖昧な点無く議論できるようになる」「アルゴリズム的な方法によって判定が可能である」という基準で線引きをした.\\
+        一階述語論理を知っている人なら, ここまでの議論が$\{ \in \}$を言語とする等号付き一階述語論理の体系だと気付いただろう. インフォーマルにはそのように理解して問題ないだろう. しかし, ここまでのパートは「集合とは何か」「推論とは何か」という最も根源的な部分であったので, 有限主義的な立場に立って議論したい. そこで, 一般化して一階述語論理の話をするのを避けたのである. (もし一般の一階述語論理の話をすれば, 無限個の関数や述語をもった体系に敷衍して話さなければならないだろう. しかしまだ自然数論すら整備していない「数学の基礎」の段階では, 哲学的な意味でそういった議論は受け入れがたいと感じる. ) 一般の理論を展開したければ, 本稿の基数論まで程度の集合論を整備した後がいいだろう.
+        \end{rem}
+
+    \newpage
     \section{集合論}
+    \subsection{基本的構成}
+    \subsection{クラス}
+    % russel paradox
+    \subsection{関係}
+    \subsection{関数}
+    \newpage
+    
     \section{順序数論}
+    \subsection{基本的性質}
+    % 基本
+    \subsection{transfinite recursion}
+    % 超限、Zorn, W-Ord thm..., <Ord>~<A>
+    \subsection{順序数の算術と$\omega$}
+    % 
+    \subsection{正則性と累積階層}
+    % 
+    \newpage
+    
     \section{基数論}
+    \subsection{基本的性質}
+    
+    \subsection{基数の算術}
+    
+    \subsection{正則性と到達不能性}
+    
+    \newpage
+    
     \section{応用}
-    % Zorn
-    % algebraic closure
-    % Measure theory
-    % Category Theory
+    \subsection{$\nat, \zah, \quo, \rea, \com$の構成}
+    
+    \subsection{位相$\colon$ 順序数での例の構成}
+    
+    \subsection{代数$\colon$ 代数閉包の構成}
+    
+    \subsection{解析$\colon$ $\sigma$-alg. の様相}
+    
+    \subsection{圏論$\colon$ universeと米田の補題}
+
+    \newpage
+    
     \begin{thebibliography}{9}
-    \bibitem{matsuzaka} 松坂和夫, 『集合・位相入門』, 岩波書店, 1968.
-    
-    
-    % https://faculty.math.illinois.edu/~vddries/main.pdf
+        \bibitem{matsuzaka} 松坂和夫, 『集合・位相入門』, 岩波書店, 1968.
+        \bibitem{kunenfound} ケネス・キューネン, 『キューネン　数学基礎論講義』（藤田博司訳）, 日本評論社, 2016.
+        \bibitem{kunenset} ケネス・キューネン, 『集合論　独立性証明への案内』（藤田博司訳）, 日本評論社, 2008.
+        \bibitem{tanaka} 田中尚夫, 『公理的集合論』, 培風館, 1982.
+        \bibitem{arai} 新井敏康, 『数学基礎論』, 岩波書店, 2011.
+        \bibitem{takeuti} G.Takeuti and W.M.Zaring, Introduction to Axiomatic Set Theory, Springer-Verlag New York, 1971.
+        
+        % https://faculty.math.illinois.edu/~vddries/main.pdf
     \end{thebibliography}
 \end{document} 
