@@ -1,0 +1,587 @@
+\documentclass[a4paper, twoside]{bxjsarticle}  
+\usepackage{zxjatype}
+\usepackage[ipa]{zxjafont}
+
+%usepackage----------
+\usepackage{amsthm}
+\usepackage{amsmath,mathrsfs,amsfonts,amssymb}
+\usepackage{braket} %$\set{|}$, $\Set{|}$
+\usepackage{framed} %\begin{leftbar}\end{leftbar}, \begin{framed}\end{framed}
+\usepackage{fancyhdr}
+\usepackage[all]{xy}
+
+%newcommand-------
+%N, Z, Q, R, C
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\zah}{\mathbb{Z}}
+\newcommand{\quo}{\mathbb{Q}}
+\newcommand{\rea}{\mathbb{R}}
+\newcommand{\com}{\mathbb{C}}
+
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\Spm}{Spm}
+\DeclareMathOperator{\Ker}{Ker}
+\DeclareMathOperator{\Coker}{Coker}
+\DeclareMathOperator{\Image}{Im}
+\DeclareMathOperator{\colim}{colim}
+\DeclareMathOperator{\rad}{rad}
+\DeclareMathOperator{\jac}{jac}
+\DeclareMathOperator{\ann}{ann}
+%記号
+
+\newcommand{\mr}{\mathrm}
+\newcommand{\mb}{\mathbb}
+\newcommand{\ms}{\mathscr}
+\newcommand{\mf}{\mathfrak}
+\newcommand{\tb}{\textbf}
+
+%theorem-------------
+\theoremstyle{definition}
+\newtheorem{thm}{定理}[subsection]
+\newtheorem{prop}[thm]{命題}
+\newtheorem{defn}[thm]{定義}
+\newtheorem{lem}[thm]{補題}
+\newtheorem{cor}[thm]{系}
+\newtheorem{exm}[thm]{例}
+\newtheorem{rem}[thm]{注意}
+\newtheorem{notation}{記法}
+
+%--------------------
+
+\title{可換代数の鳥瞰}
+\author{mochix2}
+\date{\today}
+
+\begin{document}
+    \maketitle
+    
+    \pagestyle{fancy}
+    \lhead[\leftmark]{\thepage}
+    \rhead[\thepage]{\rightmark}
+    \cfoot{\thepage}
+
+    \cleardoublepage
+    \section*{まえがき}
+        \subsection*{概要}
+        可換代数の理論を紹介する. 
+        
+        可換代数とは, 可換環（以下単に環という）と呼ばれる対象を研究する数学の分野である.
+        \tb{環}とは, 大雑把に言えば加法と乗法の2つの演算が整合的に入っている集合のことで, 例えば整数全体$\zah$や, 複素係数1変数多項式全体$\com [X]$は自然に環の構造を持つ.
+        
+        環を調べるために, 様々な道具を用いることができる.
+        例えば, 環が作用する可換群であるところの, \tb{環上の加群}を調べることが効果的である.
+        加群の理論においては, 加群の準同型$f, g\colon M\to N$に対して常に$f+g$を考えることができる, すなわち加群の圏に加法構造が自然にある, という点が環の理論と大きく異なっている.
+        また, 環準同型$f\colon A\to B$に対し, $B$は自然に$A$加群の構造を持つ（特に, $A$は自然に$A$加群である）から, 加群を調べた結果が環に適用できることも多い.
+        また環の\tb{素イデアル}と呼ばれる特別な環の部分群を考えると, 素イデアルたちは環の情報を多く持っており, そこから多くの知識を引き出せることが分かってくる. 
+        
+        環の中でも, 特に性質の良いものがいくつかある. 例えば, 環であってイデアルの昇鎖条件を満たすものは, \tb{ネーター環}と呼ばれる.
+        典型的な環はネーターなものが多く, また\tb{剰余環}, \tb{局所化}といった種々の構成に対しネーター性は保たれる.
+        ネーター性を課すことは, 環にある意味で有限性を課すことであり, 環の構造は明瞭となり, 様々な理論がその上で展開できるようになる.
+        また, 環であって極大イデアルがただ1つ存在するようなものは, \tb{局所環}と呼ばれる. 局所環の構造は普通の環より調べやすいが, 重要なのは, 環についてのある主張を示す際に, 局所環の場合に帰着できることが多いという点にある.
+
+        %TODO: この説明はもっと後に書いた方がよさそう。目標：M2
+        %TODO: 代数幾何の説明を追加.
+        %可換代数はそれ自身が興味の対象でもあるが, 代数幾何的状況を俯瞰するための道具としても重要である.
+
+        本稿は, 代数を専攻していないが, 代数という分野の基本的なアイデアを概観したい人, あるいは代数を専攻していて整理された記述で復習したい人を対象に書いている（初めて代数に触れる人向けではない）. 
+
+        \subsection*{内容}
+
+        %TODO: 各章の概説を追加.
+        %第1章では,
+
+        \subsection*{前提知識}
+        基本的な集合論, 位相空間論, 圏論, 群論, 初等的な解析学の知識を仮定する. ただし, これらの非自明な結果を援用するときは, その旨を明記する. また, 初等的な代数学に触れたことがある, 数学科学部3年程度以上の読者を想定している. 
+        
+        \subsection*{記法}
+        本稿では環はすべて単位的可換環であり, 環準同型は1を保つ. 加群の1倍写像は恒等写像である. 環準同型が定める代数が, 有限代数とは加群として有限生成であることであり, 有限型代数とはある有限変数多項式環からの全射な代数の準同型が存在することである. このことを, 環の射が有限である, 環の射が有限型であると呼ぶことにする. 体拡大が体として有限生成とは, 有限個の元の体としての付加によって得られることをいう. 
+
+        $\rad(I)$により$I$の根基, $\jac(I)$により$I$のjacobson根基を表す. ただし記号を乱用して$I=A$のとき$\rad(A)=\rad(0)$, $\jac(A)=\jac(0)$のことと約束する.
+
+        %TODO: 記法の抜けを補完する.
+
+        \subsection*{更新履歴}
+        \begin{itemize}
+            \item 2019/12/26 執筆開始.
+            \item 2020/06/07 1.1執筆.
+        \end{itemize}
+        
+    \newpage
+    \tableofcontents
+
+    \cleardoublepage
+  
+    \section{可換環の基本}
+        この章では, 環の定義とイデアルの定義からはじめ, 重要な環の構成とその初等的な性質について論じる.
+        素イデアルと極大イデアルの概念が導入されるが, これらは環について膨大な量の情報を含む. そのため対応原理を理解することは極めて重要である.
+        \subsection{可換環とイデアル}
+        \begin{defn}
+            集合$A$とその上の二項演算$+, \cdot$の組が\tb{環(ring), 単位的可換環(unital commutative ring)}であるとは, その加法$+$が$0$を単位元とする可換群の構造をもち, 乗法$\cdot$が$1$を単位元とする結合的可換単位的な演算であり, 加法と乗法が分配することをいう. すなわち, ある$A$の元$0, 1$が存在して任意の$A$の元$a, b, c$に対し, 
+            \begin{itemize}
+                \item $a+(b+c)=(a+b)+c$.
+                \item $a+0=0+a=a$.
+                \item $\exists x (a+x=x+a=0)$.
+                \item $a+b=b+a$.
+                \item $a\cdot(b\cdot c)=(a\cdot b)\cdot c$.
+                \item $a\cdot 1=1\cdot a = a$.
+                \item $a\cdot b = b\cdot a$.
+                \item $a\cdot(b+c) = (a\cdot b)+(a\cdot c)$.
+                \item $(a+b)\cdot c = (a\cdot c)+(b\cdot c)$.
+            \end{itemize}
+            をみたすことをいう. 上における加法逆元$x$のことをふつう$-a$と表し, また$a\cdot y=y\cdot a=1$を満たす元$y$は(一般には存在しないが存在すれば)乗法逆元と呼ばれ, $a^{-1}$と表される. 群論の初歩により, 単位元$0, 1$や加法逆元が一意的であること, 乗法逆元が存在すれば一意的であることがわかる.
+            
+            文脈上明らかな場合は, 環$(A, +, \cdot)$のことを単に$A$と表す. また, $a\cdot b$は$ab$と略記される. 
+        \end{defn}
+        \begin{rem}
+            簡単な計算により, $0x = 0$, $(-1)x=-x$が成り立つ. また環の公理から, "常識的な演算"をすることができるとわかる.
+            しかし, 環には乗法逆元が一般に存在しないから, 例えば$ab=cb$に$b^{-1}$を乗じて$a=c$とすることはできない.
+
+            一方で, 以下で説明する整域ならば, $ab=cb$から$(a-c)b=0$と変形し, $b\neq 0 $ならば$a-c=0$すなわち$a=c$を帰結することができる. 整域では逆元がなくても"割り算ができる"という事実はよく用いられる.
+        \end{rem}
+        \begin{defn}環の元について,
+
+            環$A$の元$a$が\tb{単元(unit)}とは, $\exists b\in A(ab=1)$なること.
+            
+            環$A$の元$a$が\tb{零因子(zero divisor)}とは, $\exists b\in A\setminus\{0\}(ab=0)$なること. 
+
+            環$A$の元$a$が\tb{冪零元(nilpotent)}とは, $\exists n\in \nat(a^n=0)$なること.
+
+            環$A$の元$a$が\tb{冪等元(idempotent)}とは, $a^2 = a$なること.
+
+            環が\tb{整域(integral domain)}であるとは, $0\neq 1$であり, 零因子が$0$のみであることをいう.
+
+            環が\tb{体(field)}であるとは, $0\neq 1$であり, $0$以外の元が全て単元であることをいう.
+            
+            単元全体の集合を$A^\times$で表す. 零因子全体の集合を$Z(A)$で表す.
+        \end{defn}
+        \begin{rem}
+            整域の定義は, 単に$Z(A)=\set{0}$と言い換えることもできる. 同様に, 体の定義は, 単に$A^\times = A\setminus\set{0}$と言い換えることもできる. この場合, $1\neq 0$を課していることが見辛いのであえて上のように定義した.
+        \end{rem}
+        \begin{prop}
+            単元, 零因子, 冪零元, 冪等元について以下が成り立つ.
+            \begin{itemize}
+                \item 冪零元は零因子である.
+                \item 零因子は非単元である.
+                \item 単元の積は単元. 逆に, 2つの元の積が単元なら, もともと2つとも単元.
+                \item 零因子と何かの積は零因子である. 逆に, 2つの元の積が零因子なら, そのうち少なくとも1つは零因子.
+                \item 単元と冪零元の和は単元である.
+                \item 冪零元と冪零元の和は冪零元である.
+                \item 冪等元$e$に対し, $1-e$も冪等元である.
+            \end{itemize}
+        \end{prop}
+        \begin{proof}
+            単元と冪零元の和について. 単元$u$, 冪零元$x$に対し$x^n=0$とする. $y=-x$とおけば, 
+            \[ (u-y)(u^{n-1}+u^{n-2}y+\cdots+uy^{n-2}+y^{n-1})=u^n-y^n = u^n\]
+            これは単元なので, よって$u+x=u-y$も単元であることが従う.
+
+            冪零元と冪零元の和について. 冪零元$x, y$に対し$x^n=0$かつ$y^m=0$ならば$(x+y)^{n+m-1}=0$が2項展開によりわかる.
+
+            それ以外の命題は定義からただちに従う.
+        \end{proof}
+        \begin{exm}
+            整数全体からなる集合$\zah$は標準的な演算で環となる. これは整域だが体でない. 冪零元は$0$のみであり, 冪等元は$1, 0$のみである. これを\tb{有理整数環(the ring of rational integers)}という.
+
+            有理数全体からなる集合$\quo$, 実数全体からなる集合$\rea$, 複素数全体からなる集合$\com$は標準的な演算で環となる. これは整域であり, 体でもある. 冪零元は$0$のみであり, 冪等元は$1, 0$のみである. これらは\tb{有理数体, 実数体, 複素数体(the field of rational numbers, real numbers, complex numbers)}と呼ばれる.
+
+            $\set{0}$という集合に, ただ1通りの演算を入れることで環となる. これは\tb{零環(zero ring)}といい, $0$で表す.（すこし紛らわしい.） これは整域でも体でもない. $1=0$が成り立っているからである. 冪等元は$0$のみ, 冪零元は$0$のみである. 逆に, $1=0$が成り立つ環は, 任意の元$x$に対し$x=1x=0x=0$が成り立つので, 零環であることがわかる. 
+        \end{exm}
+        \begin{rem}（零環は環か）
+
+            零環は非常に特殊な環であり, これを環の定義に入れてしまうことに疑問を持つ方もいるだろう. しかし, これは環の圏の終対象だったり, 全体イデアル$(1)$による剰余環だったり, $0$を含む積閉集合による局所化だったりする. つまり, 零環を環でないと定義すると, そのしわ寄せがいろんなところに来てしまい, 結果として理論が汚くなってしまう. (もっとも, Krull次元など零環を除外して考えた方が自然な話も少なくない.)
+            また, 整域や体に零環を許さないのは, 全体イデアル$(1)$は極大イデアルや素イデアルでないという定義に対応している. こちらも定義を別に変えてしまうと理論が汚くなるので, 本稿でしているような定義が現在一般的に用いられているのである.
+
+            大抵の場合, 零環に対する場合分けは簡単に済むので, ”例外的な環がある”という認識で問題ない.
+        \end{rem}
+        \begin{defn}
+            環$A, B$に対し, 写像$f\colon A\to B$が\tb{環準同型(ring homomorphism)}であるとは, 環構造を保つことをいう. すなわち, 任意の$A$の元$a, b$に対し, 
+            \begin{itemize}
+                \item $f(a+b)=f(a)+f(b)$.
+                \item $f(ab)=f(a)f(b)$.
+                \item $f(0)=0$.
+                \item $f(1)=1$. 
+            \end{itemize}
+            をみたすことをいう. 式の左辺にある$0, 1$は$A$の元であり, 右辺にある$0, 1$は$B$の元であることに注意.
+
+            群論の一般論により, 1番目の条件から自動的に3番目の条件が出る. よって実は3番目の条件は不要である. 一方で, 4番目の条件は必要であることが$\zah\to\zah\times\zah, n\mapsto (n, 0)$なる例からわかる. 
+            
+            環準同型$f\colon A\to B$に対し, 環準同型$g\colon B\to A$が存在し, $f\circ g = \text{id}_B$, $g\circ f = \text{id}_A$が成り立つとき, $f$は\tb{環同型(ring isomorphism)}であるという. 
+
+            簡単な計算により, 環準同型の合成は環準同型であること, 恒等写像は環準同型であることがわかる. （これにより可換環の圏\tb{CRing}が定まる. ）また, 全単射環準同型は環同型となることもわかる. 
+        \end{defn}
+        \begin{prop}
+           有理整数環$\zah$, 零環$0$は次の普遍性を持つ. すなわち, 任意の環$A$に対して, $\zah$から$A$への環準同型がただ1つ存在し, $A$から$0$への環準同型がただ1つ存在する. すなわち, $\zah, 0$がCRingの始対象, 終対象であるということである.
+
+            この環準同型は, 明示的に表すとそれぞれ\[f\colon \zah\to A, \left\{\begin{array}{llll} n&\mapsto& f(n-1)+1&(n>0)\\ 0&\mapsto&0& \\ n&\mapsto& f(n+1)-1 & (n<0)\\ \end{array}\right. \]\[g\colon A\to 0, x\mapsto 0\]となる.
+        \end{prop}
+        \begin{rem}（有理整数環は何者か）
+            
+            $\zah$の演算や性質は, 中学高校で習った通りであるが, それが集合論的にどのように構成されたものか, ということは通常の数学科のカリキュラムでは習わないようである. 例えば, 今の定理では$f$を数学的帰納法のようなもので構成した, と見えるが, それが集合論的にはどう正当化されるかは, あまり知られていないようである.
+            現在の数学の主流であるZFC公理系において, $\zah$の構成, 写像の数学的帰納法による構成, などといった問題は, 集合論の初歩である順序数論の範疇に含まれる. この他, 数学をやる上で出くわす集合論的な問題については, 付録でまとめてある.
+        \end{rem}
+        \begin{defn}
+            環$A$に対し, その\tb{イデアル(ideal)}とは加法とスカラー倍に閉じた$A$の空でない部分集合$I$のことをいう. すなわち, 
+            \[0\in I \land \forall a, b\in I, r\in A (a+b\in I, ra\in I)\]
+            をみたすことをいう.
+        \end{defn}
+        \begin{defn}
+            環$A$をとる.
+
+            \begin{itemize}
+                \item 部分集合$S\subseteq A$に対し, \tb{$S$の生成するイデアル(ideal generated by $S$)}$\langle S \rangle$とは, $S$を含む最小の$A$のイデアルのことである. これは常に存在し, \[\set{\sum_{i=0}^n a_i s_i| a_i\in A, s_i \in S, n\in \nat}\]により与えられることがわかる. ただし, 0個の和は$0$であると約束する.
+                
+                \item ただ1つの元により生成されるイデアル$\langle\{a\}\rangle$のことを\tb{単項イデアル, 主イデアル(principal ideal)}といい, $(a)$で表す. 特に, $(0)=\{0\}$を\tb{零イデアル(zero ideal)}, $(1)=A$を\tb{全体イデアル(unit ideal)}という. 全体イデアルでないイデアルのことを, \tb{真のイデアル(proper ideal)}という. また, 全体イデアル, 零イデアルのことを合わせて\tb{自明なイデアル}ということがよくある.
+                
+                明らかに, イデアルについて, 全体イデアルであること, 単元を含むこと, 1を含むことは同値である.
+                
+                \item イデアルの族$\{I_j\}_{j\in J}$に対し, その\tb{和}を, $\bigcup_{j\in J}I_j$の生成するイデアルと定め, $\sum_{j\in J}I_j$と書く. 有限族の和は$I_1+\cdots+I_n$とも書く. ただし, 0個のイデアルの和は$(0)$と約束する.
+                
+                \item イデアルの族$\{I_j\}_{j\in J}$に対し, その\tb{交叉}を, 集合論的交叉として定めるとイデアルになっていることがわかる. これを$\bigcap_{j\in J}I_j$と書く. 有限族の交叉は$I_1\cap\cdots\cap I_n$とも書く. ただし, 0個のイデアルの交叉は$(1)$と約束する.
+                
+                \item イデアルの有限族$I_1,\dots, I_n$に対し, その\tb{積}を, $\set{x_1\cdots x_n| x_j\in I_j}$の生成するイデアルと定め, $\prod_{j=1}^n I_j$とか$I_1\cdots I_n$などと書く. ただし, 0個のイデアルの積は$(1)$と約束する.
+               
+                \item イデアル$I, J$に対し, その\tb{イデアル商(ideal quotient)}を, $\set{x\in A|\forall y\in J(xy\in I)}$として定めるとイデアルになっていることがわかる. これを$(I\colon J)$と書く. 特に, 零イデアルとのイデアル商$((0)\colon I)$を$I$の\tb{零化域, アナイアレータ(annihilator)}といい, $\ann_A(I)$と書く.
+                
+                \item 一般に, 元$a_1, \dots, a_n$があるときに, それが生成するイデアルのことを$(a_1, \dots, a_n)$とか$a_1 A+\cdots+a_n A$などと表す. この形で書けるイデアルは, \tb{有限生成なイデアル(finitely generated ideal)}であるという. この記法はイデアルの和と整合的であることがわかる.
+            \end{itemize}
+        \end{defn}
+        \begin{rem}
+            イデアルの和, 積, 交叉は結合的単位的可換な演算であることが確かめられる. 有限生成イデアルの和, 積は再び有限生成となり, その生成元を書き下すことは難しくない. 一方で, 有限生成イデアルの交叉は一般に有限生成ではない.
+
+            誤解のおそれがないとき, 単項イデアル$(x)$のことを単に$x$と書くことがよくある. 例えば, $\ann((x))=\ann(xA)=\ann(x)$などと書く.
+        \end{rem}
+        \begin{prop}
+            イデアル$I, J, K$の和と積について次が成立する.
+            \begin{itemize}
+                \item $IJ\subseteq I\cap J\subseteq I\subseteq I+J$.
+                \item $(I+J)K = IK+JK$.（積の分配）
+                \item $I\subseteq K$あるいは$J\subseteq K$が成り立つと仮定する. このとき$(I+J)\cap K = (I\cap K)+(J\cap K)$.(交叉の分配)
+            \end{itemize}
+            また, イデアルの和は明示的に$I+J=\set{a+b|a\in I, b\in J}$と書ける.
+        \end{prop}
+        \begin{prop}
+            イデアル商について次が成立する. ただし, 交叉と和は無限族についても成り立つ.
+            \begin{itemize}
+                \item $I\subseteq (I:J)$.
+                \item $(I:J)J\subseteq I$.
+                \item $((I:J):K) = (I:JK)=((I:K):J)$.
+                \item $(\bigcap I_i : J) = \bigcap(I_i: J)$.
+                \item $(I: \sum J_i) = \bigcap(I:J_i)$.
+            \end{itemize}
+            
+            またアナイアレータに対しては, $Z(A)=\bigcup_{x\neq 0}\ann(x)$が成立する. 
+        \end{prop}
+        \begin{defn}
+            $A, B$を環, $f\colon A\to B$を環準同型とする. 
+            \begin{itemize}
+                \item $A$のイデアル$I$の\tb{拡大(extension)}とは, $I$の$f$による像$f(I)$の生成する$B$のイデアルのことをいう. これを$I^e, IB$などと書く. 
+            
+                \item $B$のイデアル$J$の\tb{縮約(contraction)}とは, $J$の$f$による逆像$f^{-1}(J)$のことをいう. これは$A$のイデアルであることがわかる. これを$J^c. J\cap A$などと書く. 特に, 零イデアルの縮約は$f$の\tb{核(kernel)}と呼ばれ, $\Ker f$と書く. 
+            \end{itemize}
+
+            後々わかるように, 拡大は$A$加群$B$のイデアル倍$IB$と集合として一致する. また, $A$が$B$の部分環で$f$が包含写像のとき, 縮約は集合の演算$J\cap A$と集合として一致する. したがってこの記法は整合的である.
+
+            実際には, どの環準同型についての拡大縮約なのかというので混乱が生じやすいので, $I^e, J^c$という表記を使うことはまれである.
+        \end{defn}
+        \begin{rem}
+            $f$について単射であることと, 圏論的単射であることと, $\Ker f=(0)$であることは同値である.
+
+            圏論的単射については, $\zah[x]$からの射を考えればわかる.
+        \end{rem}
+        \begin{prop}
+            拡大, 縮約について以下が成り立つ.
+            \begin{itemize}
+                \item 拡大, 縮約は包含を保つ.
+                \item $I\subseteq I^{ec}, J^{ce}\subseteq J$.
+                \item $I^e = I^{ece}, J^c = J^{cec}$.
+                \item $I=I^{ec}$であることは, $\exists J (I=J^c)$であることに必要十分.
+                \item $J=J^{ce}$であることは, $\exists I (J=I^e)$であることに必要十分.
+            \end{itemize}
+        \end{prop}
+
+        以下の命題は, とてもよく使う.
+        \begin{prop}（拡大, 縮約と和, 積, 交叉の交換）
+            \begin{itemize}
+                \item $I^e + J^e = (I+J)^e$.
+                \item $I^eJ^e = (IJ)^e$.
+                \item $I^c \cap J^c = (I\cap J)^c$.
+            \end{itemize}
+        \end{prop}
+        \begin{defn}
+            環$A$の部分集合$S$が\tb{積閉集合, 乗法的集合(multiplicatively closed set, multiplicative set)}とは, $1$を含み, かつ$\forall a, b\in S(ab\in S)$をみたすことをいう.
+        \end{defn}
+        \begin{exm}
+            $A$を環とする.
+
+            \begin{itemize}
+                \item $a\in A$に対し, $\set{1, a, a^2,\cdots}$は$a$で生成された積閉集合という.
+                \item $S$を積閉集合とすれば, $\tilde{S}=\set{x\in A|\exists y (xy\in S)}$も積閉集合である. これを$S$の飽和化という.
+                \item 次の節で定義する素イデアル$\mf{p}$について, $A\setminus\mf{p}$は定義からただちに積閉集合である.
+            \end{itemize}
+        \end{exm}
+
+        \subsection{素イデアル}
+        \begin{defn}
+            $A$を環とする. 
+
+            \begin{itemize}
+                \item $A$の真のイデアル$\mf{p}$が\tb{素イデアル(prime ideal)}であるとは, 補集合$A\setminus \mf{p}$が積閉集合をなすことをいう.
+                
+                \item $A$の真のイデアル$\mf{m}$が\tb{極大イデアル(maximal ideal)}であるとは, 包含順序において真のイデアル全体の極大元であることをいう. すなわち, $\mf{m}\subsetneq I$を満たすイデアルは$I=(1)$のみであることをいう.
+            \end{itemize}
+            
+        \end{defn}
+        % prime avoidance
+        % nilradical, jacobson
+        % local ring
+        % reduced ring
+    
+
+
+        \subsection{剰余環}
+        \subsection{局所化}
+        \subsection{直積環}
+        \begin{defn}
+            2つのイデアル$I, J$が\tb{comaximal}であるとは, $I+J=(1)$であることをいう. より一般に, イデアルの族がどの相異なる2つのイデアルについてもcomaximalであるとき, \tb{pairwise comaximal}という.
+        \end{defn}
+        \subsection{多項式環}
+        \subsection{一意分解整域}
+
+    \cleardoublepage
+    \section{加群}
+        \subsection{加群}
+        \begin{defn}
+            \label{module}
+            環$A$に対し, 集合$M$とその上の演算$+\colon M\times M\to M$, $\cdot\colon A\times M\to M$の組が\tb{$A$加群($A$-module, module over $A$)}であるとは, その加法$+$が$0$を単位元とする可換群の構造をもち, スカラー乗法$\cdot$が環構造と両立するように$M$に作用することをいう. すなわち, ある$M$の元$0$が存在して任意の$M$の元$x, y, z$, $A$の元$a, b$に対し,
+            \begin{itemize}
+                \item $x+(y+z)=(x+y)+z$.
+                \item $x+0=0+x=x$.
+                \item $\exists w(x+w=w+x=0)$.
+                \item $x+y=y+x$.
+                \item $a\cdot(b\cdot x)=(ab)\cdot x$.
+                \item $1\cdot x=x$.
+                \item $(a+b)\cdot x=(a\cdot x)+(b\cdot x)$.
+                \item $a\cdot(x+y)=(a\cdot x)+(a\cdot y)$. 
+            \end{itemize}
+            をみたすことをいう. 上における加法逆元$w$のことをふつう$-x$と表す. 群論の初歩により, 単位元$0$や加法逆元が一意的であることがわかる.
+            
+            文脈上明らかな場合は, $A$加群$(M, +, \cdot)$のことを単に$M$と表す. また, $a\cdot x$は$ax$と略記される.
+
+            簡単な計算により, $0x = 0$, $(-1)x=-x$が成り立つ.
+        \end{defn}
+        \begin{defn}
+            \label{modulehom}
+            $A$加群$M, N$に対し, 写像$f\colon M\to N$が\tb{$A$加群の準同型($A$-module homomorphism)}であるとは, 加群の構造を保つことをいう. すなわち, 任意の$M$の元$x, y$, $A$の元$a$に対し,
+            \begin{itemize}
+                \item $f(x+y)=f(x)+f(y)$.
+                \item $f(0)=0$.
+                \item $f(ax)=af(x)$.
+            \end{itemize}
+            をみたすことをいう. 環の場合と同様に, 2番目の条件は実は不要である.
+        \end{defn}
+        \begin{rem}
+            $a\in A$を固定し, $\lambda_a\colon M\to M, x\mapsto ax$なる写像を考える. 加群の公理は, これが加群の準同型であり, しかも$\lambda_a+\lambda_b = \lambda_{a+b}, \lambda_a\circ \lambda_b = \lambda_{ab}$であることを述べている. 非可換環の言葉を用いると, 可換群$M$に$A$加群の構造を入れることは$A$から$M$の自己群準同型のなす非可換環への非可換環準同型を定めるということに等しい.
+        \end{rem}
+        \begin{defn}
+            環$A, B$に対し, 集合$M$とその上の演算$+\colon M\times M\to M$, $\cdot_A\colon A\times M\to M$, $\cdot_B\colon B\times M\to M$の組が\tb{$(A, B)$複加群($(A, B)$-bimodule)}であるとは, $(M, +, \cdot_A)$が$A$加群であり, $(M, +, \cdot_B)$が$B$加群であり, さらに\[\forall a\in A, b\in B, x\in M (a\cdot_A (b\cdot_B x)=b\cdot_B (a\cdot_A x))\]をみたすことをいう.
+        \end{defn}
+
+        \subsection{部分加群と剰余加群}
+        %イデアルの拡大と加群のイデアル倍が一致することを指摘しておいて下さい
+        \subsection{極限と余極限}
+        % 自由加群についてどこかでまとめる
+        \subsection{完全性}
+
+        \begin{exm}
+            \cite{intersectionofness}からの例. 
+            
+            $\quo[X]$の部分環$R$を, 定数項が整数, 1次の項が0, 2次以上の項が有理数である多項式全体として定める. $I=X^2 R, J=X^3 R$なる単項イデアルをとる. $I\cap J$は5次未満の項が0, 5次以上の項が有理数である多項式全体のなすイデアルであることが計算で分かる. これが有限生成で, $f_1 R+\cdots+f_n R$と書けると仮定する.
+            
+            $f_i = X^5 g_i$として, $g_i$の定数項を既約分数$a_i/b_i$で書く. $g=(b_1\cdots b_n + 1)^{-1} X^5$とすれば, $g\in I\cap J$であるから$g=f_1 h_1 +\cdots+f_n h_n (h_i\in R)$と書ける.
+
+            そこで両辺を$X^5$で割ってから$X=0$を代入すれば, $(b_1\cdots b_n+1)^{-1} = (a_1/b_1) h_1(0)+\cdots (a_n/b_n) h_n(0)$であり, $b_1\cdots b_n$を両辺に乗じると左辺は分数, 右辺は整数となり矛盾する. したがって, $I\cap J$は有限生成でないことがわかった.
+
+            一方, 環$R$がpseudo-coherentなら, 有限生成イデアル$I, J$に対し$R$加群の短完全列\[\xymatrix{0 \ar[r] & I\cap J \ar[r] & I\oplus J \ar[r]^f & I+J \ar[r] & 0}\]において$I+J$が有限表示, $I\oplus J$が有限生成だから $I\cap J$は有限生成.
+        \end{exm}
+
+        \subsection{有限性}
+        % ホモロジー的な話 組成列
+        \subsection{行列}
+        % 中山, 行列式, 線形代数（対角化）, 単因子論
+        \subsection{テンソル積}
+        \subsection{局所化}
+        % 複加群の難しい話
+        \subsection{平坦性}
+        
+
+
+
+    \cleardoublepage
+    \section{体論}
+    \section{ネーター環論}
+
+    
+    \appendix
+    \def\thesection{\Alph{section}}
+    \section{集合論要約}
+    %\cleardoublepage
+    \section{圏論要約}
+
+
+    \cleardoublepage
+    \section{群論要約}
+    群とは, 結合的単位的かつ全ての元が可逆な演算をもつ数学的対象のことである.
+    例えば$X$という対象ごとに, その自己同型全体$\Aut(X)$は自然に群の構造を持つから, 群の概念は数学の各所に現れ, 重要である.
+    特に有限群にはいくつか構造を調べる手段があり, それを利用することで$X$を調べることが出来ることがある(ガロア拡大の理論が典型的である).
+
+    我々はまず, 群と群準同型, 群作用について調べる.
+    Lagrangeの定理, Orbit-Stabilizer, 類等式を示すことで, 群の位数についての最も基本的な情報を得ることができる.
+    有限群論の基本的な定理である, Sylowの定理を示し, 群にはたくさんの部分群が, ある秩序の元で存在することを見る.
+    
+    \begin{defn}
+        (群)
+
+        集合$G$とその上の2項演算$\cdot\colon G\times G\to G$の組が\tb{群(group)}であるとは, ある$G$の元$e$があり, 任意の$G$の元$x, y, z$に対し,
+        \begin{itemize}
+            \item $x\cdot(y\cdot z)=(x\cdot y)\cdot z$.
+            \item $x\cdot e = e\cdot x = x$.
+            \item $\exists w(x\cdot w = w\cdot x = e)$.
+        \end{itemize}
+        をみたすことをいう. さらに, 任意の$G$の元$x, y$に対し, 
+        \begin{itemize}
+            \item $x\cdot y = y\cdot x$.
+        \end{itemize}
+        をみたすとき, 特に\tb{Abel群(abelian group)}という. Abel群は一意的な$\zah$の作用により$\zah$加群となることが確かめられるので, 加群の理論をそのまま適用できる.
+
+        定義の$e$は実は一意的であるとわかり, 群の単位元という. また各$x\in G$に対し定義の$w$も一意的であり, $x$の逆元という. 逆元は$x^{-1}$と表される.
+
+        群$G$の元の個数$\abs{G}$を, その群の\tb{位数(order)}という. 
+
+        群$G, H$の間の写像$f\colon G\to H$が\tb{群準同型(group homomorphism)}とは, 任意の$x, y\in G$に対し,
+        \begin{itemize}
+            \item $f(x\cdot_G y)=f(x)\cdot_H f(y)$.
+            \item $f(e_G)= e_H$.
+        \end{itemize}
+        をみたすことをいう. (実は2番目の条件は1番目の条件から出る.) ただし, 各群の演算や単位元を下付きの添字で表した. 
+
+        群と群準同型により, 群の圏$\mr{Grp}$を得る. このとき, 群の圏の同型は全単射群準同型のことだとわかる.
+    \end{defn}
+    群の演算は, たびたび省略される. また, $x\in G$の$n$回の積を$x^n$, $x^{-1}$の$n$回の積を$x^{-n}$, 単位元を$x^0$と表す. 指数法則$x^{n+m}=x^n x^m$が成り立つことは簡単な場合分けでわかる.
+    \begin{defn}
+        (部分群)
+        
+        群$G$の部分集合$H\subseteq G$であって, 演算の制限で群となり, 包含写像が群準同型であるものを$G$の\tb{部分群(subgroup)}という. (演算の制限で群となるならば, 自動的に包含写像は群準同型になるとわかるので, 実は2番目の条件は不要である.)
+
+        部分群の代表的な例を挙げる.
+        \begin{itemize}
+            \item $G$, $\set{e}$は自明な部分群である.
+            \item 部分群の族が与えられたとき, その交叉は再び部分群となる.
+            \item 群$G$の部分集合$S\subseteq G$に対し, $S$を含む部分群すべての交叉を考えることで, 最小の$G$の部分群が存在する. これを$S$により\tb{生成された群(group generated by $S$)}といい, $\langle S \rangle$で表す. 特に$x\in G$により生成される部分群を$\langle x \rangle$で表す. $\langle x \rangle$の位数のことを, $x$の\tb{位数}という. この値は, $x^n=e$なる最小の正の整数$n$に一致する.
+            \item 群準同型$f$に対し, 部分群の逆像は部分群である. 特に$\set{e}$の逆像は$f$の\tb{核(kernel)}と呼ばれ, $\Ker f$と表す. $f\colon G\to H$が単射であることと, 圏論的単射であることと, $\Ker f=\set{e_G}$であることは同値である.
+            \item 群準同型$f$に対し, 部分群の像は部分群である. 特に$G$の像は$f$の\tb{像(image)}と呼ばれ, $\Image f$と表す. $f\colon G\to H$が全射であることと, 圏論的全射, $\Image f=H$であることは同値である.\footnote{https://ncatlab.org/toddtrimble/published/monomorphisms+in+the+category+of+groups}
+        \end{itemize}        
+    \end{defn}
+    \begin{defn}
+        群作用、準同型としてのみかた
+    \end{defn}
+    \begin{defn}
+        軌道、軌道分解、剰余類、剰余類分解
+    \end{defn}
+    \begin{thm}
+        (Lagrangeの定理) 群$G$とその部分群$H$に対し, $\abs{G}=\abs{H}\abs{G/H}$が成り立つ. 特に有限群において, 部分群の位数や元の位数は$\abs{G}$を割り切る.
+    \end{thm}
+    \begin{proof}
+
+    \end{proof}
+    \begin{defn}
+        固定化群, 中心化群中心、正規化群
+    \end{defn}
+    \begin{thm}
+        (Orbit-Stabilizer) 
+    \end{thm}
+    \begin{proof}
+
+    \end{proof}
+    \begin{thm}
+        (類等式)
+    \end{thm}
+    \begin{proof}
+
+    \end{proof}
+    \begin{defn}
+        正規部分群、剰余群
+    \end{defn}
+    \begin{prop}
+        正規部分群の特徴
+    \end{prop}
+    \begin{proof}
+
+    \end{proof}
+    \begin{thm}
+        (対応原理)
+    \end{thm}
+    \begin{proof}
+
+    \end{proof}
+    \begin{thm}
+        (準同型定理(第1同型定理), 第2同型定理, 第3同型定理)
+    \end{thm}
+    \begin{proof}
+
+    \end{proof}
+    \begin{defn}
+        p群
+    \end{defn}
+    \begin{thm}
+        (Sylowの定理)
+    \end{thm}
+    \begin{proof}
+
+    \end{proof}
+    \begin{defn}
+        直積, 半直積
+    \end{defn}
+    \begin{prop}
+        内部直積条件
+    \end{prop}
+    \begin{proof}
+
+    \end{proof}
+    \begin{prop}
+        内部半直積条件
+    \end{prop}
+    \begin{proof}
+    \end{proof}
+
+    ここで紹介した理論以外にも, 単純群と組成列の一意性(Jordan-Hölderの定理)に関する理論, 冪零群, 可解群, 表現論の手法など様々な群についての理論がある.
+    有限群の完全な分類をするのは, 一般には非常に難しい.
+
+    典型的には可換な場合を先に解決し, 非可換な場合はSylow部分群が何個あるかなどを調べて場合分けしたり, うまく部分群をとって半直積の分類に帰着したりすることで行う.
+    しかしこの方法は, 位数が小さいときや, 特別な素因数分解ができる場合などに限られがちである.
+    そこで次善の策として有限単純群の完全な分類をすることが考えられるが, これはすでに完成している(ただし証明はとてつもなく長大とのことだ).
+
+
+    \cleardoublepage
+    \begin{thebibliography}{99}
+        \bibitem{atiyah} M.F.Atiyah and I.G. MacDonald, 『Atiyah-MacDonald　可換代数入門』（新妻弘訳）, 共立出版, 2006.
+        \bibitem{matsumura} 松村英之, 『復刊　可換環論』, 共立出版, 2000.
+        \bibitem{yukie} 雪江明彦, 『代数学2　環と体とガロア理論』, 日本評論社, 2010.
+        \bibitem{shiho} 志甫淳, 『層とホモロジー代数』, 共立出版, 2016.
+        \bibitem{fujisaki} 藤崎源二郎, 『体とガロア理論』, 岩波書店, 1991.
+        \bibitem{shimizu} 清水勇二, 『現代基礎数学16　圏と加群』, 朝倉書店, 2018.
+        \bibitem{saitou} 斎藤毅, 『大学数学の入門7　線形代数の世界　抽象数学の入り口』, 東京大学出版会, 2007. 
+
+        \bibitem{teradaharada} 寺田至・原田耕一郎, 『群論』, 岩波書店, 2006.
+        https://math.berkeley.edu/~kpmann/SylowNotes.pdf
+
+        \bibitem{intersectionofness}https://math.stackexchange.com/questions/295875/intersection-of-finitely-generated-ideals
+
+        https://mathoverflow.net/questions/8324/what-does-linearly-disjoint-mean-for-abstract-field-extensions
+
+    \end{thebibliography}
+
+    \section*{文献紹介}
+\end{document} 

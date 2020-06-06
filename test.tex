@@ -1,0 +1,3012 @@
+\documentclass[a4paper, twoside]{bxjsarticle}  
+\usepackage{zxjatype}
+\usepackage[ipa]{zxjafont}
+
+%usepackage----------
+\usepackage{amsthm}
+\usepackage{amsmath,mathrsfs,amsfonts,amssymb}
+\usepackage{braket} %$\set{|}$, $\Set{|}$
+\usepackage{framed} %\begin{leftbar}\end{leftbar}, \begin{framed}\end{framed}
+\usepackage{fancyhdr}
+
+%newcommand-------
+%N, Z, Q, R, C
+\newcommand{\nat}{\mathbb{N}}
+\newcommand{\zah}{\mathbb{Z}}
+\newcommand{\quo}{\mathbb{Q}}
+\newcommand{\rea}{\mathbb{R}}
+\newcommand{\com}{\mathbb{C}}
+
+%絶対値, ノルム
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+%記号
+\newcommand{\ds}{\displaystyle}
+\newcommand{\Forall}{{}^{\forall}}
+\newcommand{\Exists}{{}^{\exists}}
+\newcommand{\Existsonly}{{}^{\exists !}}
+
+%theorem-------------
+\theoremstyle{definition}
+\newtheorem{thm}{定理}[section]
+\newtheorem{prop}[thm]{命題}
+\newtheorem{defn}[thm]{定義}
+\newtheorem{lem}[thm]{補題}
+\newtheorem{cor}[thm]{系}
+\newtheorem{exm}[thm]{例}
+\newtheorem{rem}[thm]{注意}
+\newtheorem{notation}[thm]{記法}
+
+%--------------------
+
+\title{集合論}
+\author{mochix2}
+\date{\today}
+% \setcounter{tocdepth}{3}
+
+
+\begin{document}
+    \maketitle
+    
+    \pagestyle{fancy}
+    \lhead[\leftmark]{\thepage}
+    \rhead[\thepage]{\rightmark}
+    \cfoot{\thepage}
+
+    \cleardoublepage
+    \section*{まえがき}
+    \subsection*{内容}
+        ZFCにより展開される, 形式主義的な公理的集合論の初歩について扱う. 数学基礎論よりかは通常の数学に応用することを主眼に置くため, 正則性公理や選択公理の回避に関する議論は全くしない. 
+        
+        1章では, 数学という行為そのものを定義する. すなわち, 数学を展開する演繹の体系と, その上で行ってよい推論の規則を厳密に述べる. 後の章で実際に使うのは集合論の公理だけなので, 読み流しても大きな支障はない.
+        
+        2章では, 集合とクラスについての基本的な用語を整備する. 集合の和, 集合の交叉, 関係, 関数などといった言葉を定義し, その性質を調べる. 順序を定義し, well-ordered classを調べる.
+        
+        3章では, 集合論で最も重要なクラスである順序数（Ordinal）について調べる. まず順序数の定義と性質, 最小の無限順序数$\omega$を調べる. 超限帰納法, 超限帰納的構成（transfinite recursion）について述べる. 順序数算術を調べる. 順序数に入る演算を調べておくことは, $\nat$の演算を定めるうえで欠かせないだけでなく, Cantor標準形（これは$n$進法の一般化とも言える）の存在といった面白い事実を調べることにも役立つ. 累積階層について調べる.
+        
+        4章では, 集合論の重要なクラスである基数（Cardinal）について調べる. 基数は全射や単射の存在性について調べる上でよく用いられるため, 重要である. 基数を順序数の部分クラスとして定義し, 性質と算術を調べる. 正則基数, 特異基数を定義し性質をみる. Grothendieck Universeの形を決定する.
+        
+        5章では, ここまでの集合論の知識が通常の数学にいかに活用されるかをみる. まず, 数学における基本的な集合である$\nat, \zah, \quo, \rea$を定義して性質を調べる. 続いて数学の各分野の知識を仮定して, 集合論的手法でそれらを分析する. 特に位相空間論においては, 順序数を用いた反例構成を理解することは重要であり, 面白い.
+        
+    % \subsection*{モチベーション}
+    %     「集合とは何か」に対し, 「ものの集まり」と返すのは, 曖昧過ぎではないだろうか. この曖昧さは普段の数学展開には問題ないが, しかし何故この推論が正しいのか, 何故この推論が「基礎論的に危うい」のか, そういった問題を考えていくと避けて通れないことが分かってくる. 特に「基礎論的に危うい」問題に対し, 立ち向かえるだけの基礎知識をつけておくことは大事である.
+        
+    %     本稿で取り扱う公理的集合論の初歩は, 「無意味な形式化」ではなく, むしろ数学を調べるための道具を提供してくれる. 筆者はこれを, 数学を行う人なら知っておくべき教養だと信じている. 
+        
+    %     数学の形式化には,  今述べたような利点があるだけではなく, パラドックスを回避するという役目もある. (ラッセルの逆理$\colon$  「自分自身を含まない集合全体のなす集合を$R$とすれば, $R \in R$としても$\lnot R \in R$としてもおかしくなり, 矛盾する」. これは$R$という集合が存在しない, 正確に言えばこのような集まり$R$はクラスであり, 集合ではない, という形で解決される. ) 
+        
+    %     また, 数学基礎論そのものに興味がある人にとっては, 本稿で触れるような基礎事項が役に立つだろう. 順序数は言葉となるから, その性質の整備は必須である.
+    
+    \subsection*{前提知識}
+        大学数学に習熟しているが, 公理的集合論についてよく知らない人物を想定している. 具体的には,
+        \begin{itemize}
+            \item 「基礎論的問題」（例えば, Grothendieck Universeとは何か）をどう解決すべきか知りたい人.
+            \item 順序数論, 基数論を勉強したい人.
+            \item $\nat, \zah, \quo, \rea$をどう定義すべきかを知りたい人.
+        \end{itemize}
+        を想定している.
+        
+        仮定する前提知識は, \cite{matsuzaka}程度の素朴集合論と, 初歩的な記号論理学である. 圏論の言葉を本文中で用いることがあるが, その知識は必須ではない. また, 数学的議論に\textbf{十分に}習熟していることを仮定する. また5章では, 取り扱う分野ごとの前提知識を仮定する.
+        
+        参考文献に挙げた, \cite{kunenfound}, あるいは\cite{kunenset}との併読を勧める.
+    
+    \subsection*{更新履歴}
+    \begin{itemize}
+        \item 2019/09/21 ver 1.0 完成.
+    \end{itemize}
+
+    \newpage
+    \tableofcontents
+    \cleardoublepage  
+    \section{数学の公理化}
+    \subsection{式と文}
+    \begin{defn}
+        次に列挙するものを総称して\textbf{記号}という.
+        \begin{enumerate}
+            \item $\forall$ 全称量化
+            \item $\exists$ 存在量化
+            \item $\land$ 論理積
+            \item $\lor$ 論理和
+            \item $\lnot$ 論理否定
+            \item $\to$ 含意
+            \item $\leftrightarrow$ 同値
+            \item $=$ 等号
+            \item $\in$ 所属
+            \item  （ \,\,左括弧
+            \item  ） 右括弧
+            \item $x_1, x_2, \dots$ 変数
+        \end{enumerate}
+        \textbf{量化子}と言えば$\forall, \exists$,
+        \textbf{結合子}と言えば$\land, \lor, \lnot, \to, \leftrightarrow$, \textbf{述語}と言えば$=, \in$, \textbf{括弧}と言えば（, ）を表す.
+    \end{defn}
+    \begin{defn}    
+        次の規則によって再帰的に定まる記号の列を\textbf{論理式}, あるいは単に\textbf{式}という.
+        \begin{enumerate}
+            \item 「変数, 述語, 変数」の形の記号列. （原子式）
+            \item 「（, 式, ）, 否定以外の結合子, （, 式, ）」の形の記号列. （式の結合）
+            \item 「否定記号, 式」の形の記号列. （式の否定）
+            \item 「量化子, 変数, （, 式, ）」の形の記号列. （式の量化）
+        \end{enumerate}
+        式に含まれる左括弧と右括弧の数と順番が整合的であること, そして        式が変数から始まっているか, 左括弧から始まっているか, 否定記号から始まっているか, 量化子から始まっているかに注目すると, 式が2通り以上のやり方で形成されることはないことがわかる. この一意的な式の形成の途中の式のことを, 元の式の\textbf{部分式}という.
+    \end{defn}
+    \begin{defn}
+        式$F$の中の量化子$Q$の出現について, その\textbf{量化変数}とは, その位置の直後に出現する変数のことをいう.  その\textbf{スコープ}とは, 式$F$の形成において, その$Q$が量化の手順で導入されたときの, 「$Q$, 変数, （, 式, ）」なる$F$の部分式のこと.
+    \end{defn}
+    \begin{defn}
+        式の中の変数$x$の出現について,  それが\textbf{束縛されている}とは, $x$を量化変数とする, ある量化子のスコープにあることをいう. それが\textbf{自由である}とは, 束縛されていないことをいう.
+        
+        式が\textbf{文}であるとは, その式の中の全ての変数が束縛されていることをいう.
+    \end{defn}
+    \begin{rem}
+        出現という言葉を用いたのは, 式に複数回同じ量化子や変数が現れてもそれを区別できるようにするためである.
+        
+        よってスコープとは, 式に量化子が出現するたびに個別に定まる概念であることに注意せよ. 例えば, 式$\forall x_1 ((x_1=x_2) \land (\forall x_2 (x_2 \in x_3)))$ において1つ目の全称量化子のスコープはこの式全体で, 2つ目の全称量化子のスコープは$\forall x_2 (x_2 \in x_3)$ である.
+        
+        また, 束縛されていること, 自由であることも式に変数が出現するたびに定まる概念であることに注意せよ. 例えば, 今の例では1つ目の$x_2$は自由だが, 2つ目と3つ目の$x_2$は束縛されている.
+    \end{rem}
+    \subsection{論理の公理}
+    \begin{defn}
+        文が式$F$の全称閉包とは, その文がいくつかの変数$x_{n_1} \dots x_{n_m}$によって$\forall x_{n_1} (\dots (\forall x_{n_m} (F)) \dots)$と書かれることをいう. 
+    \end{defn}
+    \begin{defn}
+        文が\textbf{等号の公理}であるとは, 変数$x,y,z,w$によって表される以下の形の式の全称閉包であることをいう.
+        \begin{itemize}
+            \item $x=x$
+            \item $(x=y) \to (y=x)$
+            \item $((x=y) \land (y=z)) \to (x=z)$
+            \item $((x=y) \land (z=w)) \to ((x \in z) \to (y \in w))$
+            
+        \end{itemize}
+        
+        例えば$\forall x_1 (x_1 = x_1)$は等号の公理である. 一方, $\forall x_1 (\forall x_2 ((x_1 = x_2) \to (x_1 = x_2)))$は等号の公理ではない. 
+    \end{defn}
+    \begin{defn}
+        文$F$が\textbf{命題論理の公理}であるとは, 次のように定義される.
+        
+        \begin{itemize}
+            \item $F$はいくつかの文$F_1 \dots F_n$の式の結合, 否定によって作られている. ($F$の中に2回以上同じ$F_i$が出てきても良い. 例えば, $((F_1) \land (F_2)) \lor (F_1)$など. )
+            \item 今の$F_1 \dots F_n$に対し, 任意に$0$あるいは$1$の値を与えるとする(すなわち, $2^n$通り). このとき, 以下の表によって帰納的に計算される$F$の値が$1$となっている.
+        \end{itemize}
+        
+        \begin{table}[htbp]
+            \centering
+            \begin{tabular}{c|c|c|c|c|c|c}
+                $p$ & $q$ & $p \land q$ & $p \lor q$ & $p \to q$ & $p \leftrightarrow q$ & $\lnot p$ \\ \hline
+                1 & 1 & 1 & 1 & 1 & 1 & 0 \\ \hline
+                1 & 0 & 0 & 1 & 0 & 0 & 0 \\ \hline
+                0 & 1 & 0 & 1 & 1 & 0 & 1 \\ \hline
+                0 & 0 & 0 & 0 & 1 & 1 & 1 \\ \hline
+            \end{tabular}
+        \end{table}
+        
+        例えば$(\forall x_1 (x_1 = x_1)) \to (\forall x_1 (x_1 = x_2))$は命題論理の公理である. 一方, $(\forall x_1 (x_1 = x_1)) \to (\exists x_1 (x_1 = x_1))$は命題論理の公理ではない.
+    \end{defn}
+    \begin{defn}
+        文が\textbf{量化の公理}とは, 式$F, G$と変数$x$によって表される以下の形の式の全称閉包であることをいう.
+        \begin{itemize}
+            \item $(\forall x (\lnot F)) \to (\lnot \exists x (F))$
+            \item $(\exists x (\lnot F)) \to (\lnot \forall x (F))$
+            \item $(\forall x ((F) \to (G)) \to ((\forall x (F)) \to (\forall x (G)))$
+            \item $x$が$F$で自由でないときの, $(F) \to (\forall x (F))$
+        \end{itemize}
+    \end{defn}
+    \begin{defn}
+        式$F$と変数$x, y$について, $F[x := y]$で, $F$中の全ての自由な$x$の出現を$y$で置き換えた式を表す.
+    \end{defn}
+    \begin{defn}
+        式$F$上変数$y$が変数$x$について自由とは, $F$において自由な$x$の出現を含む「量化子, $y$, （, 式, ）」の形の$F$の部分式が存在しないことをいう.
+    \end{defn}
+    \begin{rem}
+        雑に言えば, これは$x$に$y$を代入したときに意図にそぐわない代入とならないような制約条件である.
+    \end{rem}
+    \begin{defn}
+        文が\textbf{代入の公理}であるとは, $F$上$y$が$x$について自由となるような変数$x,y$と式$F$によって表される以下の形の式の全称閉包であることをいう.
+        \begin{itemize}
+            \item $(F[x := y]) \to (\exists x (F))$
+            \item $(\forall x (F)) \to (F[x := y])$
+        \end{itemize}
+        
+        例えば$(\forall x_1 (x_1 \in x_3)) \to (x_2 \in x_3)$の全称閉包のひとつは代入の公理. 一方. $(\forall x_1 (\exists x_2 (x_1 \in x_2))) \to (\exists x_2 (x_2 \in x_2))$は代入の公理でない($x_1 \in x_2$上$x_2$が$x_1$について自由でないから).
+    \end{defn}
+    \begin{defn}
+        式が\textbf{論理の公理}であるとは等号の公理, 命題論理の公理, 量化の公理, 代入の公理のいずれかであることをいう.
+    \end{defn}
+    
+    \subsection{集合論の公理}
+        この節では$a, \dots$で任意の変数を表す. 
+        \begin{defn}
+        文が\textbf{axiom of extensionality, 外延性公理}であるとは,
+        \[\forall a (\forall b ((a=b)\leftrightarrow(\forall c ((c\in a)\leftrightarrow(c\in b)))))\]
+        % \[\forall a (\forall b ((\forall c (((c\in a)\to(c\in b))\land((c\in b)\to(c\in a)))) \to (a=b)))\]
+        なる形をしていること.
+        
+        すなわち, 「同じ元を持つ集合$a, b$は等しい.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of empty set, 空集合公理}であるとは,
+        \[\exists a (\forall b (\lnot b \in a))\]
+        なる形をしていること.
+        
+        すなわち, 「何も元としてもたない集合$a$が存在する.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of pair set, 対集合公理}であるとは,
+        \[\forall a (\forall b (\exists c (\forall d ((d \in c)\leftrightarrow((d=a)\lor(d=b))))))\]
+        なる形をしていること.
+        
+        すなわち, 「二つの集合$a, b$の対集合$c$が作れる.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of union set, 和集合公理}であるとは,
+        \[\forall a (\exists b (\forall c ((c\in b)\leftrightarrow(\exists d ((c\in d)\land (d\in a))))))\]
+        % \[\forall a (\exists b (\forall c (\forall d (((d\in c) \land (c\in a)) \to (d\in b)))))\]
+        なる形をしていること.
+        
+        すなわち, 「与えられた集合族$a$の和集合$b$が作れる.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of power set, 冪集合公理}であるとは,
+        \[\forall a (\exists b (\forall c ((c\in b)\leftrightarrow(\forall d ((d\in c)\to (d\in a))))))\]
+        % \[\forall a (\exists b (\forall c ((\forall d ((d \in c) \to (d \in a))) \to (c \in b))))\]
+        なる形をしていること.
+        
+        すなわち, 「与えられた集合$a$の冪集合$b$が作れる.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom schema of comprehension, 内包公理図式}\footnote{axiom schema of separation, 分出公理図式ともいう.}であるとは, $y$を自由変数として持たない論理式$F(t_1, \dots, t_n)$（$x, z$がある$t_i$として出現していてもよいし, そうでなくともよい.）に対し, \[\exists y (\forall x((x\in y)\leftrightarrow((x\in z)\land(F(t_1, \dots, t_n)))))\]の全称閉包の形をしていること.
+        
+        すなわち, 「与えられた集合$z$の元のうち, 条件$F$をみたすものだけからなる集合$y$が作れる.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom schema of replacement, 置換公理図式}であるとは, $b$を自由変数として持たない論理式$F(x, y, t_1, \dots, t_n)$（$n=0$でもよい.）に対し,
+        \begin{align*}
+            (\forall x ((x\in a)\to((\exists y(F(x, y, t_1, \dots, t_n)))\land
+        (\exists y_1 (\exists y_2(((\\F(x, y_1, t_1, \dots, t_n))\land(F(x, y_2, t_1, \dots, t_n)))\to(y_1=y_2))))
+        )))
+        \\\to(\exists b(\forall x((x\in a)\to(\exists y((y\in b)\land(F(x, y, t_1, \dots, t_n)))))))
+        \end{align*}
+        の全称閉包の形をしていること.
+        
+        インフォーマルな記法でより簡潔に言えば, \[\forall x\in a \exists ! y F(x, y, t_1, \dots, t_n) \to \exists b \forall x\in a \exists y \in b F(x, y, t_1, \dots, t_n)\]の全称閉包の形をしていること.
+        
+        すなわち, 「各$x\in a$に対し$F(x,y)$が真となるような$y$が一意に存在するとする. つまり, $F\colon x\mapsto y$は関数のようにふるまうとする. このとき, そのような$F$による$a$の像が$b$という形で実現される.」
+        \end{defn}
+        \begin{notation}
+            置換公理図式, 内包公理図式に登場する論理式$F$のことを, \textbf{関数関係論理式}, \textbf{分出論理式}と呼んで記述の便法とする. 
+        \end{notation}
+        \begin{defn}
+        文が\textbf{axiom of infinity, 無限公理}であるとは,
+        \begin{align*}
+            \exists a ((\exists c ((c\in a) \land (\forall d (\lnot d \in c))))        \land (\forall b ((b \in a) \to         (\exists e (        (\forall f ((((f\in b) \lor (f=b))\leftrightarrow (f\in e)))        \land (e\in a))))))
+        \end{align*} 
+        の形をしていること.
+        
+        すなわち, 「無限集合$a$が存在する. 具体的には, $\varnothing$を元に持ち, かつ元$b$を持つなら元$b\cup \{b\}$も持っている.」 後に, 順序数の演算として$b\cup\{b\}$は「プラス1」を意味するものだとわかる. （ゆえにこの無限集合の定義は適当に選んだわけではないことを指摘しておく.）
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of regularity, 正則性公理}\footnote{axiom of foundation, 整礎性公理ともいう.}であるとは,
+        \[\forall a ((\exists b (b \in a)) \to (\exists c ((c \in a)\land (\lnot \exists d (((d \in c) \land (d \in a)))))))\]
+        の形をしていること.
+        
+        すなわち, 「空でない集合$a$には,それ自身とdisjointな元$c$が存在する.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{axiom of choice, 選択公理}であるとは,
+        \begin{align*}
+         \forall a (        ((\forall b ((b\in a)\to(\exists c (c \in b))))\land(\forall d (\forall e        ((((d \in a) \land (e \in a)) \land (\lnot d=e)) \to \\(\lnot \exists f        ((f \in d) \and (f \in e)))))))        \to                 (\exists g (\forall h         ((h\in a)\to        ((\exists i ((i\in g)\land (i\in h)))\\\land         (        \forall j (        \forall k (        (        (((j\in g)\land (j\in h ))\land((k \in g)\land (k \in h) )        )        \to        (j=k)))))    ))        ))        )
+        \end{align*}
+        の形をしていること.
+        
+        インフォーマルな記法でより簡潔に言えば,
+        \[\forall a ((\varnothing \not\in a \land \forall b,c \in a (b \not= c \to b \cap c = \varnothing))\to \exists g \forall h \in a \exists i (g \cap h = \{i\}))\]
+        すなわち, 「各集合が空集合でない, disjointな集合族$a$が与えられたらその選択集合$g$が存在する. ここで選択集合とは, $g$は$a$の各元とただ一点からなる交叉をもつ, という意味である.」
+        \end{defn}
+        \begin{defn}
+        文が\textbf{集合論の公理}であるとは, 以上の公理たちのどれかであることをいう.
+        \end{defn}
+        \begin{rem}
+        ここで, 各公理を振り返る. 公理というからには真理としてふさわしい明快さをもっているべきであろう. 外延性などはわかりやすく受け入れやすい. 一方, 複雑・不明瞭なものとして置換, 正則性, 選択が挙げられる. その正当性を検証してみよう.
+        \begin{itemize}
+            \item 置換$\colon$ 置換公理は, 論理式による対応規則を与えることで, その対応の像に相当する集合が存在することを要請する公理である. 集合論では大きすぎる集まりが集合にならない, という現象が起きうる. 例えば, $\textbf{V} = \set{x|x=x}$という集合は存在しない.（正則性の帰結. これは真クラスである. 後で説明する.） この公理により「集合の元を置換するだけでは, 大きすぎる集まりができることはない」ことが保証される. 
+            
+            \item 正則性$\colon$ 正則性公理は, 例えば$x=\{x\}$となるような集合$x$の存在を除外する. すなわち, 集合の元をとったところ再び元の集合に戻ってしまった, という病的な状況を除外する. 正則性公理があると集合のrankなどの概念が定まる.
+            
+            \item 選択$\colon$ 選択公理は, 「無限個の集合から同時に元を選択する」ことを可能にする公理である. 次の節で推論規則を説明すればわかるように, 我々は証明を有限回の推論で完成させなければならない. しかし, 無限個の集合からなる集合族の元に同時に何らかの操作をする, という行為は通常の数学でも必須である. 本来なら「無限回の推論」が必要な状況を「一回の選択公理の適用」でスキップする, というのがこの公理の目的であり, 必要性である. これがないと通常の数学の展開に支障をきたし, 自然に成り立つべき同値性が崩れてしまう. 
+        \end{itemize}
+        \end{rem}
+        \begin{rem}
+            集合論の公理系のことを, 外延性, 空集合, 対, 和, 内包, 置換, 無限を合わせてZF$^{-}-$P, さらに冪を加えてZF$^{-}$, さらに正則性を加えてZF, さらに選択を加えてZFCという. このような区別は, 数学基礎論では重要になってくるが, 本稿ではZFCのみを扱うので, 「集合論の公理」という呼称で統一する.
+        \end{rem}
+    \subsection{推論と証明}
+        \begin{defn}
+            文$F$と$(F) \to (G)$から$G$を導出することを, \textbf{Modus Ponens}といい, MPで表す. 
+        \end{defn}
+        \begin{defn}
+            文$F$の\textbf{証明}とは, 次の条件を満たす文$F_1 \dots F_n$のことをいう.
+            
+            各$F_i$は,次のいずれかである.
+            \begin{itemize}
+                \item 論理の公理である.
+                \item 集合論の公理である.
+                \item $j, k < i$なる$F_j, F_k$からのMPによる推論.
+             \end{itemize}
+            証明が存在する文を, \textbf{集合論の定理}という.
+        \end{defn}
+        
+        \begin{rem}
+            以上が, 本稿で用いる数学それ自身の定義である. 我々の目的は, 面白い集合論の定理をたくさんみつけることである. ただ注意したいこととして, 数学の公理化の方法はこれだけではない. ZFC以外に数学を公理化する方法は考えられている. しかし, 今回は現代の主流であるZFCによる定式化を採用した. 
+        \end{rem}
+        \begin{rem}
+            今後, 式を用いる際に混乱の恐れがない場合は括弧を省略したり, 変数記号として$x_i$以外のものを用いる. また, 証明は通常の数学と同じように行う. 新たな述語記号や関数記号, 定数記号などを定義して用いたりする.
+            これらの議論をフォーマルな証明に書き換えることは, 原理上可能である.（このことは若干非自明であるから, \cite{arai}の1章6節などで実際の証明の復元の仕方を見ておくとよい. 一階述語論理の準備が必要であるから, ここでは述べない.） 
+        \end{rem}
+        
+    \subsection{補足}
+        \begin{rem}
+            Q. 記号とはなにか？
+            
+            A. これは実は, 哲学の領域である. アルファベットなどの文字が冒頭から沢山使われたが, これらには「互いに識別できるしるし」以外の意味をもたない. そのしるしを如何に識別するかとか, しるし自体がどのような対象か, と考えるのは人間の認識能力, 思考能力の問題である. 
+            
+            最も重要なことは, 人間同士で\textbf{共通の}数学の描像, 認識を得ることができ, 曖昧な点無く議論できることである. 記号が何か, という問題は恐らく, 曖昧な点無く議論できるかどうかに関係しない. よって, 数学の文脈においては, この形式化で十分精密であると考える.
+            
+            逆に, この章における形式化を踏まえない状態では, 結局何が正当な議論なのかがはっきりしないまま宙ぶらりんの数学をすることになるだろう. それは健全ではないと筆者は思う.
+        \end{rem}
+        \begin{rem}
+            Q. $\nat$やその演算を定義する前に, 数字や$i < j$などを用いてよいのか？
+            
+            A. 上で述べた通り, 数学の基礎を論ずる上で最重要なのは共通の数学の描像, 認識を得られることである. この目的のために, 「ものを数える」「2つの数の大小を比較する」といった, 極めて自明な数の操作を行うこととする. （もし心理的な抵抗があるなら, $x_1, x_2, x_3, \dots$ のかわりに$x, x', x'', \dots$としたり, 証明の定義に出てくる不等号を「それより前に書いた論理式により」と置き換えよ. こう考えることで, 極めて初等的な数の操作を行うことは何ら危険なものではないと了承されるだろう.） 
+            
+            ただしこれらの操作で用いる数は, 「論理式を構成する記号が何個あるか」といった, 集合論の体系（すなわち論理式）で語りうるの範疇の外にある, \textbf{メタ}のものであることに注意しよう. これを単なる集合$\nat$と区別して, \textbf{メタの自然数}と呼称することにする. 当然ながら, $\nat$やその演算, 成り立つ定理（たとえば, $1+1=2$）は, 今まで定めた体系の元で厳密に構成され, 証明されるべきものである.
+            
+            メタの自然数と$\nat$が「整合的」なものであることは, 検証しなくてはならない. このことについては順序数の章で詳しく論ずる.
+        \end{rem}
+        \begin{rem}
+            Q. 論理式の定義において, 帰納的に定義するとあるがこれは合法か？
+            
+            A. ある記号列が与えられたときに, 我々はアルゴリズム的な方法によってそれが論理式か否かを判定できる. よって, この定義は危険でないと了承されるだろう. 当然ながら, これは論理式が\textbf{メタ}の対象であるから了承されるのであって, たとえば「数列（すなわち, 関数$\nat \to \rea$）$\{a_n\}$を, $a_0=1, a_{n+1}=3a_n+5$で定める」などといったときにこれがwell-definedな集合をなすことは全く自明でない. この数列が定まることは, transfinite recursionの帰結である. これは順序数の章で詳しく論ずる.
+        \end{rem}
+        \begin{rem}
+            Q. 集合とは何か？
+            
+            A. \textbf{メタ}の視点から言えば, \textbf{集合}とは式の変数が「動く」対象たちのことである. そして, \textbf{数学的言明}とは文のことである.
+            
+            文によって「$F$は式である」という形のことを主張できない. 文はあくまで集合に対する何らかの性質を意味するものであって, 式や記号といったメタのオブジェクトそれ自身について言及することはできない. だから, （我々は, 推論によって何らかの集合の性質を証明しているという\textbf{気持ち}を持っているのだが） フォーマルな\textbf{数学体系の内側}から言えば, 集合とは未定義語である, そんなものはない, としかいいようがない. 
+        
+            またこれまでの体系を見ればわかる通り, 今回の数学の形式化によって「集合とその元」という関係性, 型は失われていることがわかる. すべての数学的対象は集合であり, 関数, 関係, 全てが集合として記述される.
+            
+            これを形式化によるナンセンスだと感じるかもしれないが, むしろこの単純さによって今後述べる理論が明快になる. 次の章から, 集合論の展開をみていこう.
+        \end{rem}
+        \begin{rem}
+            Q. 集合論を記述するのに一階述語論理を使い, 一階述語論理を記述するのに集合論が要る. これは循環論法ではないか？（記号論理を知っている人向け）\footnote{この問題は人によってどう解釈するかが違うことがある. ここでは私見を述べる. }
+            
+            A. 一階述語論理を知っている人なら, ここまでの議論が$\{ \in \}$を言語とする等号付き一階述語論理の体系だと気付いただろう. インフォーマルにはそのように理解して問題ないだろう. しかし, ここまであえて一階述語論理という言葉を出すのを避けてきた. 
+            
+            はじめから一般の一階述語論理の話をすれば, 無限個の関数や述語をもった体系に敷衍して話すことになる. そして, 関数の集合や述語の集合などといった概念を用いる必要がある. それにはまず, 集合を定義しなければならない. これでは循環してしまう.
+            
+            この循環論法を断ち切るには, まず有限な言語を持った一階述語論理（すなわち, 今まで述べてきた体系である）を認め, 集合論を整備し, そのあとで改めて一階述語論理を定義する必要がある. このとき, 最初の一階述語論理はメタのものである一方で, 改めて定義された方の一階述語論理は体系の中で語られるものとなる. つまり, この2つは「メタの階層」が違う.
+            
+            例えば, 一階述語論理の完全性定理の証明では選択公理が必要となる. このことから, 一般の一階述語論理体系の分析には集合論的な手法が必要なことが了承されるであろう.
+        \end{rem}
+        \begin{rem}
+        Q. ここで述べられた論理の公理だけで, 通常の推論を展開するのに十分か？
+        
+        A. ここではインフォーマルな議論により今までの公理を検証する.
+        
+        等号の公理によって, 等号が持つべき性質が満たされていることがわかる. 命題論理の公理により, 結合子・否定が「想定通り」に働くことがわかる. これは真理値表を「そうなるように定めた」のだから, 当然である. 
+        
+        量化子が「想定通り」に動くとは, 言ってしまえば次のような議論が回ることだろう. 
+        \begin{itemize}
+            \item 全称導入$\colon$ 任意の集合$a$に対し$P(a)$が示されれば, $\forall x (P(x))$が言える.
+            \item 全称消去$\colon$ $\forall x (P(x))$ならば, どの集合$a$に対しても$P(a)$が言える.
+            \item 存在導入$\colon$ ある集合$a$に対し$P(a)$が示されれば, $\exists x P(x)$が言える.
+            \item 存在消去$\colon$ $\exists x (P(x))$ならば, ある集合$a$が存在して$P(a)$が言える.
+        \end{itemize}
+        このうち全称消去, 存在導入は代入の公理の帰結として得られる. 
+        
+        全称導入, 存在消去は量化の公理を用いた議論で行うことができることが知られている. 
+        全称導入, 存在消去が正確にはどういう意味かということを述べるには, 一階述語論理の言葉が必要になるから, ここが気になる人は, \cite{kunenfound}の2章11節を参照してほしい. 具体的にどう証明を構成をすればよいかわかるだろう.
+    \end{rem}
+    
+        ここまで詳しく述べてきたわけだが, この章の話を正確に追わなくとも次の章から読むことができる. 厳密な体系は定義しておく必要はあるが, 常にその上で証明を考えなければいけないというものでもない. むしろ, インフォーマルな推論のほうが現実的に重要である. 読者は, 「この操作は原理的に形式証明に落とし込めそうか？」「この述語は論理式で書けるか？（書けないならメタの述語である）」という点にだけ気を使って, 自由に読み進めてほしい.
+
+    \cleardoublepage
+
+    \section{集合論}
+    \subsection{集合とクラス}
+        \begin{notation}
+            量化子として, 以下を用いる.
+            \begin{enumerate}
+                \item $\forall x_1, \dots , x_n (\dots)$は$\forall x_1 (\dots \forall x_n (\dots))$の略記.
+                \item $\exists x_1, \dots , x_n (\dots)$は$\exists x_1 (\dots \exists x_n (\dots))$の略記.
+                \item $\forall x\in y (\dots)$は$\forall x (x\in y \to \dots)$の略記.
+                \item $\exists x\in y (\dots)$は$\exists x (x\in y \land \dots)$の略記.
+                \item $\exists! x (\dots)$は$\exists x (\dots) \land \forall x, y ((\dots) \to x=y)$の略記.
+            \end{enumerate}
+        \end{notation}
+        \begin{defn}
+            集合$x$が$y$の\textbf{部分集合}であるとは, 全ての$x$の元が$y$の元でもあること, すなわち\[\forall t (t\in x \to t\in y)\]なることをいい, $x\subset y$で表す.
+            
+            集合$x$が$y$の\textbf{真部分集合}であるとは, 部分集合であってかつ等しくないことをいい, $x\subsetneq y$で表す.
+        \end{defn}
+        \begin{framed}
+            以下が集合論の公理のリストであった.
+            \begin{itemize}
+                \item 外延性. 集合の相等は, その元が等しいことと等価である.
+                \item 正則性. 空でない集合は, 自身とdisjointな元をもつ.
+                \item 空. 元を持たない集合が存在する.
+                \item 対. 与えられた2つの集合だけを元に持つ集合が存在する.
+                \item 和. 与えられた集合の, 元の元全体からなる集合が存在する.
+                \item 冪. 与えられた集合の部分集合全体からなる集合が存在する.
+                \item 無限. 後続をとる操作に閉な, 空でない集合が存在する.
+                \item 置換. 集合の関数関係による「像集合」が存在する.
+                \item 内包. 集合の分出ができる.
+                \item 選択. 空でない集合たちを元にもつ集合は, その選択集合を持つ.
+            \end{itemize}
+        \end{framed}
+        \begin{rem}
+            外延性公理は, $x=y \leftrightarrow x\subset y \land y \subset x$とも言い換えられる. すなわち, 集合の相等は, 両側の包含と同値である.
+        \end{rem}
+        \begin{prop}
+            以下が成立.
+            \begin{enumerate}
+               \item 元を持たない集合がただ1つ存在する.
+               \item 任意の集合$x, y$に対し, 元として$x, y$ かつそれらのみからなる集合がただ1つ存在する.
+               \item 任意の集合$x$に対し, 元として$x$の元の元全て, かつそれらのみからなる集合がただ1つ存在する.
+               \item 任意の集合$x$に対し, 元として$x$の部分集合全て, かつそれらのみからなる集合がただ1つ存在する.
+               \item 任意の集合$x, a_1, \dots, a_n$をとる. 分出論理式$F(t, t_1, \dots t_n)$の各$t_i$に$a_i$を代入した$t$のみを自由変項とする論理式を$P(t)$とするとき, $P(t)$を満たす$x$の元全てからなる集合がただ1つ存在する.
+            \end{enumerate}
+            
+        \end{prop}
+        \begin{proof}
+            以下の通り.
+            \begin{enumerate}
+                \item 存在は空集合公理から, 一意性は外延性公理からわかる.
+                \item 存在は対集合公理から, 一意性は外延性公理からわかる.
+                \item 存在は和集合公理から, 一意性は外延性公理からわかる.
+                \item 存在は冪集合公理から, 一意性は外延性公理からわかる.
+                \item 存在は内包公理図式から, 一意性は外延性公理からわかる.
+            \end{enumerate}
+        \end{proof}
+        \begin{defn}
+            上の命題で一意に定まった集合をそれぞれ\textbf{空集合}, \textbf{対集合}, \textbf{和集合}, \textbf{冪集合}, \textbf{分出集合}といい, $\varnothing$, $\{x, y\}$, $\bigcup x$, $\mathfrak{P}(x)$, $\set{t \in a | P(t)}$で表す. ただし, $x=y$の場合は対集合は$\{x\}$とも表す.
+        \end{defn}
+        \begin{defn}
+            集合が$\{x\}$の形で書けるとき, \textbf{シングルトン}であるという.
+        \end{defn}
+        % \begin{prop}
+        % （\textbf{axiom of separation, 分出公理}\footnote{axiom of comprehension, 内包公理ともいう.}）
+        
+        % $P(x)$を分出論理式とする. このとき, \[\forall a \exists! b \forall t (t \in b \leftrightarrow (t\in a \land P(t)))\]
+        % \end{prop}
+        % \begin{proof}
+        %     置換公理とは, $F(x, y)$に対して\[\forall x, y, z (F(x,y)\land F(x,z) \to y=z) \to \forall a \exists b \forall t (t\in b \leftrightarrow \exists u (u \in a \land F(u, t)))\]ということだった. そこで$F(x,y) \equiv (P(x) \land x=y)$と定めると関数関係論理式である. 後半については,\[t\in b \leftrightarrow \exists u (u \in a \land P(u) \land u=t)\]
+        %     となり結局\[t\in b \leftrightarrow (t\in a \land P(t))\]となる.
+            
+        %     また一意性は外延性公理より従う.
+        % \end{proof}
+        \begin{defn}
+            集合$x$の交叉を, $x$が空でないときに限り\[\set{t \in \bigcup x | \forall a \in x (t \in a)}\]で定め, $\bigcap x$と書く. 
+        \end{defn}
+        \begin{defn}
+            2つの集合について, その交叉, 和, 差を\[A \cap B = \bigcap \{A, B\}\]\[A \cup B = \bigcup \{A, B\}\]\[A - B = \set{x \in A | x \not\in B}\]で定める.
+            
+            2つの集合は, その交叉が空であるとき\textbf{disjoint}という.
+            集合が\textbf{disjoint}とは, その任意の2つの元がdisjointであることをいう.
+        \end{defn}
+        \begin{defn}
+            集合$x, y$の\textbf{順序対}$\langle x,y\rangle$を, $\{\{x\}, \{x, y\}\}$によって定める.
+            
+            集合$x_1, \dots , x_n$の対集合を帰納的に$\bigcup\{\{x_1, \dots , x_{n-1}\},\{x_n\}\}$で定める. この定義は$n=2$のとき整合的である.
+            
+            集合$x_1, \dots , x_n$の順序対を帰納的に$\langle \langle x_1, \dots x_{n-1} \rangle, x_n \rangle$で定める.
+            
+            これらは, 各メタの自然数$n$に対して定義される概念である.
+        \end{defn}
+        \begin{prop}
+            $\{x_1, \dots x_n\}$は, 元として$x_1, \dots , x_n$かつそれらのみからなる集合である.
+        \end{prop}
+        \begin{proof}
+            $n$の帰納法. $n=2$のときはすでに整合的であることを言った. $n=k$まで示されたと仮定しよう. \[\{x_1 \dots x_{k+1}\} = \bigcup\{\{x_1, \dots , x_k\},\{x_{k+1}\}\}\]であり, 右辺は帰納法の仮定と和の定義から元として$x_1, \dots , x_{k+1}$のみを持つ. よって言えた.
+        \end{proof}
+        \begin{rem}
+            帰納法を使っていいのか？と思うかもしれないが, ここでの$n$とはメタの自然数であった. すなわち, ここでは各メタの自然数$n$に対して, 「$\{x_1, \dots x_n\}$は, 元として$x_1, \dots , x_n$かつそれらのみからなる集合である」ことを証明するアルゴリズム的手続きを与えた, ということである. この定理は集合論の定理ではなく, \textbf{メタの定理}であることに注意せよ. 今後このようなことは断らない.
+        \end{rem}
+        \begin{prop}
+            $\langle a, b\rangle = \langle c, d\rangle \leftrightarrow a=c \land b=d$.
+        \end{prop}
+        \begin{proof}
+        （$\leftarrow$）等号の公理.
+        
+        （$\rightarrow$）$c, d \in \{c, d\} = \bigcup \langle c, d \rangle = \bigcup \langle a, b\rangle = \{a, b\}$. あとは場合分けをすればわかる. 
+        
+        $a=b$ならば$a=b=c=d$となり自明であるから, $a\neq b$のときを考えよう. $c=a, d=a$の場合は$\bigcup \langle c, d \rangle = \{a\}, \bigcup \langle a, b \rangle = \{a, b\}$となり等しくない. $c=b, d=b$の場合も同様. $c=b, d=a$のときは$\bigcap \langle c, d \rangle = \{b\}, \bigcap \langle a, b \rangle = \{a\}$となり等しくない. 結局, $c=a, d=b$となるしかない.
+        \end{proof}
+        \begin{rem}
+            $x \mapsto \bigcup x$, $x \mapsto \bigcap x$（空集合は未定義とする）, $\langle x, y \rangle \mapsto x$（順序対でない集合は未定義とする）などの対応は, すべて関数関係論理式によって記述できる. このことと置換公理によって, 無限個の集合たちに同時に和集合, 交叉, 第一成分をとるといった行為が可能となる. このような関数関係論理式による記述可能性については今後断らないが, 無限個の集合たちに同時に何らかの操作をする場合, 置換公理を用いているという事実は記憶すべきである.
+        \end{rem}
+        \begin{prop}
+            （正則性） $x_1 \in x_2 \in \dots \in x_n \in x_1$なる集合$x_1, \dots , x_n$は存在しない.
+        \end{prop}
+        \begin{proof}
+            存在すると仮定して矛盾を導く. $\{x_1, \dots , x_n\}$に対し正則性から, ある元$x_i$が存在して$x_i \cap \{x_1, \dots , x_n\} = \varnothing$となるはずだが, これは矛盾である.
+        \end{proof}
+        \begin{notation}
+            自由変数を$n+1$個（$n\geq 0$なるメタの
+            自然数とする）持つ論理式$C(x, t_1, \dots, t_n)$とその自由変数$x$の組を\textbf{$x$を主変数, 各$t_i$をパラメタとするクラス}\footnote{主変数は本稿のみの用語.}と呼ぶ.  共通する主変数をもつ2つのクラス$C(x, t_1, \dots, t_n), D(x, s_1, \dots, s_m)$について
+            \begin{enumerate}
+                \item $x \in C(t_1, \dots, t_n)$で$C(x, t_1, \dots, t_n)$を表す.
+                \item $C(t_1, \dots, t_n) \subset D(s_1, \dots, s_m)$で$\forall x (C(x, t_1, \dots, t_n) \to D(x, s_1, \dots, s_m))$を表す. （これにより\textbf{部分クラス}を定義する.）
+                \item $C(t_1, \dots, t_n)=D(s_1, \dots, s_m)$で$\forall x (C(x, t_1, \dots, t_n) \leftrightarrow D(x, s_1, \dots, s_m))$を表す.
+            \end{enumerate}
+            以上のように約束し, $C(x, t_1, \dots, t_n)$が「集まり」$\set{x|C(x, t_1, \dots, t_n)}$を意味すると考えると, 集合と似た議論が一部できる.
+            
+            集合$a$は, 論理式$C(x,a) \equiv (x \in a)$によってクラスと同一視すると約束する. この同一視の下で, どの集合とも等しくないクラスは\textbf{真クラス}であるという.
+            
+            2つのクラスについて, その交叉, 和, 差を\[C(x, t_1, \dots, t_n)\land D(x, s_1, \dots, s_m)\]\[C(x, t_1, \dots, t_n)\lor D(x, s_1, \dots, s_m)\]\[C(x, t_1, \dots, t_n)\land \lnot D(x, s_1, \dots, s_m)\]で定める.
+
+            以後, パラメタ付きのクラスであってもそれを明示せずに単に$C$と書くことが多い.            
+        \end{notation}
+        \begin{rem}
+            当然ながら, クラス, 真クラスなどといった言葉はメタの語彙である. 我々の数学体系では, 証明とは文を並べたものであった. だから, 無限個のクラスを扱うといったことは有り得ない. クラスの交叉等を考えるということは, 与えられた2つの論理式から新しい論理式を生み出すアルゴリズムを考えることにほかならない.
+            
+            \textbf{単なる略記法でしかない}クラスという概念を考えなければならない理由の1つとして, 集合全体$\textbf{V}$, 順序数全体$\textbf{Ord}$, 基数全体$\textbf{Card}$が集合にならず, 真クラスになってしまうことに由来する. 数学展開に非常に重要な概念の「全体」を考えられないと, 記述が\textbf{冗長}になる. 我々があえてクラスというメタな概念を用いるのはそれを回避するためである. クラスとは結局論理式のことなのだから, クラスの言葉を論理式のレベルに落とし込むのは容易である.
+        \end{rem}
+        \begin{rem}
+            明らかに, クラスにおける交叉, 和, 差と集合における交叉, 和, 差は上記の同一視の下で整合的である.
+        \end{rem}
+        \begin{rem}
+            （ラッセルのパラドックス）
+            
+            $\textbf{R}(x) \equiv (x \not \in x)$なるクラスを考える. もしこれが集合$r$と等しければ, 正則性より$r \not \in r$である. すると, $r \in \textbf{R}$となり従って$r \in r$となるがこれは矛盾である. よって, $\textbf{R}$は真クラスである.
+            
+            パラドックスの回避に本質的なのは, 「クラスは何かの元となることはない」という事実である. $\in$記号の左側にクラスが出現することはないのだった. 
+        \end{rem}
+        \begin{defn}
+            クラス$\textbf{V}$を, \[\textbf{V}(x) \equiv (x=x)\]で定め\textbf{集合論の宇宙V}と呼ぶ.
+            
+            等号の公理より, すべての集合は$\textbf{V}$に属する.
+        \end{defn}
+        \begin{prop}
+            集合論の宇宙は真クラスである.
+        \end{prop}
+        \begin{proof}
+            集合論の宇宙が集合$v$で表されたとすると, $v\in v$となり正則性に矛盾.
+        \end{proof}
+    \subsection{関数}
+        \begin{defn}
+            クラスたちに対し, 以下を定義する.
+           \begin{itemize}
+                \item $A$と$B$の\textbf{直積}を\[A\times B = \set{z|x\in A \land y\in B \land z=\langle x, y \rangle}\]で定める. 直積は左結合と約束する. すなわち, 単に$A_1 \times A_2 \times \dots \times A_n$と書いたとき$(\dots(A_1 \times A_2) \times \dots \times A_n)$とする. （こうすれば, $n$項順序対の定義と合わせて$A_1 \times A_2 \times \dots \times A_n = \set{\langle a_1, \dots , a_n \rangle|a_i \in A_i}$となって都合がいい. このことは帰納的に証明できる.）
+            
+                \item $A^n = \underbrace{A \times \dots \times A}_{n\text{回}}$とする.
+            
+                \item $\textbf{V}^n$の部分クラスを\textbf{$n$項関係}という. $A_1 \times \dots \times A_n$の部分クラスを$A_1, \dots, A_n$上の$n$項関係という. $n=2$のとき, たんに関係という.
+            
+                \item $A$の\textbf{始域}を\[{\rm Dom}(A) = \set{x|\exists y \langle x, y \rangle \in A}\]$A$の\textbf{終域}を\[{\rm Rng}(A) =  \set{y|\exists x \langle x, y \rangle \in A}\]$A$の\textbf{反転}を\[A^{-1} = \set{\langle y, x \rangle|\langle x, y \rangle \in A}\]             $A$の$B$への\textbf{制限}を\[A\restriction_{B} = A\cap(B\times \textbf{V})\]$A$による$B$の\textbf{像}を\[A``B = {\rm Rng}(A\restriction_{B})\]$A$と$B$の\textbf{合成}を\[A\circ B = \set{\langle x, y \rangle| \exists z (\langle x, z \rangle \in B \land \langle z, y \rangle \in A)}\]
+                $A$による集合$x$の\textbf{値}\footnote{通常, $A$を関数として$A(x)$とかくものである. わかりやすさのために, この表記を用いることがある.}を, \[A`x = \set{a|\exists y (a\in y \land \langle x, y \rangle \in A) \land \exists ! y \langle x, y\rangle \in A}\]
+                と定める.
+                これらは関係でない一般のクラスに対して定めていることに注意.
+                
+                \item 関係$F$が\textbf{関数}とは,\[(\langle x, y\rangle \in F \land \langle x, z\rangle \in F) \to y=z\]をみたすことをいう.
+                
+                \item $F\colon A\to B$によって, $F$が関数で${\rm Dom}(F)=A, {\rm Rng}(F)\subset B$であることをいう.
+                
+                このとき, $F$が\textbf{全射}とは${\rm Rng}(F)=B$なること, \textbf{単射}とは$(\langle x, z\rangle \in F \land \langle y, z\rangle \in F) \to x=y$なること, \textbf{全単射}とは全射かつ単射であることをいう.
+                
+                \item 直積, 関係, 関数が[真]クラスであることを強調したい文脈で特に\textbf{[真]クラス直積}, \textbf{[真]クラス関係}, \textbf{[真]クラス関数}といい, 対比して集合であることを強調したい文脈で特に\textbf{集合直積}, \textbf{集合関係}, \textbf{集合関数}という.
+            \end{itemize}
+        \end{defn}
+        \begin{rem}
+            クラスとクラスの直積は, 2つの論理式から1つの論理式を作る手続きである. 一方で, 集合と集合の直積は集合になっていて欲しいものであるが, 実際以下の命題が成り立つ.
+        \end{rem}
+        \begin{prop}
+            以下が成立.
+            \begin{enumerate}
+                \item 集合同士の直積は集合.
+                \item 関数による集合の像$F``a$は集合.
+                \item 関数による集合の値$F`a$は集合.
+                \item 集合の始域, 終域, 反転, 制限, 合成は集合.
+                \item 集合から集合への関数全体は集合をなす.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            注意として, 何々は集合である, という主張は論理式で言えば$\exists x P(x)$の形に書けるということを意味する. 
+            \begin{enumerate}
+                \item $a\times b$は$\mathfrak{P}(\mathfrak{P}(a\cup b))$から分出できるから, 集合.
+                \item $F``a = \set{y|\exists x (\langle x, y\rangle \in F\cap (a\times \textbf{V}))} = \set{y|\exists x\in a \langle x, y\rangle \in F}$である. $F$が関数であることから, 置換公理を適用して右辺が集合であることがわかる. （置換公理が使える形にするために, $a\cap {\rm Dom}(F)$なる集合と関数関係論理式として$x\mapsto y$ （$\langle x, y\rangle \in F$のとき）を用いる必要がある. 「置換公理の形に合わせる」ために軽微なmodifyを要することがあるが, これは形式的なものであって本質的でないから今後注意しない.）
+                \item $F`a$の定義をよくみると, これは「$a\in {\rm Dom}(F)$でありかつ$\langle a, b\rangle\in F$なる$b$が一意に存在するとき$b$, それ以外なら$\varnothing$」であることがわかる. すなわち, 関数の値とは「ちゃんと関数のようにふるまう点では通常の意味の値を返し, それ以外なら空集合を返す」操作である. $b, \varnothing$はともに集合だから, 示された.
+                \item 始域${\rm Dom}(a)$はクラス関数$\langle x, y\rangle \mapsto x$による$a$の像.
+                
+                終域${\rm Rng}(a)$はクラス関数$\langle x, y\rangle \mapsto y$による$a$の像.
+                
+                反転$a^{-1}$はクラス関数$\langle x, y\rangle \mapsto \langle y, x\rangle$による$a$の像.
+                
+                制限は分出で得られるから集合. 合成$a\circ b$は, $a, b$の始域と終域が集合で, 集合の直積が集合で, その分出として得られるから集合.
+                
+                \item $a$から$b$への関数全体は, $\mathfrak{P}(a\times b)$から分出できるから集合.
+            \end{enumerate}
+        \end{proof}
+        \begin{prop}
+            関数$F, G\colon A\to B$に対し, $F=G \leftrightarrow (\forall x\in A (F`x = G`x))$.
+        \end{prop}
+        \begin{proof}
+            （$\leftarrow$）$x\in A$をとる. $\langle x, F`x\rangle \in F$, $\langle x, G`x\rangle \in G=F$より$F`x = G`x$.
+            
+            （$\rightarrow$）$\langle a, b\rangle \in F$をとる. $b=F`a=G`a$となるから, $\langle a, b\rangle \in G$. よって$F\subset G$. 同様にして$G\subset F$. よって$F=G$.
+        \end{proof}
+        \begin{prop}
+            （集合と関数は圏をなす.）
+            \begin{itemize}
+                \item $F\colon A \to B$, $G\colon B\to C$, $x\in A$とすると, $G\circ F\colon A\to C$であり, $(G\circ F)`x = G`(F`x)$が成り立つ.  
+                \item 関数の合成は結合的である.
+                \item ${\rm id}_X\colon X\to X = \set{\langle x, x\rangle|x\in X}$はwell-definedで, $F\circ {\rm id}_A = {\rm id}_B \circ F = F$となる.
+            \end{itemize}
+        \end{prop}
+        \begin{proof}
+            $G\circ F$が$A$から$C$への関数なのはstraightforward. $\langle x, F`x\rangle \in F, \langle F`x, G`(F`x)\rangle \in G$だから$\langle x, G`(F`x)\rangle \in G\circ F$がわかる.
+            
+            $H\circ(G\circ F) = (H\circ G)\circ F$を示したいが, 前命題から${\rm Dom}(F)$上での応答を見ればよい. $(H\circ(G\circ F))`x = H`(G`(F`x))=((H\circ G)\circ F)`x$だから言えた.
+            
+            ${\rm id}$が関数なのは等号の公理から従う. $x\in A$に対して, $(F\circ {\rm id}_A)`x = ({\rm id}_B \circ F)`x = F`x$であるから$F\circ {\rm id}_A = {\rm id}_B \circ F = F$が言えた.
+        \end{proof}
+        \begin{prop}
+            （像と逆像の演算との交換）
+            
+            関数$F\colon A\to B$に対し以下が成立.
+            \begin{itemize}
+                \item $Y\subset B$の$F$による\textbf{逆像}とは, $\set{x\in A|F`x \in Y}$のことである. このとき, 逆像は$F^{-1}``Y$で与えられる.
+                \item 像をとる操作は, 包含, 和を保つ.
+                \item 逆像をとる操作は, 包含, 和, 交叉, 差を保つ.
+                \item $X\subset A, Y\subset B$に対し, $X \subset F^{-1}``(F``X)$, $F``(F^{-1}``Y) \subset Y$が成り立つ.
+            \end{itemize}
+        \end{prop}
+        \begin{proof}
+            $\set{x\in A|F`x \in Y}\subset F^{-1}``Y$を示そう. 左辺の任意の元$x$をとる. $F`x \in Y$である. さらに, $\langle F`x, x\rangle \in F^{-1}$である. よって, $x\in F^{-1}``Y$であるから言えた.
+            
+            $F^{-1}``Y \subset \set{x\in A|F`x \in Y}$を示そう. 左辺の任意の元$x$をとる. ${\rm Dom}(F)=A$であるから, $x\in A$となる. ある$Y$の元$y$が存在して, $\langle y, x\rangle \in F^{-1}$である. すなわち, $\langle x, y\rangle \in F$となる. よって$F`x = y\in Y$であるから言えた.
+            
+            残りは簡単な集合論の演習問題である.
+        \end{proof}
+        \begin{prop}
+            （全射とエピ射）
+            
+            集合関数$f\colon X\to Y$に対し, 以下は同値.\footnote{この証明で選択公理を使う.}
+            \begin{itemize}
+                \item $f$は全射.
+                \item ある関数$s\colon Y\to X$があって, $f\circ s = {\rm id}_Y$となる. （これを$f$の\textbf{section}という. この条件を, $f$が\textbf{分裂エピ}であるという.）
+                \item 任意の集合$Z$, 関数$g_1, g_2\colon Y\to Z$に対し, $g_1\circ f = g_2\circ f \to g_1 = g_2$.（この条件を, $f$が\textbf{エピ}であるという.）
+            \end{itemize}            
+        \end{prop}
+        \begin{proof}
+            $0 = \varnothing, 1 = \{\varnothing\}$とする.
+            \begin{itemize}
+                \item $f$を全射とする. 各$y$に対して, $f^{-1}``\{y\}$は空でない. 置換公理より, $\set{f^{-1}``\{y\}|y\in Y}$なる集合があり, 選択公理よりこの選択集合$C$をとれる. $s = \set{\langle y, x\rangle| x\in C \land y\in Y \land f`x = y }$と定めれば, これが関数であり$f$のsectionになっていることが容易に確かめられる.
+                \item $s$をsectionとする. $g_1\circ f = g_2\circ f$ならば, $g_1\circ f\circ s = g_2\circ f\circ s$なので$g_1 = g_2$となる.
+                \item $g_1\circ f = g_2\circ f \to g_1 = g_2$が成り立つとする. $f$が全射でないとすると, $f$の終域の元でない$Y$の元$y$がとれる. そこで, $Z=\{0, 1\}$として$g_1$を$0$への定値関数, $g_2$を$g_1$から$\langle y, 0\rangle$を除いて$\langle y, 1\rangle$を付け加えて得られる関数とすれば仮定に矛盾する. よって, $f$は全射.
+            \end{itemize}
+        \end{proof}
+        \begin{prop}
+            （単射とモノ射）
+            
+            $X\neq \varnothing$とする. 集合関数$f\colon X\to Y$に対し, 以下は同値.
+            \begin{itemize}
+                \item $f$は単射.
+                \item ある関数$r\colon Y\to X$があって, $r\circ f = {\rm id}_X$となる. （これを$f$の\textbf{retraction}という. この条件を, $f$が\textbf{分裂モノ}であるという.）
+                \item 任意の集合$W$, 関数$h_1, h_2\colon W\to X$に対し, $f\circ h_1 = f\circ h_2 \to h_1 = h_2$.（この条件を, $f$が\textbf{モノ}であるという.）
+            \end{itemize}            
+        \end{prop}
+        \begin{proof}
+            \begin{itemize}
+                \item $f$を単射とする. $x\in X$をとる. $r$を, $Y-{\rm Rng}(f)$上の$x$への定値関数と$f^{-1}$の和として定めれば, これが関数であり$f$のretractionであることは容易に確かめられる.
+                \item $r$をretractionとする. $f\circ h_1 = f\circ h_2$ならば, $r\circ f\circ h_1 = r\circ f\circ h_2$なので$h_1 = h_2$となる.
+                \item $f\circ h_1 = f\circ h_2 \to h_1 = h_2$が成り立つとする. $\langle x, z\rangle, \langle y, z\rangle \in f$なら$x = r`z = y$となるから, $f$は単射.
+            \end{itemize}
+        \end{proof}
+        \begin{rem}
+            空集合からの関数は単射である. しかし空集合からの関数にretractionは存在しない. 一方で, 空集合への関数はただ1つ存在するので, 3番目の条件はなりたつ. よって, 1番目と3番目の同値については$X\neq \varnothing$の仮定は不要.
+        \end{rem}
+        \begin{prop}
+            （全単射と同型射）
+            \begin{itemize}
+                \item $F\colon A\to B$を全単射とする. このとき$F^{-1}\colon B\to A$は全単射となり, $F\circ F^{-1} = {\rm id}_B, F^{-1}\circ F = {\rm id}_A$をみたす.
+                
+                \item 逆に$F\colon A\to B$, $G\colon B\to A$が$F\circ G = {\rm id}_B, G\circ F={\rm id}_A$をみたすとき, $F$は全単射であり, $G=F^{-1}$.
+            \end{itemize}
+        \end{prop}
+        \begin{proof}
+            $F^{-1}\subset B\times A$であり, $F$の単射性から$F^{-1}$が関数になることがわかる. $F$の全射性から${\rm Dom}(F^{-1})=B$がわかる. よって$F^{-1}\colon B\to A$. これが全単射になっていることが, $F$が関数であることから従う.
+            
+            $F^{-1}`(F`x)=x$は定義から明らかなので, $F^{-1}\circ F = {\rm id}_A$. また$(F^{-1})^{-1} = F$なので, $F$を$F^{-1}$に置き換えて考えることで$F\circ F^{-1} = {\rm id}_B$がわかる.
+            
+            2番目の性質については, まず$F$が全単射であることが容易にわかる. すると各$x \in B$に対し$F`(G`x) = x = F`(F^{-1}`x)$であるから, $F$の単射性より$G`x = F^{-1}`x$. 従って$G=F^{-1}$を得る.
+        \end{proof}
+        \begin{rem}
+            考える全単射を集合関数だけに絞っていいなら, 全単射$\leftrightarrow$分裂エピかつモノ$\leftrightarrow$同型射, という同値で証明することもできる.
+        \end{rem}
+        \begin{defn}
+            このとき, 全単射$F$に対して$F^{-1}$を\textbf{逆写像}という.
+        \end{defn}
+        \begin{defn}
+            集合$\Lambda$により\textbf{添字づけられた$X$の集合族}$\{x_\lambda\}_{\lambda\in\Lambda}$とは, 関数$x\colon\Lambda\to X$のことである.
+            
+            添字づけられた集合族に対して, 以下の演算を定める.
+            \begin{itemize}
+                \item 和.\[\bigcup_{\lambda\in\Lambda} x_\lambda = \set{t|\exists \lambda \in \Lambda(t\in x_\lambda)}\]
+                \item 交叉.\[\bigcap_{\lambda\in\Lambda} x_\lambda = \set{t|\forall \lambda \in \Lambda(t\in x_\lambda)}\]
+                \item 直積.\[\prod_{\lambda\in\Lambda} x_\lambda = \set{f\colon\Lambda\to\bigcup_{\lambda\in\Lambda} x_\lambda|\forall \lambda \in \Lambda(f`\lambda\in x_\lambda)}\]
+                \item 直和.\[\coprod_{\lambda\in\Lambda} x_\lambda = \set{\langle \lambda, t \rangle|\lambda \in \Lambda \land t\in x_\lambda}\]
+            \end{itemize}
+        \end{defn}
+        \begin{rem}
+            $\bigcup_{\lambda\in\Lambda} x_\lambda = \bigcup{\rm Rng}(x)$, $\bigcap_{\lambda\in\Lambda} x_\lambda = \bigcap{\rm Rng}(x)$である. すなわち, 和, 交叉という用語はこれまでとある意味で整合的である. 特に, 添字づけられた集合族の和と交叉は集合である. またその帰結として, 直積と直和も集合から分出できるから集合である.
+        \end{rem}
+        \begin{rem}
+            集合直積と, 対応する添字づけられた集合族の直積の間には, 自然な全単射を構成することができる. この意味で直積という語は整合的である.
+        \end{rem}
+        \begin{prop}
+            （選択公理）空でない集合からなる族の直積は空でない.
+        \end{prop}
+        \begin{proof}
+            そのような集合族$x\colon\Lambda\to X$の終域${\rm Rng}(x)$の選択集合$C$をとる. $\langle \lambda, x_\lambda\rangle \mapsto \langle \lambda, z\rangle$（ここに$z$は$x_\lambda\cap C = \{z\}$をみたす集合.）によって関数関係論理式が定まるので, これにより$x$を置換して所望の直積の元を得る.
+        \end{proof}
+        \begin{notation}
+            関係$R$に対し, $\langle a,b \rangle \in R$ のことを単に$aRb$と書く.
+        \end{notation}
+        \begin{defn}
+            集合$X$上の関係$\equiv$が\textbf{同値関係}とは, $X$上の2項関係であって以下を満たすものをいう.
+            \begin{itemize}
+                \item 反射律. $a\equiv a$
+                \item 対称律. $a\equiv b \to b\equiv a$
+                \item 推移律. $a\equiv b \land b\equiv c \to a\equiv c$
+            \end{itemize}
+            
+            同値関係の交叉は再び同値関係となることが容易にわかるから, $X$上の任意の2項関係$R$に対し, それを含む最小の同値関係が存在する. これを, $R$が\textbf{生成する}同値関係という.
+            
+            $a\in X$の同値関係$\equiv$による\textbf{同値類}とは, \[[x]_\equiv = \set{t \in X| t \equiv x}\]のこと. 考えている同値関係が明らかなときは単に$[x]$と書く.
+            
+            $X$の同値関係$\equiv$による\textbf{商集合}とは, \[X/\equiv \,= \set{[x]|x\in X}\]のこと. 商集合の選択集合を, $\equiv$の\textbf{完全代表系}という.
+            
+            同値類たちは, $X$の分割を与えることが容易にわかるが, これを\textbf{同値関係に付随する$X$の同値類別}という.
+        \end{defn}
+        \begin{prop}
+            （集合の圏はbicomplete）
+            
+            以下が成立.
+            \begin{itemize}
+                \item productの存在. $\{X_\lambda\}$に対し, その直積を$X = \prod X_\lambda$とする. $\lambda$成分への\textbf{射影}を, $p_\lambda\colon X\to X_\lambda, f \mapsto f`\lambda$で定める. このとき任意の集合$Y$と関数の族$f_\lambda\colon Y\to X_\lambda$に対し, 一意的に関数$f\colon Y\to X$が存在して, $\forall \lambda \in \Lambda (f_\lambda = p_\lambda \circ f)$が成り立つ.
+                \item coproductの存在. $\{X_\lambda\}$に対し, その直和を$X = \coprod X_\lambda$とする. $\lambda$成分からの\textbf{入射}を, $i_\lambda\colon X_\lambda\to X, t \mapsto \langle \lambda, t \rangle$で定める. このとき任意の集合$Y$と関数の族$f_\lambda\colon X_\lambda\to Y$に対し, 一意的に関数$f\colon X\to Y$が存在して, $\forall \lambda \in \Lambda (f_\lambda = f \circ i_\lambda)$が成り立つ.
+                \item equalizerの存在. 集合$X, Y$と関数$f, g\colon X\to Y$に対し, その\textbf{イコライザ}を$E=\set{x\in X|f`x = g`x}$とし, \textbf{イコライザの構造射}を$eq\colon E\to X, x \mapsto x$とする. このとき任意の集合$O$と$f\circ m = g\circ m$を満たす関数$m\colon O\to X$に対し, 一意的に関数$u\colon O\to E$が存在して, $m = eq \circ u$が成り立つ. 
+                \item coequalizerの存在. 集合$X, Y$と関数$f, g\colon X\to Y$に対し, その\textbf{コイコライザ}を$C=Y/\equiv$とし, \textbf{コイコライザの構造射}を$coeq\colon Y\to C, y \mapsto [y]_\equiv$とする. ここで$\equiv$とは, $\set{\langle f`x, g`x \rangle|x\in X}$が生成する$Y$上の同値関係である. このとき任意の集合$P$と$m\circ f = m\circ g$を満たす関数$m\colon Y\to P$に対し, 一意的に関数$u\colon C\to P$が存在して, $m = u \circ coeq$が成り立つ. 
+            \end{itemize}
+        \end{prop}
+        \begin{proof}
+            \begin{itemize}
+                 \item productの存在. $f$を$y \mapsto (\lambda \mapsto f_\lambda`y)$として定めれば存在性が言える. 一意性は, $\forall \lambda \in \Lambda (f_\lambda = p_\lambda \circ f)$の成立のためにこうなるしかないから従う.
+                \item coproductの存在. $f$を$\langle \lambda, t \rangle \mapsto f_\lambda`t$として定めれば存在性が言える. 一意性は, $\forall \lambda \in \Lambda (f_\lambda = f \circ i_\lambda)$の成立のためにこうなるしかないから従う.
+                \item equalizerの存在. $u=m$として定めると, ${\rm Rng}(m)\subset E$だからwell-definedで, 存在性が言える. 一意性は, $m = eq \circ u$の成立のためにこうなるしかないから従う.
+                \item coequalizerの存在. $u$を$[y] \mapsto m`y$として定めると, $\equiv$の定義からwell-definedとなる. 実際, $a \sim b \leftrightarrow m`a = m`b$と定めればこれは$Y$上の同値関係であり, $\set{\langle f`x, g`x \rangle|x\in X}$を含むから最小性より$\equiv \subset \sim$. これがwell-definedであることを言っている. よって存在性が言えた. 一意性は, $m = u \circ coeq$の成立のためにこうなるしかないから従う.
+            \end{itemize}
+        \end{proof}
+        
+    \subsection{順序関係}
+        \begin{defn}
+            クラス$A$上の2項関係$\leq$が$A$上の\textbf{反射的順序関係}であるとは, 
+            \begin{itemize}
+                \item 反射律. $x\leq x$
+                \item 反対称律. $x\leq y \land y\leq x \to x=y$
+                \item 推移律. $x\leq y \land y\leq z \to x\leq z$
+            \end{itemize}
+            の3条件を満たすことをいう. 
+            
+            クラス$A$上の2項関係$<$が$A$上の\textbf{（非反射的）順序関係}であるとは, 
+            \begin{itemize}
+                \item $x\not < x$
+                \item $x<y\land y<z \to x<z$
+            \end{itemize}
+            の2条件を満たすことをいう.
+            
+            $\textbf{E} = \set{\langle x, x\rangle|x=x}$とする.
+            反射的順序$\leq$に対し, $< \,=\, \leq - \textbf{E}$とすればこれは非反射的順序関係で, 逆に非反射的順序$<$に対し, $\leq \,=\, < \cup \textbf{E}$とすればこれは反射的順序. さらにこの対応は反射的順序と非反射的順序の1対1対応を与えている. これによって, 順序といったときどちらを考えても本質的に同じであることがわかる.
+            
+            任意の2元が比較可能, すなわち$x < y \lor x = y \lor x > y$となるときその順序は\textbf{全順序}であるという.
+            
+            クラスとその上の非反射的順序関係の組$\langle A, <\rangle$のことを, \textbf{順序クラス}という.\footnote{ここで組とは, 順序対のことではなく, 文字通りクラスの組のことである. 実際クラスとクラスの順序対は定義されていない. 一方で, 順序集合については集合論のオブジェクトとして扱えた方が都合がいいので, 順序対として定義されていると考えても良い.} これが集合であるとき, 特に\textbf{順序集合}であるという.
+        \begin{rem}
+            本稿では, 順序クラスといったら非反射的順序クラスのことと約束する. 証明などで$\leq, \geq$を用いた場合は, 上で述べた, 誘導される反射的順序について言及しているものとする.
+        \end{rem}
+        \end{defn}
+        \begin{defn}
+            順序クラス$\langle A, R\rangle, \langle B, S\rangle$について, クラス関数$F\colon A\to B$が\textbf{順序保存}とは, \[xRy \to F`x S F`y\]が成り立つことをいう.
+
+            クラス関数$F\colon A\to B$が\textbf{順序同型}とは, 逆写像が存在して, $F$も$F^{-1}$も順序保存であることをいう.
+        \end{defn}
+        \begin{rem}
+            一般に順序保存写像という場合, $x\leq y\to F`x \leq F`y$を意味することが多い. しかし本稿では, 非反射的順序について扱うことが多いので, $x<y\to F`x<F`y$というより強い形を定義としてあることに注意.
+        \end{rem}
+        \begin{rem}
+            全単射順序保存だからといって, 順序同型とは限らない. （有限集合で簡単な反例がある.）一方で, 始域が全順序である全単射順序保存写像は, 順序同型になることが証明できる.
+        \end{rem}
+        \begin{defn}
+            順序クラス$\langle A, R\rangle$に対し, $a\in A$の\textbf{始切片}を,\[{\rm Seg}_R(a) = \set{x\in X|xRa}\]と定める.
+        \end{defn}
+        \begin{defn}
+            順序クラス$\langle A, R\rangle$に対し, $R$-\textbf{極小元}, \textbf{極大元}, \textbf{最小元}, \textbf{最大元}とはそれぞれ「より小さい元がない元」「より大きい元がない元」「すべての元が自分以上である元」「すべての元が自分以下である元」のことである.
+            
+            $A$の部分クラス$u$に対し, その$R$-\textbf{上界}, \textbf{下界}, \textbf{上限}, \textbf{下限}とは「任意の$u$の元以上である元全体」「任意の$u$の元以下である元全体」「上界の最小元」「下界の最大元」である.
+            
+            また全順序クラスにおいて, 元の$R$-\textbf{直前元}, \textbf{直後元}とは, 「自分より小さい元たちの中で最大の元」「自分より大きい元たちの中で最小の元」のことである.
+            
+            これらは存在するとは限らないし, 極小元と極大元は存在しても一意とは限らない.
+        \end{defn}
+        \begin{defn}
+            順序クラス$\langle A, R\rangle$に対して, 
+            \begin{itemize}
+                \item 任意の空でない$A$の部分集合が$R$-最小元を持つ.
+                \item $\forall a\in A \exists b(b = {\rm Seg}_R(a))$, すなわち任意の始切片は集合である.
+            \end{itemize}
+            が成り立つとき\textbf{整列クラス, well-ordered class}であるという.\footnote{2つめの条件を\textbf{集合状}であると呼び, 整列クラスの定義に含めない文献もある.}
+        \end{defn}
+        \begin{prop}
+            well-orderedならば全順序.
+        \end{prop}
+        \begin{proof}
+            任意の2元$a, b\in A$に対して$\{a, b\}$に最小元がある, すなわち比較可能であるから従う.
+        \end{proof}
+        \begin{prop}
+            well-orderedクラスの部分クラスは順序を制限することでwell-orderedクラスとなる.
+        \end{prop}
+        \begin{proof}
+            straightforward.
+        \end{proof}
+        \begin{prop}
+            （\textbf{最小元原理}）well-orderedクラスの空でない部分クラスは$R$-最小元を持つ.
+        \end{prop}
+        \begin{proof}
+            部分クラス$B$の元$a$をとる. $a$が最小元ならいうことはない. 最小元でなければ, $B\cap{\rm Seg}(a)\neq\varnothing$はwell-orderの定義から集合で, よって最小元を持つ. これが$B$の最小元であることは容易にわかる. 
+        \end{proof}
+        \begin{prop}
+            （\textbf{帰納法原理}）well-orderedクラス$A$と論理式$P(t)$において, \[(\forall x \in A (\forall y (yRx\to P(y))\to P(x)) )\to (\forall x\in A P(x))\]
+            すなわち, 各$x$に対し, 「${\rm Seg}(x)$上で成立するならば$x$でも成立」を満たすような性質は, 実は全体で成り立っている.
+        \end{prop}
+        \begin{proof}
+            背理法. $P(x)$が成立しない$x$が存在するとする. $\set{x\in A|\lnot P(x)}$は空でない部分クラスだから最小元$a$が存在する. ところが, 最小性より${\rm Seg}(a)$上では$P(t)$が成立しているから, 仮定より$P(a)$となり矛盾.
+        \end{proof}
+        \begin{prop}
+            well-orderedクラスの任意の元は, 直後元を持つ.
+        \end{prop}
+        \begin{proof}
+            任意に元$x$を考える. $x$よりも大きい元全体は部分クラスを成すから, その最小元が存在するが, これが直後元である.
+        \end{proof}
+        \begin{prop}
+            well-orderedクラスはその始切片と順序同型になることはない.
+        \end{prop}
+        \begin{proof}
+            $A$をwell-orderedクラス, $x\in A$とする. 順序同型$F\colon A\to {\rm Seg}(x)$が存在するとする.
+            
+            $\set{a\in A|F`a \neq a}$は, $x$の存在から空でない部分クラス. したがって最小元$b$がとれる. $b=x$なら単射性に矛盾. $bRx$なら, $F`a=b$なる$a$が存在せず, 全射性に矛盾. よって矛盾.
+        \end{proof}
+        \begin{prop}\label{ordisounique}
+            well-orderedクラスの間の順序同型は, 存在すれば一意である.
+        \end{prop}
+        \begin{proof}
+            $F, G\colon A\to B$をwell-orderedクラスの間の相異なる順序同型とする. $\set{a\in A|F`a \neq G`a}$は空でない部分クラスであるから最小元$a$が存在する. $F`a < G`a$として一般性を失わない. $G`b = F`a$となる$b$が存在しないことになり, 矛盾.
+        \end{proof}
+    \cleardoublepage
+    
+    \section{順序数論}
+    \subsection{定義と性質}
+    $0, 1, 2, \dots$と数えるという行為を, 数学的に扱いたいというモチベーションから, 順序数の概念は生まれた. 順序数が満たしていて欲しい性質として, 
+    \begin{itemize}
+        \item 数$\alpha$を数えたら, その次$\alpha+1$を数えられる.
+        \item 数たち$\set{\alpha, \beta, \dots}$を数えられたとする. そのとき, さらにその次を数えられる. 例えば, 有限の数たち$\set{0, 1, \dots}$を全て数えてしまった後に, 「無限順序数」の領域に進み, $0, 1, \dots, \omega, \omega+1, \dots$と数え続けられる.
+    \end{itemize}
+    がある. 2番目の性質は, 無限に元を持つ集合の要素数を数えたいという要請から来ている. 
+    
+    かつてvon Neumannは, 順序数を\textbf{それ自身より小さい順序数全てからなる集合}と考えた. そして$0 = \{\}, 1=\{0\}, 2=\{0, 1\}, 3=\{0, 1, 2\}\dots$と順に数え, $\omega = \{0, 1, \dots\}$と定めることで, この議論を正当化しようとした. これをvon Neumann式順序数という.
+    
+    もっとも, この直感的方法では, 「順序数全体」をうまく定めることはできない. そこで, 我々はいったんこのインフォーマルな定義から離れ, 少しわかりずらい定義からはじめることにする. 
+        \begin{notation}
+            $\in$によって, 混乱が起きない場合にクラス$A$上の関係$\set{\langle x, y\rangle|x\in y \land x\in A\land y\in A}$を意味することとする. 
+        \end{notation}
+        \begin{defn}
+            クラス$A$が\textbf{推移的}とは, \[\forall x, y ((y\in x \land x\in A)\to y\in A)\]であることをいう. これを${\rm Trans}(A)$と書く.
+            
+            クラス$A$が\textbf{連結}\footnote{この用語は広く使われていないようである.}とは, \[\forall x, y\in A (x\in y \lor y\in x \lor x=y)\]であることをいう. これを${\rm Conn}(A)$と書く.
+            
+            　
+            集合は, それが推移的かつ連結であるとき, \textbf{順序数, ordinal}であるという. すなわち, \[\textbf{Ord}(x) = {\rm Trans}(x) \land {\rm Conn}(x)\]として, クラス\textbf{Ord}を定め, その元を順序数という. このクラスを\textbf{順序数クラス}という.\footnote{順序数の定義を, 推移的かつ$\in$により整列集合になる, とする文献もある. これはその文献において, 順序数論を正則性公理を用いずに展開したいからである. 本稿では理論展開にどの公理が必要かに興味がないから, この定義を採用しないことにする.}
+        \end{defn}
+        \begin{prop}
+            $\alpha$を順序数とする. このとき, $\langle \alpha, \in \rangle$はwell-ordered set.
+        \end{prop}
+        \begin{proof}
+            まず, 順序集合になることを見よう. $\in$が非反射的なのは正則性から, 推移的なのは$\alpha$の連結性と正則性から出る.
+        
+            $\alpha$の任意の空でない部分集合$u$をとる. 正則性より, $u$の元$v$であって, $u\cap v = \varnothing$であるものが存在する. 言い換えれば, $w\in v$なる$u$の元$w$は存在しない. また, ${\rm Conn}(\alpha)$だから, $\in$は$u$上の全順序である. すなわち, $v$が$u$の$\in$-最小元である. よって, $\in$は$\alpha$上のwell-orderである.
+        \end{proof}
+        \begin{prop}
+            $\alpha$を順序数とし, $\beta \in \alpha$とする. このとき, $\beta$は順序数であり, 順序集合$\langle \alpha, \in\rangle$の始切片として$\beta = {\rm Seg}(\beta)$が成り立つ.
+        \end{prop}
+        \begin{proof}
+            $\beta \in \alpha$かつ$\alpha$は推移的集合なので, $\beta \subset \alpha$がわかる. よって, ${\rm Conn}(\alpha)$から${\rm Conn}(\beta)$がわかる.
+            
+            $a\in b, b \in \beta$なる$a, b$を任意にとる. 再び$\beta \subset \alpha$と$\alpha$の推移性によって, $a\in \alpha$. そこで$\alpha$の連結性から, $a\in \beta \lor \beta\in a \lor a=\beta$である. しかし, $a\in \beta$以外は正則性からあり得ない. よって, $a\in \beta$である, したがって${\rm Trans}(\beta)$. 
+            
+            これで$\beta$が順序数であることはわかった. 最後の等式については, $\beta=\set{x|x\in \beta}=\set{x\in\alpha|x\in\beta} = {\rm Seg}(\beta)$だから従う.
+        \end{proof}
+        \begin{prop}
+            $\alpha$を順序数とし, $\beta\subsetneq\alpha$を推移的な集合とする. このとき, $\beta\in\alpha$.
+        \end{prop}
+        \begin{proof}
+            $\alpha-\beta$の元$\gamma$をとる. 
+            
+            任意に$x\in\beta$をとる. $x\in\alpha$であり, $\alpha$は連結だから$x\in\gamma \lor \gamma\in x\lor x=\gamma$である. しかし, $\gamma\in x$ならば$\beta$の推移性より$\gamma\in\beta$となり, $x=\gamma$ならば直ちに$\gamma\in\beta$となる. これは$\gamma$の取り方に反するので, 結局$x\in\gamma$となるしかない. $x$は$\beta$の任意の元であったから, $\forall x\in\beta(x\in\gamma)$である. 
+            
+            さて, $\set{y\in\alpha|\forall x\in\beta(x\in y)}$は$\alpha$の部分集合であり, 今示したことによって$\gamma$を含むから空でない. $\alpha$はwell-ordered setだから, これには最小元$\delta$がある.
+            
+            定義から直ちに$\beta\subset\delta$である. また, 任意の$z\in\delta$に対し, $\delta$の最小性から$\lnot\forall x\in\beta(x\in z)$. $\alpha$の連結性と合わせて, $\exists w\in\beta(w=z\lor z\in w)$. いずれにしても, $\beta$の推移性より$z\in\beta$である. したがって, $\delta\subset\beta$. よって$\beta=\delta\in\alpha$が示された.
+        \end{proof}
+        \begin{prop}
+            $\alpha, \beta$を順序数とする. このとき, $\alpha\subset\beta \lor \beta\subset\alpha$.
+        \end{prop}
+        \begin{proof}
+            背理法. $\alpha \not\subset \beta \land \beta \not\subset\alpha$としよう. 順序数はwell-ordered setだから, $x = {\rm min}(\beta-\alpha), y={\rm min}(\alpha-\beta)$が存在する.
+            
+            任意に$t \in \alpha\cap\beta$をとる. $x, t\in \beta$であるから$\beta$の連結性から$t\in x \lor x\in t\lor t=x$. $\alpha$の推移性と$x\not\in\alpha$より, $t\in x$しかあり得ない. よって, $\alpha\cap\beta \subset x$.
+            
+            任意に$s \in x$をとる. $x$の最小性より, $s\not\in \beta-\alpha$. 一方$\beta$の推移性より, $s\in \beta$. よって$s\in \alpha$. 合わせて$s\in \alpha\cap\beta$であり, $x\subset \alpha\cap\beta$.
+            
+            以上より, $x = \alpha\cap\beta$. 全く同様にして$y = \alpha\cap\beta$だから, $x=y$. そこで$x=y\in(\alpha-\beta)\cap(\beta-\alpha)$となるが, この右辺は明らかに空集合であるから矛盾.
+        \end{proof}
+        \begin{prop}
+            $\textbf{Ord}$は推移的, 連結な真クラスであり, $\in$によりwell-ordered classとなる.
+        \end{prop}
+        \begin{proof}
+            順序数の元は順序数となるのだったから, 推移性は言えた. また任意に相異なる$\alpha, \beta\in \textbf{Ord}$をとると, $\alpha\subsetneq\beta \lor \beta\subsetneq\alpha$. 順序数の推移的な真部分集合は元であったから, $\alpha\in\beta \lor \beta\in\alpha$. これは連結性を言っている.
+            
+            もし$\textbf{Ord}$が集合であれば, 今いったことより$\textbf{Ord}\in\textbf{Ord}$となり矛盾. したがって真クラスである.
+            
+            $\in$が$\textbf{Ord}$上の順序となるのはstraightforward. 順序数の空でない集合$u$を任意にとる. 正則性から$u\cap v = \varnothing$をみたす$u$の元$v$がある. 言い換えれば, $w\in v$なる$u$の元$w$は存在しない. また, ${\rm Conn}(\textbf{Ord})$だから, $\in$は$u$上の全順序である. すなわち, $v$が$u$の$\in$-最小元である. さらに$\textbf{Ord}$の始切片は${\rm Seg}(\alpha) = \set{x\in\textbf{Ord}|x\in\alpha} = \set{x|x\in\alpha}=\alpha$より集合. よって, $\in$は$\textbf{Ord}$上のwell-orderである.
+        \end{proof}
+        \begin{prop}
+            順序数$\alpha, \beta$に対し, $\alpha\in\beta \leftrightarrow \alpha\subsetneq\beta$.
+        \end{prop}
+        \begin{proof}
+            （$\rightarrow$）$\beta$の推移性より明らか.
+            （$\leftarrow$）順序数の推移的真部分集合は元となるのであった.
+        \end{proof}
+        \begin{notation}
+            以後, 順序数の文脈で$\in$を$<$と書くことがある.
+        \end{notation}
+        \begin{defn}
+            順序数$\alpha$に対して, その\textbf{後続}$\alpha+1$を, \[\alpha+1 = \alpha \cup \{\alpha\}\]で定める.
+            
+            順序数が\textbf{後続型順序数}であるとは, ある順序数の後続として書けるか0であることをいう.\footnote{通常, 0は後続型として扱わない. 本稿では記法の便宜上, 0を後続型とするが, この差異は0の場合を分けて考えることで簡単に解決できる.} 後続型順序数全体のなすクラスを$\textbf{Suc}$で表す.
+            
+            順序数が\textbf{極限順序数}であるとは, 後続型でないことをいう. 極限順序数全体のなすクラスを$\textbf{Lim}$で表す.
+        \end{defn}
+        \begin{prop}
+            順序数の後続は順序数であり, $\textbf{Ord}$における$\in$-直後元である.
+        \end{prop}
+        \begin{proof}
+            順序数となることは, 定義に従って推移性と連結性を場合分けでチェックすればよい. 直後元であることは次のようにしてわかる. $\alpha\in\beta\in\alpha+1$なる$\beta$が存在すれば, $\beta\in\alpha\lor\beta=\alpha$となるが, どちらにせよ正則性に矛盾する.
+        \end{proof}
+        \begin{prop}
+            $\alpha$を極限順序数とする. このとき, $\forall \beta<\alpha(\exists \gamma\in\textbf{Ord}(\beta<\gamma<\alpha))$
+        \end{prop}
+        \begin{proof}
+            背理法. もし$\exists \beta<\alpha(\forall \gamma\in\textbf{Ord}(\lnot (\beta<\gamma<\alpha)))$ならば, $\beta$の直後元は$\alpha$ということになる. 直後元の一意性から$\alpha = \beta+1$となるが, 極限順序数であるから矛盾である.
+        \end{proof}
+        \begin{prop}
+            $u\subset\textbf{Ord}$を空でない集合とする. このとき, $\bigcap u, \bigcup u\in \textbf{Ord}$であり, \[\bigcap u = {\rm min}u\]\[\bigcup u = {\rm sup}u\]である.
+        \end{prop}
+        \begin{proof}
+            順序数クラスはwell-orderedなので${\rm min}u$が存在する. これが交叉と一致することは容易にわかり, よって交叉は順序数である.
+            
+            和について. $x\in y, y\in \bigcup u$とする. 和の定義より, $\exists \alpha\in u(y\in \alpha)$. $\alpha$の推移性より$x\in\alpha\in u$. よって, 和の定義より$x\in \bigcup u$. すなわち${\rm Trans}(\bigcup u)$.
+            
+            $\bigcup u$の元は順序数の元, すなわち順序数なので$\bigcup u\subset\textbf{Ord}$. したがって, ${\rm Conn}(\bigcup u)$. よって$\bigcup u\in\textbf{Ord}$.
+            
+            和が上限となることについて. 上界の元であることは和の定義に従えば出る. 最小性を示そう. そのために$u$の任意の上界の元$\alpha$をとる. 任意の$\beta\in\bigcup u$に対し, 和の定義より$\exists \gamma(\beta\in\gamma\in u)$. このとき上界の定義から$\gamma\leq\alpha$であり, $\beta<\alpha$. $\beta$の任意性から, $\bigcup u\leq\alpha$. よって言えた.
+        \end{proof}
+        \begin{defn}
+            $\omega = \set{\alpha|\alpha+1 \subset {\rm Suc}}$によりクラス$\omega$を定義する.
+            
+            $0 = \varnothing, 1 = \{0\}, 2=\{0, 1\}\dots$と定義する. 
+        \end{defn}
+        \begin{prop}
+            $\omega$は集合である.
+        \end{prop}
+        \begin{proof}
+            無限公理を思い出そう. 空集合を含み, 「後続」に閉じた集合が存在する. それを$a$とする. $a$は取り方から, \[\varnothing\in a \land \forall x\in a (x\cup\{x\}\in a)\]をみたす. 
+            
+            ここで, $A = \set{x|x\cup\{x\}\subset{\rm Suc}\land x\not\in a}$を考えよう. $x\in x\cup \{x\} \subset {\rm Suc}$であるから$A$は${\rm Suc}$の部分クラスである. もし$A$が空でなければ最小元$\alpha$がある. すなわち, $\alpha+1 \subset {\rm Suc} \land \alpha \not\in a$である. $a$の性質から, $\alpha\neq\varnothing$. $\alpha\in{\rm Suc}$であるから$\alpha=\beta+1$と書ける. 
+            
+            $\alpha$の最小性より, $\beta+1\subset {\rm Suc} \to \beta \in a$が成立. $\beta+1 = \alpha \subset \alpha+1 \subset {\rm Suc}$だから結局, $\beta \in a$である. すると, $a$の性質から, $\alpha = \beta +1 \in a$となるがこれは$\alpha$の取り方に矛盾する.
+            
+            よって, $A=\varnothing$である. 言い換えれば, \[\forall x (x\cup\{x\}\subset {\rm Suc} \to x\in a)\]である. 従って, $\omega \subset a$であり, $\omega$は集合の部分クラスだから集合.
+        \end{proof}
+        \begin{rem}
+            ここまでで, 全ての公理が出揃った. 「初めから無限公理を$\omega$は存在する, としておけばよいのでは」などと思った読者もいると思う. 本稿では, 集合論の公理を述べる段階ではあまりにも定義が不足していたので, このような形式をとっている. 
+        \end{rem}
+        \begin{prop}
+            （ペアノの公理）$\omega$は次の性質をもつ.
+            \begin{enumerate}
+                \item $0\in \omega$.
+                \item $\forall n\in \omega(n+1\in \omega)$.
+                \item $\forall n\in \omega(n+1 \neq 0)$.
+                \item $\forall n, m\in \omega(n+1 = m+1 \to n=m)$.
+                \item $\forall A\subset\omega((0\in A\land \forall n\in\omega(n\in A\to n+1\in A))\to A=\omega)$. （数学的帰納法）
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            $\omega = \set{\alpha|\alpha+1\subset{\rm Suc}}$であるから, $\omega \subset {\rm Suc}\subset \textbf{Ord}$であることに注意せよ.
+            \begin{enumerate}
+                \item straightforward.
+                \item $n\in\omega$とする. 定義より$n+1\subset{\rm Suc}$. $n+2 = (n+1)\cup\{n+1\}\subset{\rm Suc}$が容易にわかる. よって$n+1\in\omega$.
+                \item $n+1$は$n$を元に持つから, 空集合たり得ない.
+                \item $n, m\in\omega$とする. $n+1=m+1$ならば, $n\in(m+1)\land m\in(n+1)$. すなわち, $(n=m\lor n<m)\land (n=m\lor m<n)$. 場合分けと正則性から, $n=m$となるしかない.
+                \item $A$を, $0$を含み後続に閉である$\omega$の部分集合とする. $A\neq \omega$ならば, $\omega-A$は空でない$\textbf{Ord}$の部分集合であり, 最小元$r$をもつ. $\omega\subset{\rm Suc}$だから, $r=s+1$とかける. 最小性より, $s\in A$. すると$r= s+1\in A$となり矛盾. 結局, $A=\omega$となる. 
+                
+                （先に$\omega$が順序数であることを示し, 整列クラスの帰納法原理の系として示しても良い.）
+            \end{enumerate}
+        \end{proof}
+        \begin{rem}
+            （$\omega$はメタの自然数と整合する.）
+            
+            以下のことが容易にわかる.
+            \begin{itemize}
+                \item $\langle \omega, +1\rangle$はペアノの公理をみたす.
+                \item $0$は$\omega$の元である. $1$は$\omega$の元である. 以下同様.
+                \item $0<1$, $1<2$, 以下同様.
+                \item $1$は$0$の後続, $2$は$1$の後続, 以下同様.
+                \item $0$は零番目の$\omega$の元である. $1$は一番目の$\omega$の元である. 以下同様. （ここでは, アラビア数字で$\omega$の元を, 漢数字で零から始まるメタの自然数を表している.）
+            \end{itemize}
+            これらの証拠は, メタの自然数における操作と$\omega$上の演算が整合的であることを示している. 以下同様と書いているのは, メタの自然数に対する量化は形式体系の中で表現できない行為であるから, 便宜上そう書いただけである. そもそもメタの自然数と$\omega$が「すべて」整合することは形式体系の内側では表現できない. しかし, どんなメタの自然数をとってきても, それが整合していることを形式体系の内側で検証することは可能である. このことを今, 単に整合と呼んでいるわけである.
+            
+            これは重要な応用を与える. 例えば, $x$が二元集合であることをこれまでは$\exists x_1, x_2 (x_1 \neq x_2 \land x=\{x_1, x_2\})$と表すほかなかったが, これからは$\exists f\colon 2\to x, f$は全単射. とも表せるようになった. これにより, $x$が「有限集合」であることを, 「$\exists n\in\omega, \exists f\colon n\to x, f$は全単射」と表すことができる. というより, \textbf{集合が有限かどうかを, $\omega$を用いずに表現することはできない}. （有限集合を, $\omega$を用いずに定義できるだろうか？）
+            
+            例を挙げよう. 実線型空間$V$の元の族$S$が張る部分空間とは, \[{\rm span}(S)=\set{x\in V|\exists a_1, \dots, a_n \in \rea, \exists s_1, \dots, s_n\in S, x=\sum a_i s_i}\]であるとふつう習う. しかし形式体系に忠実になるなら, \[{\rm span}(S)=\set{x\in V|\exists n\in\omega, \exists a\colon n\to\rea, \exists s\colon n\to S, \mbox{a, sは全単射}, x=\sum a(i) s(i)}\]と書くべきなのである.
+        \end{rem}
+        \begin{prop}
+            $\omega$は最小の極限順序数である. 特に, 極限順序数は存在する.
+        \end{prop}
+        \begin{proof}
+            順序数であることを示す. $\omega \subset \textbf{Ord}$より, ${\rm Conn}(\omega)$. 任意に$\alpha\in\beta\in\omega$とする. $\beta+1\subset{\rm Suc}$. よって$\alpha\in{\rm Suc}$, $\beta\subset{\rm Suc}$. ここで$\alpha, \beta$は順序数であるから, $\alpha\subsetneq\beta$.  よって$\alpha\subsetneq{\rm Suc}$. したがって$\alpha+1\subset {\rm Suc}$. よって$\alpha\in\omega$となり, これは${\rm Trans}(\omega)$を意味する. よって$\omega\in\textbf{Ord}$.
+            
+            極限順序数であることを示す. もし後続型なら, $\omega+1\in {\rm Suc}$となり, $\omega\in\omega$を得る. これは明らかに矛盾であるから, 極限順序数である.
+            
+            最小性を示す. $\alpha < \omega$とすれば, $\alpha$は後続型なのだったから, $\omega$より小さな極限順序数は存在しない.
+        \end{proof}
+        \begin{defn}
+            $\omega$未満の順序数を\textbf{有限順序数}, $\omega$以上の順序数を\textbf{無限順序数}という.
+        \end{defn}
+        
+    \subsection{transfinite recursion}
+    順序数の性質をみてきた. 確かに冒頭に述べたvon Neumann式順序数と整合していることがわかったが, これが何の役に立つのだろうか.
+    
+    その答えは, 順序数論において最も重要な定理, transfinite induction, transfinite recursionにある. これは, 数学的帰納法や, 数学的帰納法による数列の構成をより一般の無限へと一般化する. 数学の至る所で暗黙のうちに使っているこの定理は, それ自身が重要なだけでなくその結果も重要である. 例えば, 任意の整列クラスはある順序数か, \textbf{Ord}と順序同型になる. これは順序数を考える強力なモチベーションとなる. 
+    
+    \begin{notation}
+        この節以降, ギリシャ文字により順序数を表すと約束する. 例えば$\forall \alpha P(\alpha)$と書けば$\forall \alpha\in \textbf{Ord} P(\alpha)$のことと約束する. 
+    \end{notation}
+    \begin{prop}
+        （transfinite induction）
+    
+         $A$を\textbf{Ord}の部分クラスとする. このとき, \[(\forall \alpha ((\forall \beta < \alpha (\beta\in A))\to \alpha\in A))\to (A=\textbf{Ord})\]
+    \end{prop}
+    \begin{proof}
+        整列クラスの帰納法原理から明らかである.
+    \end{proof}
+    \begin{cor}
+        （$\xi$までのtransfinite induction）
+    
+        $\xi$を順序数, $A$を$\xi$の部分集合とする. このとき, \[(\forall \alpha<\xi ((\forall \beta < \alpha (\beta\in A))\to \alpha\in A))\to (A=\xi)\]
+    \end{cor}
+    \begin{proof}
+        整列クラスの帰納法原理から明らかである.
+    \end{proof}
+    \begin{cor}
+        （場合分けでtransfinite induction）
+        
+            $0$で成り立ち, $\alpha$で成り立つなら$\alpha+1$でも成り立ち, 極限順序数$\beta$に対し$\beta$未満の順序数全てで成り立つならば$\beta$でも成り立つような命題は, 順序数全体で成り立っている.
+    \end{cor}
+    \begin{proof}
+        整列クラスの帰納法原理の証明を少しmodifyすればわかる.
+    \end{proof}
+    \begin{prop}
+        （transfinite recursion）
+        
+        $G$を関数とする. \textbf{Ord}上のクラス関数$F$が一意に存在して, \[\forall \alpha(F`\alpha = G`(F\restriction_\alpha))\]をみたす.
+    \end{prop}
+    \begin{proof}
+        $P(f, \alpha)$によって, 「$f$は$\alpha$上の関数であり, $\forall \beta<\alpha(f`\alpha = G`(f\restriction_\alpha))$」と定める. \[F=\set{\langle x, y\rangle| \exists f \exists \alpha (\langle x, y\rangle \in f \land P(f, \alpha))}\]として, $F$が所望のクラス関数であることを見る.
+        
+        $P(f, \alpha)\land P(g, \beta) \land \alpha\leq\beta$とする. このとき, $f=g\restriction_\alpha$.
+        \begin{framed}
+            $\alpha$までのtransfinite inductionで示す. 任意に$\gamma<\alpha$をとる. 任意の$\delta<\gamma$に対し, $f`\delta = g`\delta$と仮定する. すなわち, $f\restriction_\gamma = g\restriction_\gamma$である. このとき$f`\gamma = G`(f\restriction_\gamma) = G`(g\restriction_\gamma) = g`\gamma$である. よって帰納法が回り, $f=g\restriction_\alpha$.
+        \end{framed}
+        
+        $F$は元の形から\textbf{Ord}と\textbf{V}の関係である. 今示したことを用いて$F$の定義をよくみるとこれが関数であることがわかる. これの始域を$D$と呼ぼう.
+        
+        $D$は\textbf{Ord}の部分クラスである. また, 推移的である. 実際$x\in y\in D$とすれば, $y$を始域に含む$f\colon \beta\to\textbf{V}$があり, $x\in y\in \beta$となる. 従って$x\in\beta$であり, $x\in D$. 
+        
+        推移的な\textbf{Ord}の部分クラスは, \textbf{Ord}自身であるか順序数である. 
+        \begin{framed}
+            $D$を推移的な\textbf{Ord}の部分クラスとしよう. $D\neq\textbf{Ord}$ならば, $\gamma\in\textbf{Ord}-D$がとれる. 任意の$D$の元$\alpha$をとる. $\alpha>\gamma$, $\alpha=\gamma$ならば推移性から$\gamma\in D$となり矛盾である. よって$\alpha<\gamma$であるが, このことは$D\subset\gamma$を意味する. 集合の部分クラスは集合だから, $D$は集合である.　$D$は推移的で, \textbf{Ord}の部分クラスだから連結, 従って順序数である.
+        \end{framed}
+        もし$D$が順序数であれば, $h = F\cup\{\langle D, G`(F\restriction_D)\}$が$P(h, D+1)$を満たす. よって${\rm Dom}(F)\neq D$となり矛盾. 結局, $D=\textbf{Ord}$となる.
+        
+        任意の順序数$\alpha$に対し, $\alpha\in D$より, $\alpha$を始域に含む$f\colon \beta\to\textbf{V}$があり, $P(f, \beta)$であるから$F`\alpha= f`\alpha = G`(f\restriction_\alpha) = G`(F\restriction_\alpha)$. よって存在性は言えた.
+        
+        残るは一意性の部分だが, これは証明の最初でやったようにtransfinite inductionをすれば同様に示される.
+    \end{proof}
+    \begin{cor}
+        （$\xi$までのtransfinite recursion）
+        
+        $\xi$を順序数, $G$を関数とする. $\xi$上の関数$F$が一意に存在して, \[\forall \alpha<\xi(F`\alpha = G`(F\restriction_\alpha))\]をみたす.
+    \end{cor}
+    \begin{proof}
+        まず\textbf{Ord}上の関数をtransfinite recursionでとってから, それを$\xi$に制限すればよい. これが一意であることは, $\xi$までのtransfinite inductionでわかる.
+    \end{proof}
+    \begin{cor}
+        （場合分けでtransfinite recursion）
+        
+        $a$を集合, $A, B$を関数とする. \textbf{Ord}上の関数$F$が一意に存在して, $F`0 = a$かつ$F`(\alpha+1)=A`(F`\alpha)$かつ極限順序数$\beta$において$F`\beta=B`(F\restriction_\beta)$をみたす.
+    \end{cor}
+    \begin{proof}
+        $A, B$からtransfinite recursionに用いる$G$をうまく工作すればよい.
+    \end{proof}
+    
+    \begin{prop}\label{ordinalthm}
+        well-ordered set$\langle A, R\rangle$に対し, 一意的な順序数$\gamma$が存在して順序同型$\langle A, R\rangle \cong\langle\gamma, <\rangle$となる.
+    \end{prop}
+    \begin{proof}
+        $G=\set{\langle f, y\rangle|y={\rm min}_R(A-{\rm Rng}(f))}$とする. この関数でtransfinite recursionをして関数$F\colon \textbf{Ord}\to\textbf{V}$を得る. $\forall \alpha (F`\alpha=G`(F\restriction_\alpha)={\rm min}_R(A-{\rm Rng}(F\restriction_\alpha)))$が成り立っている.
+        
+        $\exists \gamma(A-F``\gamma = \varnothing)$である.
+        \begin{framed}
+            $\forall \gamma(A-F``\gamma \neq\varnothing)$と仮定して矛盾を導く. transfinite inductionにより, 任意の順序数$\alpha$に対し$F``\alpha$は$A$の始切片で, $F\restriction_\alpha$は順序保存であることを示そう. 任意の$\beta<\alpha$に対し, $F``\beta$は$A$の始切片で, $F\restriction_\beta$は順序保存であると仮定しよう. このとき, 
+            \begin{itemize}
+                \item $\alpha$が後続型なら, $\alpha = \delta+1$と書ける. $F`\delta = {\rm min}_R(A-{\rm Rng}(F\restriction_\delta))$だから, $F``\alpha$は「始切片に, それに入っていない最小元をくっつけた集合」である. これは$\forall \gamma(A-F``\gamma \neq\varnothing)$と合わせて考えれば始切片となる. $F\restriction_\alpha$が順序保存も明らか.
+                \item $\alpha$が極限順序数なら, $F``\alpha=\bigcup_{\beta<\alpha}F``\beta$. これは始切片である. 実際, $F``\beta = {\rm Seg}(a_\beta)$と書けたとして, $\forall \gamma(A-F``\gamma \neq\varnothing)$だから${\rm sup}_{\beta<\alpha}a_\beta$は存在する. $F``\alpha = {\rm Seg}({\rm sup}a_\beta)$を示せばよい.
+                
+                $F\restriction_\alpha$が順序保存でなければ, 順序が入れ替わってしまう2元$\beta_1, \beta_2$がある. $F\restriction_{{\rm max}\{\beta_1, \beta_2\}+1}$が順序保存であることに矛盾.
+            \end{itemize}
+            inductionが回って示された. $F$が順序保存なので, 特に単射. $F^{-1}\colon{\rm Rng}(F)\to\textbf{Ord}$は全単射となるが, 置換公理から\textbf{Ord}が集合となってしまい矛盾.
+        \end{framed}
+        そこで, そのような$\gamma$のうち最小のものをとる. $\gamma$までのtransfinite inductionで, $F``\gamma = A$, $F\restriction_\gamma$は順序保存がわかる. （上の議論を少しmodifyすればよい.）
+        
+        始域が全順序な全単射順序保存写像は順序同型なので, これは順序同型$\langle A, R\rangle \cong\langle\gamma, <\rangle$を与えている.
+    \end{proof}
+    \begin{defn}
+        well-ordered setに対し, それと順序同型となる一意的な順序数のことを, その\textbf{順序型}という. $\langle A, R\rangle$の順序型を\[{\rm type}(A, R)\]で表す.
+    \end{defn}
+    \begin{prop}\label{ordinalthm2}
+        真クラスであるwell-ordered class$\langle A, R\rangle$に対し, 順序同型$\langle A, R\rangle \cong\langle\textbf{Ord}, <\rangle$が成り立つ.
+    \end{prop}
+    \begin{proof}
+        $G=\set{\langle f, y\rangle|y={\rm min}_R(A-{\rm Rng}(f))}$とする. この関数でtransfinite recursionをして関数$F\colon \textbf{Ord}\to\textbf{V}$を得る. $\forall \alpha (F`\alpha=G`(F\restriction_\alpha)={\rm min}_R(A-{\rm Rng}(F\restriction_\alpha)))$が成り立っている.
+        
+        $F$が全単射順序保存であることを示せば十分である. 置換公理から, $\forall \gamma(A-F``\gamma \neq\varnothing)$でなければならない. すると前命題の枠内と同じtransfinite inductionを用いることで, 任意の順序数$\alpha$に対し$F``\alpha$は$A$の始切片で, $F\restriction_\alpha$は順序保存であることが示される. よって, $F$も順序保存でなければならない. 順序保存ならば単射である.
+        
+        $F$が全射でないならば, $a\in A-{\rm Rng}(F)$として${\rm Rng}(F)\subset {\rm Seg}(a)$. \textbf{Ord}の単射像が集合ということになり置換公理から矛盾する. よって全射でなければならない.
+        
+        以上より, $F$は順序同型を与える.
+    \end{proof}
+    \begin{prop}
+        （比較定理）
+        
+        二つの整列クラス$\langle A, R\rangle, \langle B, S\rangle$は, 順序同型であるか, $A$が$B$の始切片に順序同型であるか, $B$が$A$の始切片に順序同型であるかのいずれかであり, しかもこれらのうち1つしかおこらない. 
+    \end{prop}
+    \begin{proof}
+        真クラスの場合も含めた「順序型」を考えて, \textbf{Ord}上の話に帰着できる. ${\rm type}(A, R)$と${\rm type}(B, S)$を比較して, 等しいなら順序同型, 異なるなら大きい方が小さい方の始切片である.
+    \end{proof}
+
+    \begin{prop}
+        （Zornの補題）
+        
+        $\langle X, <\rangle$を, 任意の全順序部分集合に対して上界が存在する順序集合とする. このとき, $X$には極大元が存在する.\footnote{空集合は自明な全順序部分集合であるから, 特に$X$は空でないことに注意.}
+    \end{prop}
+    \begin{proof}
+        極大元がないと仮定し矛盾を導く. $C$を$X$の全順序部分集合全体のなす集合とする. 各$c\in C$に対して, それより真に大きい上界が存在する. （極大元がないから.） よって選択公理より, 上界の1つを与える関数$f\colon C\to X$がとれる.
+        
+        $x_\lambda = f(\{x_\mu\}_{\mu<\lambda})$としてtransfinite recursionで$\{x_\lambda\}_{\lambda\in\textbf{Ord}}$を構成する. これは\textbf{Ord}から$X$への単射となっているから, 置換公理より矛盾. よって, 極大元は存在する.
+    \end{proof}
+    \begin{prop}
+        （整列可能定理）
+        
+        $X$を集合とする. $X$上のwell-orderが存在する.
+    \end{prop}
+    \begin{proof}
+        $X$上にwell-orderが存在しないと仮定し矛盾を導く. $f\colon \mathfrak{P}(X)-\{\varnothing\}\to X$を選択関数とする.
+        
+        $x_\lambda = f(X-\{x_\mu\}_{\mu<\lambda})$としてtransfinite recursionで$\{x_\lambda\}_{\lambda\in\textbf{Ord}}$を構成する. $X$上のwell-orderは存在しないのだから, ある順序数$\alpha$によって$X=\{x_\mu\}_{\mu<\alpha}$となることは有り得ない. したがって常に$X-\{x_\mu\}_{\mu<\lambda} \neq \varnothing$である. よって\textbf{Ord}から$X$への単射が構成でき, 置換公理より矛盾. $X$上のwell-orderは存在する.
+    \end{proof}
+    
+    \subsection{順序数算術}
+        足し算, 掛け算といった基本的な演算は, 順序数の上でも定義することができる. 足し算は, 二つの順序数を整列集合と思って, 「ならべた」整列集合の順序型と考えられる. 掛け算は, 二つの順序数を整列集合と思って, その直積の辞書式順序による順序型と考えられる. しかし, この定義は少々扱いづらい.
+        
+        そこで我々は, transfinite recursionによる定義を採用する. これは証明に便利である.
+        
+        \begin{defn}
+            $\alpha$を順序数とする. 
+            
+            $\alpha$と順序数の和を, transfinite recursionにより
+            \begin{itemize}
+                \item 0との和を, $\alpha + 0 = \alpha$.
+                \item 0でない後続型との和を, $\alpha + (\beta+1) = (\alpha+\beta)+1$.
+                \item 極限順序数との和を, $\alpha + \gamma = \bigcup_{\beta<\gamma}(\alpha+\beta)$
+            \end{itemize}
+            と定める.
+            
+            $\alpha$と順序数の積を, transfinite recursionにより
+            \begin{itemize}
+                \item 0との積を, $\alpha \cdot 0 = 0$.
+                \item 0でない後続型との積を, $\alpha \cdot (\beta+1) = (\alpha\cdot\beta)+\alpha$.
+                \item 極限順序数との積を, $\alpha \cdot \gamma = \bigcup_{\beta<\gamma}(\alpha\cdot\beta)$
+            \end{itemize}
+            と定める.
+            
+            $\alpha$の順序数の冪を, transfinite recursionにより
+            \begin{itemize}
+                \item 0との冪を, $\alpha^0 = 1$.
+                \item 0でない後続型との冪を, $\alpha^{\beta+1} = \alpha^\beta\cdot\alpha$.
+                \item 0の極限順序数との冪を, $0^\gamma = 0$.
+                \item 0でない順序数の極限順序数との冪を, $\alpha^\gamma = \bigcup_{\beta<\gamma}\alpha^\beta$
+            \end{itemize}
+            と定める.
+        \end{defn}
+        
+        \begin{prop}
+            $\alpha + \beta, \alpha \cdot \beta, \alpha^\beta \in \textbf{Ord}$.
+        \end{prop}
+        \begin{proof}
+            $\beta$についてtransfinite induction.
+            
+            和. $\alpha+0$は$\alpha$で, これは順序数. $\alpha+(\beta+1)=(\alpha+\beta)+1$. 帰納法の仮定より$\alpha+\beta$は順序数で, その後続も順序数. $\alpha+\gamma = \bigcup_{\beta<\gamma}(\alpha+\beta)$は帰納法の仮定より\textbf{Ord}の部分集合の和であるから, 順序数.
+            
+            積, 冪についても同様の議論をする.
+        \end{proof}
+        \begin{prop}
+            $0+\alpha=\alpha+0=\alpha, 0\cdot\alpha=\alpha\cdot0=0, 1\cdot\alpha=\alpha\cdot1=\alpha, 0^0=1, 0^\beta=0(\beta>0), 1^\alpha=1, \alpha^0=1, \alpha^1=\alpha$が成り立つ.
+            
+            また, 1との和$\alpha+1$は後続をとる操作と一致する.
+        \end{prop}
+        \begin{proof}
+            明らかである. transfinite inductionを極限順序数のケースで回すときに, $\alpha = {\rm sup}_{\beta<\alpha}\beta = \bigcup_{\beta<\alpha}\beta$を用いることに注意.
+        \end{proof}
+        \begin{prop}
+            （和の性質）
+        
+            \begin{enumerate}
+                \item $\alpha<\beta \leftrightarrow \gamma+\alpha<\gamma+\beta$.
+                \item $\alpha=\beta \leftrightarrow \gamma+\alpha=\gamma+\beta$.
+                \item $\alpha\leq\beta \to \alpha+\gamma\leq\beta+\gamma$.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            transfinite inductionは, 証明をmodifyすることで「$\alpha+1$からinductionを始めることで, $\alpha$より大きな全ての順序数で命題が成り立つ」という風に使えることに注意する.
+            \begin{enumerate}
+                \item （$\rightarrow$）$\beta$について, $\alpha+1$からのtransfinite induction. $\beta = \alpha+1$のときは$\gamma+\alpha<(\gamma+\alpha)+1=\gamma+(\alpha+1)=\gamma+\beta$より成立. 後続型の場合, $\beta = \delta+1$として$\gamma+\alpha<\gamma+\delta<(\gamma+\delta)+1=\gamma+\beta$より成立. $\alpha+1$以上の極限順序数の場合, $\alpha+1\leq\delta<\beta$を満たす任意の$\delta$に対して$\gamma+\alpha<\gamma+\delta$であるから, $\gamma+\alpha<{\rm sup}_{\delta<\beta}(\gamma+\delta)=\bigcup_{\delta<\beta}(\gamma+\delta)=\gamma+\beta$より成立.
+                
+                （$\leftarrow$）今示したことから明らかである.
+                \item 今示したことから明らかである.
+                \item $\gamma$についてtransfinite induction. $\gamma=0$のときは明らか. 後続型の場合, $\gamma=\delta+1$として$\alpha+\gamma=(\alpha+\delta)+1\leq(\beta+\delta)+1=\beta+\gamma$.（途中の不等号は, 後続をとる操作が順序保存だから従う.） 極限順序数の場合, 帰納法の仮定より$\forall \delta<\gamma(\alpha+\delta\leq\beta+\delta)$である. よって, ${\rm sup}_{\delta<\gamma}(\alpha+\delta)\leq{\rm sup}_{\delta<\gamma}(\beta+\delta)$. （上界の包含を示せば上限の大小がわかる.） 順序数の上限は和だったから, $\alpha+\gamma = \bigcup_{\delta<\gamma}(\alpha+\delta)={\rm sup}_{\delta<\gamma}(\alpha+\delta)\leq{\rm sup}_{\delta<\gamma}(\beta+\delta)=\bigcup_{\delta<\gamma}(\beta+\delta)=\beta+\gamma$.
+            \end{enumerate}
+            なお, $\alpha<\beta \to \alpha+\gamma<\beta+\gamma$は一般に成り立たない. $0+\omega=\omega$だが, $1+\omega=\bigcup_{n<\omega}(1+n)=\omega$だから$0+\omega=1+\omega$.
+        \end{proof}
+        \begin{cor}
+            （差）$\alpha\leq\beta$ならば, $\exists ! \gamma(\alpha+\gamma = \beta)$.
+        \end{cor}
+        \begin{proof}
+            $\set{\delta|\alpha+\delta\geq\beta}$は$\beta$を含むから空でない. よって最小元$\gamma$が存在する.
+            
+            $\gamma =0$の場合. $\alpha\geq\beta$となり, $\alpha=\beta$. したがって$\alpha+\gamma=\beta$.
+            
+            0でない後続型$\gamma=\epsilon+1$の場合. $\alpha+\epsilon<\beta$だから, $\alpha+\gamma\leq\beta$. 一方定義より$\alpha+\gamma\geq\beta$だから, $\alpha+\gamma=\beta$.
+            
+            極限順序数の場合. 任意の$\epsilon<\gamma$に対し$\alpha+\epsilon<\beta$. 従って$\alpha+\gamma = \bigcup_{\epsilon<\gamma}(\alpha+\epsilon)\leq\beta$. 一方定義より$\alpha+\gamma\geq\beta$だから, $\alpha+\gamma=\beta$.
+            
+            存在は言えた. 一意性は前命題の2から, $\alpha+\gamma_1=\beta=\alpha+\gamma_2\to\gamma_1=\gamma_2$なので言えた.
+        \end{proof}
+        \begin{lem}\label{pluswithlimislim}
+            $\alpha$を極限順序数とする. このとき, $\beta+\alpha$は極限順序数である.
+        \end{lem}
+        \begin{proof}
+            $\beta+\alpha$が後続型であると仮定して矛盾を導く. $\alpha>1$であるから, $\beta+\alpha\neq0$. よって$\exists \epsilon(\beta+\alpha=\epsilon+1)$.
+                
+            さて, $\epsilon\in\epsilon+1=\beta+\alpha = \bigcup_{\delta<\alpha}(\beta+\delta)$であるから, ある$\delta<\alpha$に対し$\epsilon\in\beta+\delta$. すなわち, $\beta+\alpha = \epsilon+1 < (\beta+\delta)+1 = \beta+(\delta+1)$. （後続をとる操作は順序保存を用いた.）
+                
+            よって$\alpha<\delta+1$, $\alpha\leq\delta$を得るがこれは矛盾である.
+        \end{proof}
+        \begin{prop}
+            （和の結合性）$\alpha+(\beta+\gamma)=(\alpha+\beta)+\gamma$.
+        \end{prop}
+        \begin{proof}
+            $\gamma$についてtransfinite induction. 極限順序数のケースのみ非自明である.
+            
+            $\gamma$を極限順序数とする. このとき, \ref{pluswithlimislim}より$\beta+\gamma$は極限順序数である.
+            
+            よって$\alpha+(\beta+\gamma) = \bigcup_{\eta<(\beta+\gamma)}(\alpha+\eta)$.
+            
+            また任意の$\delta<\gamma$に対し, $\alpha+(\beta+\delta)=(\alpha+\beta)+\delta$であるから, $(\alpha+\beta)+\gamma=\bigcup_{\delta<\gamma}((\alpha+\beta)+\delta)=\bigcup_{\delta<\gamma}(\alpha+(\beta+\delta))$.
+            
+            最後に, $\bigcup_{\eta<(\beta+\gamma)}(\alpha+\eta) = \bigcup_{\delta<\gamma}(\alpha+(\beta+\delta))$を示せば証明は完了する. 和が上限であることを思い出せば, $\set{\alpha+\eta|\eta<\beta+\gamma}$の上界$A$と$\set{\alpha+(\beta+\delta)|\delta<\gamma}$の上界$B$が一致することを示せばよい.
+            
+            $A\subset B$であること. $\delta<\gamma$であるから, $\beta+\delta<\beta+\gamma$. したがって$A$の元は$B$の元でもある.
+            
+            $B\subset A$であること. $B$の元を任意に$\xi$とする. 定義より$\forall \delta<\gamma(\alpha+(\beta+\delta)\leq\xi)$である.
+            任意に$\eta<\beta+\gamma$をとる.
+            \begin{itemize}
+                \item $\eta<\beta$である場合. $\alpha+\eta<\alpha+\beta=\alpha+(\beta+0)\leq\xi$.
+                \item $\eta\geq\beta$である場合. 前系より$\eta=\beta+\theta$と書ける. $\beta+\theta<\beta+\gamma$だから, $\theta<\gamma$. よって$\alpha+\eta=\alpha+(\beta+\theta)\leq\xi$.
+            \end{itemize}
+            いずれにしろ$\alpha+\eta\leq\xi$なので, $\xi\in A$.
+            
+            以上の議論により$A=B$となり, 題意は示された.
+        \end{proof}
+        \begin{prop}
+            （積の性質）
+            
+            \begin{enumerate}
+                \item $\alpha<\beta\land \gamma>0 \leftrightarrow \gamma\alpha<\gamma\beta$.
+                \item $\gamma\alpha=\gamma\beta \land \gamma>0 \to \alpha=\beta$.
+                \item $\alpha\leq\beta \to \alpha\gamma\leq\beta\gamma$.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            \begin{enumerate}
+                \item （$\rightarrow$）$\beta$について$\alpha+1$からのtransfinite induction. 和の場合とほぼ同様の証明で回る.
+                
+                （$\leftarrow$）$\gamma=0$ならば$\gamma\alpha=\gamma\beta$となり矛盾するから, $\gamma>0$. 今示したことにより$\alpha<\beta$が従う.
+                \item 今示したことにより従う.
+                \item $\gamma$についてtransfinite induction. 和の場合とほぼ同様の証明で回る.
+            \end{enumerate}
+            なお, $\alpha<\beta \to \alpha\gamma<\beta\gamma$は一般に成り立たない. $\gamma=0$の場合はもちろんだが, 例えば$1\cdot\omega = \omega = 2\cdot\omega$なども反例となる.
+        \end{proof}
+        \begin{cor}
+            $\alpha\beta\neq0\leftrightarrow\alpha\neq0\land\beta\neq0$.
+        \end{cor}
+        \begin{proof}
+            順序数に対して, 0でないことは0より大きいことと同値であるから, 前命題を使えばよい.
+        \end{proof}
+        \begin{lem}\label{multwithlimislim}
+            $\alpha\neq0$とし, $\beta$を極限順序数とする. このとき, $\alpha\beta$は極限順序数.
+        \end{lem}
+        \begin{proof}
+            $\alpha\beta\neq0$は明らかだから, $\alpha\beta=\gamma+1$と表せるとして矛盾を導けばよい.
+            
+            $\gamma\in\gamma+1=\alpha\beta=\bigcup_{\delta<\beta}\alpha\delta$であるから, ある$\delta<\beta$に対し$\gamma\in\alpha\delta$. $\beta$は極限順序数だから, $\delta+1<\beta$であることに注意すると, $\alpha\beta=\gamma+1<\alpha\delta+1\leq\alpha(\delta+1)<\alpha\beta$. これは矛盾.
+        \end{proof}
+        \begin{prop}
+            （分配法則）$\alpha(\beta+\gamma)=\alpha\beta+\alpha\gamma$.
+        \end{prop}
+        \begin{proof}
+            $\gamma$についてtransfinite induction. $\gamma$が極限順序数のケース以外は簡単なので, $\gamma$が極限順序数のケースだけ考える. $\alpha=0$の時は自明なので, $\alpha>0$で考える.
+            
+            \ref{pluswithlimislim}, \ref{multwithlimislim}から$\beta+\gamma, \alpha\gamma$は極限順序数. したがって, $\alpha(\beta+\gamma)=\bigcup_{\delta<\beta+\gamma}\alpha\delta, \alpha\beta+\alpha\gamma=\bigcup_{\eta<\alpha\gamma}(\alpha\beta+\eta)$. よって, 和が上限であることを思い出せば, $\set{\alpha\delta|\delta<\beta+\gamma}$の上界$A$と, $\set{\alpha\beta+\eta|\eta<\alpha\gamma}$の上界$B$が一致することを言えばよい.
+            
+            $A\subset B$であること. $A$の任意の元$\xi$をとる. 任意の$\eta<\alpha\gamma$をとる. $\eta\in\alpha\gamma=\bigcup_{\epsilon<\gamma}\alpha\epsilon$だから, ある$\epsilon<\gamma$に対し$\eta<\alpha\epsilon$. $\alpha\beta+\eta<\alpha\beta+\alpha\epsilon=\alpha(\beta+\epsilon)$（帰納法の仮定）. $\beta+\epsilon<\beta+\gamma$であるから, $\alpha\beta+\eta\leq\xi$. すなわち, $\xi\in B$.
+            
+            $B\subset A$であること. $B$の任意の元$\xi$をとる. 任意の$\delta<\beta+\gamma$をとる.
+            \begin{itemize}
+                \item $\delta<\beta$の場合. $\alpha\delta<\alpha\beta=\alpha\beta+0$. また明らかに$0<\alpha\gamma$である.
+                \item $\delta\geq\beta$の場合. $\delta=\beta+\tau$と書ける. このとき, $\tau<\gamma$であるから, 帰納法の仮定より $\alpha\delta=\alpha\beta+\alpha\tau$. また$\alpha\tau<\alpha\gamma$である.
+            \end{itemize}
+            よって, いずれの場合も$\alpha\delta\leq\xi$である. すなわち, $\xi\in A$.
+            
+            以上より, 示された.
+            なお, 逆の分配法則$(\alpha+\beta)\gamma=\alpha\gamma+\beta\gamma$は成り立たない. 実際, $(\omega+1)2 = \omega2+1\neq\omega2+2$が反例となる.
+        \end{proof}
+        \begin{prop}
+            （積の結合性）$\alpha(\beta\gamma)=(\alpha\beta)\gamma$.
+        \end{prop}
+        \begin{proof}
+            $\gamma$についてtransfinite induction. 極限順序数のケース以外は簡単なので, $\gamma$が極限順序数のケースだけ考える. $\alpha\beta=0$の時は自明だから, $\alpha\beta\neq0$の場合を考える.
+            
+            \ref{multwithlimislim}より, $\beta\gamma$は極限順序数. よって$(\alpha\beta)\gamma=\bigcup_{\delta<\gamma}(\alpha\beta)\delta, \alpha(\beta\gamma)=\bigcup_{\eta<\beta\gamma}\alpha\eta$である. 後は分配法則の時のように上界の相等をみればよいが, 証明は同様である.
+        \end{proof}
+        \begin{prop}
+            （商）$\beta\neq0$ならば, $\exists !\gamma \exists !\delta(\alpha=\beta\gamma+\delta\land\delta<\beta)$
+        \end{prop}
+        \begin{proof}
+            存在性をいう. まず$\alpha<\beta$であれば, $\alpha=\beta\cdot0+\alpha$とかけるからよい. $\alpha\geq\beta$の場合を考えよう.
+            
+            $\gamma={\rm sup}\set{\epsilon|\beta\epsilon\leq\alpha}$ を考えよう. $\beta(\alpha+1)=\beta\alpha+\beta>\beta\alpha\geq\alpha$であるから, 右辺の集合は$\alpha+1$を上界に持つ. したがって, $\gamma$は存在し, また0でない.
+            
+            ここで, $\beta\gamma\leq\alpha$である. 言い換えれば, $\gamma$は実は${\rm max}$である.
+            \begin{framed}
+                まず$\gamma$より小さい任意の元$\xi$は, $\beta\xi\leq\alpha$であることを示そう. 任意に$\xi<\gamma$をとり, $\beta\xi>\alpha$と仮定して矛盾を導く. 任意の$\set{\epsilon|\beta\epsilon\leq\alpha}$の元$\epsilon$に対し, $\beta\epsilon\leq\alpha<\beta\xi$であるから$\epsilon<\xi$. よって上限の定義から, $\gamma\leq\xi$. これは$\xi$の取り方に矛盾する.
+                
+                本題に戻ろう. $\gamma$が後続型である場合. $\gamma=\eta+1$と書けるとする. $\eta<\gamma$であるから, 今示したことにより, $\beta\eta\leq\alpha$. もし$\beta\gamma>\alpha$とすれば, $\set{\epsilon|\beta\epsilon\leq\alpha}$の上限は$\eta$となってしまい矛盾するから, $\beta\gamma\leq\alpha$となるしかない.
+                
+                $\gamma$が極限順序数である場合. $\beta\gamma=\bigcup_{\xi<\gamma}\beta\xi={\rm sup}_{\xi<\gamma}\beta\xi\leq\alpha$であるから, 示された.
+            \end{framed}
+            
+            よって$\alpha=\beta\gamma+\delta$なる$\delta$が存在する. もし$\delta\geq\beta$であれば, $\delta=\beta+\delta_0$とかけることになり, $\alpha=\beta(\gamma+1)+\delta_0\geq\beta(\gamma+1)$となる. しかしこれは$\gamma$の最大性に矛盾である. よって, $\delta<\beta$.
+            
+            一意性を示そう. $\alpha=\beta\gamma_1+\delta_1=\beta\gamma_2+\delta_2 (\gamma_1\geq\gamma_2, \delta_1<\beta, \delta_2<\beta)$と書けたとする. $\gamma_1=\gamma_2+\nu$なる$\nu$をとって, $\beta\gamma_1+\delta_1=\beta\gamma_2+\beta\nu+\delta_1=\beta\gamma_2+\delta_2$. したがって$\beta\nu+\delta_1=\delta_2<\beta$. $\nu=0$となるしかなく, よって$\gamma_1=\gamma_2, \delta_1=\delta_2$が従う.
+        \end{proof}
+        \begin{prop}
+            辞書式順序（$\langle a, b\rangle < \langle c, d\rangle \leftrightarrow (a<c\lor (a=c\land b<d))$）により定まるwell-orderの下で,
+            
+            \begin{itemize}
+                \item $\alpha+\beta = {\rm type}((\{0\}\times\alpha)\cup(\{1\}\times\beta))$.
+                \item $\alpha\beta = {\rm type}(\beta\times\alpha)$.
+            \end{itemize}
+        \end{prop}
+        \begin{proof}
+            $\beta$についてtransfinite induction. 
+            
+            \begin{itemize}
+                \item 和. $\beta=0$のとき, $\alpha={\rm type}(\{0\}\times\alpha)$は$a \mapsto \langle 0, a\rangle$なる関数によって順序同型が得られるから言える. 
+                
+                $\beta = \delta+1$とかけるとき, $\alpha+\delta$と$(\{0\}\times\alpha)\cup(\{1\}\times\delta)$は帰納法の仮定より順序同型. そこで, この順序同型を$(\alpha+\delta)\mapsto\langle 1, \delta\rangle$と合わせて拡張することで, $\alpha+\beta$と$(\{0\}\times\alpha)\cup(\{1\}\times\beta)$の順序同型を得られる.
+                
+                $\beta$を極限順序数とする.  $\gamma<\beta$に対し, $f_\gamma\colon(\alpha+\gamma)\to((\{0\}\times\alpha)\cup(\{1\}\times\gamma))$を帰納法の仮定で得られる順序同型とする. ここで任意に$\gamma_1, \gamma_2<\beta, \eta\in{\rm min}(\alpha+\gamma_1, \alpha+\gamma_2)$をとったとき, $f_{\gamma_1}`\eta=f_{\gamma_2}`\eta$となる（すなわち, 整合する）.
+                \begin{framed}
+                    もし整合しないとすれば, ある$\gamma_1, \gamma_2, \eta$が存在して$f_{\gamma_1}`\eta\neq f_{\gamma_2}`\eta$となる. そこで, そのようなもののうち$\eta$が最小となる組を1つとる. 一般性を失わず,　$f_{\gamma_1}`\eta<f_{\gamma_2}`\eta$とする.
+                    
+                    このとき, 最小性から$\eta$未満の順序数では$f_{\gamma_1}$と$f_{\gamma_2}$で送られる先は同じである. すると, $f_\gamma$たちは順序同型であることから, $f_{\gamma_2}`x = f_{\gamma_1}`\eta$となる$x$が存在しないことになる. 実際そのような$x$は存在すれば$\eta$より小さいはずだが, すると$f_{\gamma_2}`x=f_{\gamma_1}`x \neq f_{\gamma_1}`\eta$であるから. このことは, $f_{\gamma_2}$が順序同型であることに反する.
+                \end{framed}
+                よって, $\bigcup_{\gamma<\beta}f_\gamma$は関数$\alpha+\beta\to((\{0\}\times\alpha)\cup(\{1\}\times\beta))$を定め, これは簡単に全射順序保存がわかる. よって順序同型であり, $\alpha+\beta = {\rm type}((\{0\}\times\alpha)\cup(\{1\}\times\beta))$となる.
+                
+                \item 積. 和での議論をmodifyすれば同様に示せる.
+            \end{itemize}
+        \end{proof}
+        \begin{prop}
+            （冪の性質）
+            
+            \begin{enumerate}
+                \item $1\leq\alpha \to 1\leq\alpha^\beta$.
+                \item $\alpha<\beta \land 1<\gamma \to \gamma^\alpha<\gamma^\beta$.
+                \item $\gamma^\alpha<\gamma^\beta \land 1<\gamma \to \alpha<\beta$.
+                \item $\alpha\leq\beta \to \alpha^\gamma\leq\beta^\gamma$.
+                \item $\gamma$を0でない後続型順序数とする. このとき$\alpha<\beta \to \alpha^\gamma<\beta^\gamma$.
+                \item $1<\alpha \to \beta\leq\alpha^\beta$.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            \begin{enumerate}
+                \item $\beta$についてtransfinite induction. $\beta=0$のとき$\alpha^0=1\geq1$. $\beta=\delta+1$とかけるとき$\alpha^{\delta+1}=\alpha^\delta\alpha\geq1\cdot1=1$. $\beta$が極限順序数のとき, $\alpha^\beta={\rm sup}_{\gamma<\beta}\alpha^\gamma \geq\alpha^0=1$.
+                \item $\beta$について$\alpha+1$からのtransfinite induction. $\beta=\alpha+1$のとき$\gamma^\beta=\gamma^\alpha\gamma>\gamma^\alpha\cdot1$. $\beta=\delta+1$とかけるとき$\gamma^\beta=\gamma^\delta\gamma>\gamma^\delta>\gamma^\alpha$. $\beta$が極限順序数のとき, $\gamma^\beta={\rm sup}_{\delta<\beta}\gamma^\delta\geq\gamma^{\alpha+1}>\gamma^\alpha$.
+                \item 今示したことから明らかである.
+                \item $\gamma$についてtransfinite induction. $\gamma=0$のとき明らか. $\gamma=\delta+1$とかけるとき$\beta^\gamma=\beta^\delta\beta\geq\alpha^\delta\alpha=\alpha^\gamma$. $\gamma$が極限順序数のとき, $\beta^\gamma={\rm sup}_{\delta<\gamma}\beta^\delta\geq{\rm sup}_{\delta<\gamma}\alpha^\delta=\alpha^\gamma$. ただし途中の不等号は上界の包含からわかった.
+                
+                なお, $\alpha<\beta\to\alpha^\gamma<\beta^\gamma$は一般には成り立たない. $2^\omega = \omega = 3^\omega$が反例となる.
+                \item $\gamma=\delta+1$とかける. そこで今示したことから$\alpha^\delta\leq\beta^\delta$. よって$\alpha^\gamma=\alpha^\delta\alpha<\alpha^\delta\beta\leq\beta^\delta\beta=\beta^\gamma$.
+                \item $\beta$についてtransfinite induction. $\beta=0$のとき明らか. $\beta=\delta+1$とかけるとき, $\delta\leq\alpha^\delta<\alpha^{\delta+1}$. よって, $\beta=\delta+1\leq\alpha^\beta$. $\beta$が極限順序数のとき, $\alpha^\beta={\rm sup}_{\delta<\beta}\alpha^\delta\geq{\rm sup}_{\delta<\beta}\delta=\beta$. ただし途中の不等号は上界の包含からわかった.
+            \end{enumerate}
+        \end{proof}
+        \begin{prop}
+            （累乗根）$\alpha>1, \beta>0$とする. このとき, $\exists !\delta(\alpha^\delta\leq\beta<\alpha^{\delta+1})$.
+        \end{prop}
+        \begin{proof}
+            $\beta\leq\alpha^\beta<\alpha^{\beta+1}$より, $\beta<\alpha^\gamma$となる$\gamma$は存在する. そのようなもののうち最小のものをとる. このとき$\gamma$は極限順序数ではない. （もしそうならば$\beta\in\bigcup_{\delta<\gamma}\alpha^\delta$となり, ある$\delta<\gamma$に対し$\beta<\alpha^\delta$となるから最小性に矛盾する.） また, $\beta\geq1$だから$\gamma$は0でない. 
+            
+            よって, $\gamma=\delta+1$とかける. 最小性より$\alpha^\delta<\beta$だから, 存在性はいえた.
+            
+            一意性を示す. $\delta_1, \delta_2$がともに条件をみたすとする. $\delta_1<\delta_2$ならば, $\delta_1+1\leq\delta_2$だから$\beta<\alpha^{\delta_1+1}\leq\alpha^\delta_2\leq\beta$となり矛盾. 逆も同様なので, $\delta_1=\delta_2$となる.
+        \end{proof}
+        \begin{lem}\label{powerlimislim}
+            $\alpha>1, \beta>0$とする. $\gamma$を極限順序数とする. このとき, $\alpha^\gamma, \gamma^\beta$は極限順序数.
+        \end{lem}
+        \begin{proof}
+            （前半.）$\alpha^\gamma\neq0$だから, $\alpha^\gamma=\eta+1$とかけたとして矛盾を言えばよい. $\eta\in\alpha^\gamma=\bigcup_{\delta<\gamma}\alpha^\delta$だから, ある$\delta<\gamma$が存在して$\eta<\alpha^\delta$. よって$\alpha^\gamma=\eta+1\leq\alpha^\delta$となるがこれは$\delta<\gamma$に矛盾する.
+            
+            （後半.）$\beta$が極限順序数の場合は前半に帰着されるから, $\beta=\xi+1$とかけるとしてよい. $\gamma^\beta=\gamma^\xi\gamma$. $\gamma^\xi\neq0$だから, \ref{multwithlimislim}より従う.
+        \end{proof}
+        \begin{prop}
+            （指数法則）
+            
+            \begin{itemize}
+                \item $\alpha^\beta \alpha^\gamma = \alpha^{\beta+\gamma}$.
+                \item $(\alpha^\beta)^\gamma = \alpha^{\beta\gamma}$.
+            \end{itemize}
+        \end{prop}
+        \begin{proof}
+            （前半.）$\gamma$についてtransfinite induction. $\gamma$が極限順序数以外のケースは簡単なので, $\gamma$が極限順序数のときのみ考える. また$\alpha=0, 1$のときは自明なので, $\alpha>1$のときを考える. このとき, \ref{pluswithlimislim}, \ref{powerlimislim}より$\beta+\gamma, \alpha^\gamma$は極限順序数である.
+            
+            $\alpha^\beta\alpha^\gamma = {\rm sup}_{\delta<\alpha^\gamma}\alpha^\beta\delta, \alpha^{\beta+\gamma}={\rm sup}_{\eta<\beta+\gamma}\alpha^\eta$である.
+            
+            そこで, $\set{\alpha^\beta\delta|\delta<\alpha^\gamma}$の上界を$A$, $\set{\alpha^\eta|\eta<\beta+\gamma}$の上界を$B$としてこれらが等しいことをいえばよい.
+            
+            $A\subset B$であること. 任意に$\xi\in A$をとる. 任意の$\eta<\beta+\gamma$をとる. $\eta\leq\beta$の場合は, $\alpha^\eta\leq\alpha^\beta\cdot1\leq\xi$. $\eta>\beta$の場合は, $\eta=\beta+\tau$とかけて$\tau<\gamma$であるから帰納法の仮定が使える. $\alpha^\tau<\alpha^\gamma$に注意すれば, $\alpha^\eta=\alpha^\beta\alpha^\tau\leq\xi$. いずれにしろ$\xi\in B$であるから, いえた.
+            
+            $B\subset A$であること. 任意$\xi\in B$をとる. 任意の$\delta<\alpha^\gamma$をとる. このとき$\delta\in\bigcup_{\tau<\gamma}\alpha^\tau$であるから, ある$\tau<\gamma$が存在して$\delta<\alpha^\tau$, $\beta+\tau<\beta+\gamma$. すると帰納法の仮定より$\alpha^\beta\delta<\alpha^\beta\alpha^\tau=\alpha^{\beta+\tau}\leq\xi$. よって$\xi\in A$であるから, いえた.
+            
+            （後半.）$\gamma$についてのtransfinite induction. $\gamma$が極限順序数以外のケースは簡単なので, $\gamma$が極限順序数のときのみ考える. また$\alpha=0, \beta=0$のときは自明なので, $\alpha>0, \beta>0$のときを考える. このとき, \ref{multwithlimislim}より$\beta\gamma$は極限順序数である. また, $\alpha^\beta>0$である.
+            
+            $(\alpha^\beta)^\gamma = {\rm sup}_{\delta<\gamma}(\alpha^\beta)^\delta, \alpha^{\beta\gamma}={\rm sup}_{\eta<\beta\gamma}\alpha^\eta$である. そこで, 同様に上界の相等を確かめればよいが, $\eta<\beta\gamma\to\exists\epsilon<\gamma(\eta<\beta\epsilon)$に気をつければstraightforwardである.
+        \end{proof}
+        \begin{prop}
+            和, 積, 冪は$\omega$上の2項演算として閉じている.
+        \end{prop}
+        \begin{proof}
+            和だけ示す. $m+n\in\omega$を$n$について数学的帰納法. $n=0$のときは$m+n=m\in\omega$. $n=k+1$とかけるときは$m+n=m+(k+1)=(m+k)+1$. 帰納法の仮定より$m+k\in\omega$であり, $\omega$は極限順序数だから$(m+k)+1\in\omega$. よって示された.
+        \end{proof}
+        \begin{prop}
+            $\omega$上の2項演算として, 和, 積は可換.
+        \end{prop}
+        \begin{proof}
+            和. まず, $m+1=1+m$を$m$について数学的帰納法で示す. $m=0$のとき自明. $m=k+1$とかけるとき, $m+1=k+1+1=1+k+1=1+m$. よって示された. 
+            
+            そこで, $m+n=n+m$を$n$について数学的帰納法で示す. $n=0$のときは$m+0=m=0+m$. $n=k+1$とかけるときは$m+n=m+k+1=k+m+1=k+1+m=n+m$. よって示された.
+            
+            積. まず, $(m+1)n=mn+n$を$n$について数学的帰納法で示す. $n=0$のとき自明, $n=k+1$とかけるとき, $(m+1)n=(m+1)(k+1)=(m+1)k+(m+1)=mk+k+m+1=(mk+m)+(k+1)=m(k+1)+(k+1)=mn+n$. よって示された.
+            
+            そこで, $mn=nm$を$n$について数学的帰納法で示す. $n=0$のときは$m0=0=0m$. $n=k+1$とかけるときは$mn=m(k+1)=mk+m=km+m=(k+1)m=nm$. よって示された.
+        \end{proof}
+        
+        \begin{lem}\label{forcantor}
+            $\alpha>1, n\in\omega, 0\leq\beta_0<\beta_1<\dots<\beta_n<\beta, \gamma_i<\alpha(0\leq i\leq n)$とする. このとき,\[\beta>\alpha^{\beta_n}\gamma_n+\dots+\alpha^{\beta_0}\gamma_0\]が成立.
+        \end{lem}
+        \begin{proof}
+            $n$について数学的帰納法. $n=0$のとき, $\beta_0+1\leq\beta$であるから,  $\alpha^{\beta_0}\gamma_0<\alpha^{\beta_0+1}\leq\alpha^\beta$. $n=m+1$とかけるとき, 帰納法の仮定より$\alpha^{\beta_{n-1}}\gamma_{n-1}+\dots+\alpha^{\beta_0}\gamma_0<\alpha^{\beta_n}$である. よって, $\gamma_n+1\leq\alpha$より, $\alpha^{\beta_n}\gamma_n+\dots+\alpha^{\beta_0}\gamma_0<\alpha^{\beta_n}(\gamma_n+1)\leq\alpha^{\beta_n+1}\leq\alpha^\beta$.
+        \end{proof}
+        \begin{prop}
+            （Cantor標準形）
+            
+            $\alpha>1, \beta>0$とする. このとき, $n\in\omega, 0<\gamma_i<\alpha(0\leq i\leq n), 0\leq\beta_0<\beta_1<\dots<\beta_n$なる順序数たちによって\[\beta=\alpha^{\beta_n}\gamma_n+\dots+\alpha^{\beta_0}\gamma_0\]と一意的に表示される. これを$\alpha$を底とする$\beta$の\textbf{Cantor標準形}という.
+        \end{prop}
+        \begin{proof}
+            存在性を示そう. $\beta$についてtransfinite induction. 累乗根の命題により, $\alpha^\delta\leq\beta<\alpha^{\delta+1}$なる$\delta$があり, 商の命題により, $\beta=\alpha^\delta\tau+\nu, (\nu<\alpha^\delta\leq\beta)$と書ける. $\nu=0$なら$\beta=\alpha^\delta\tau$が表示であり, $\nu>0$ならば帰納法の仮定より$\nu$の表示があるから, $\beta=\alpha^\delta\tau+\nu$にその表示を代入したものが$\beta$の表示となる. このとき明らかに, $0<\gamma_n<\alpha, 0\leq\beta_0<\beta_1<\dots<\beta_n$は満たされている.
+            
+            一意性を示そう.  \[\beta=\alpha^{\beta_n}\gamma_n+\dots+\alpha^{\beta_0}\gamma_0=\alpha^{\beta_m'}\gamma_m'+\dots+\alpha^{\beta_0'}\gamma_0'\]とかけたとする. 第2項以降をまとめ, 「最高次の項」のみを残すことで単に\[\beta=\alpha^{\beta_n}\gamma_n+\eta=\alpha^{\beta_m'}\gamma_m'+\eta'\]とする. \ref{forcantor}より, $\eta<\alpha^{\beta_n}$であるから, もし$\beta_n<\beta_m'$ならば\[\beta=\alpha^{\beta_n}\gamma_n+\eta<\alpha^{\beta_n}(\gamma_n+1)\leq\alpha^{\beta_n+1}\leq\alpha^{\beta_m'}\leq\alpha^{\beta_m'}\gamma_m'+\eta'=\beta\]となり矛盾. 同様に, $\beta_m'<\beta_n$も不合理であるから, $\beta_n=\beta_m'$.
+            
+            続いて, もし$\gamma_n<\gamma_m'$ならば\[\beta=\alpha^{\beta_n}\gamma_n+\eta<\alpha^{\beta_n}(\gamma_n+1)\leq\alpha^{\beta_n}\gamma_m'\leq\alpha^{\beta_m'}\gamma_m'+\eta'=\beta\]となり矛盾. 同様に, $\gamma_m'<\gamma_n$も不合理であるから, $\gamma_n=\gamma_m'$.
+            
+            すると$\alpha^{\beta_n}\gamma_n+\eta=\alpha^{\beta_m'}\gamma_m'+\eta=\alpha^{\beta_m'}\gamma_m'+\eta'$であるから, $\eta=\eta'$.
+            \end{proof}
+            
+    \subsection{累積階層}
+        空集合から冪集合をとる操作を超限回繰り返してできる集合たちのなすクラスを, \textbf{WF}という. その集合を作るのにどれくらいの階数冪をとる必要があるかに応じて \textbf{WF}には「階層」が定まる.
+        これを累積階層という.  
+            
+         \begin{defn}
+            以下のtransfinite recursionによって,  $R_\alpha$を定める. これを水準$\alpha$の\textbf{累積階層}という.
+            \begin{itemize}
+                \item $R_0=\varnothing$.
+                \item $R_{\alpha+1}=\mathfrak{P}(R_\alpha)$.
+                \item $R_\gamma=\bigcup_{\alpha<\gamma}R_\alpha$. （$\gamma$は極限順序数.） 
+            \end{itemize}
+            
+            $\textbf{WF}(x)\equiv(\exists\alpha(x\in R_\alpha))$によってクラス\textbf{WF}を定める. 
+            
+            \textbf{WF}の元$x$に対し, その\textbf{階数}${\rm rank}(x)$を, $x\in R_{\alpha+1}$となる最小の$\alpha$として定める.
+         \end{defn}
+         \begin{prop}
+         以下が成立.
+             \begin{enumerate}
+                 \item $R_\alpha$は推移的である.
+                 \item \textbf{WF}は推移的である.
+                 \item $\beta<\alpha$とする. このとき$R_\beta\in R_\alpha$.
+                 \item $\beta\leq\alpha$とする. このとき, $R_\beta\subset R_\alpha$.
+                 \item $x\in \textbf{WF}$とする. このとき$x\in R_\alpha \leftrightarrow {\rm rank}(x)<\alpha$.
+                 \item $x, y\in \textbf{WF}$とする. このとき$x\in y \to {\rm rank}(x)<{\rm rank}(y)$.
+             \end{enumerate}
+         \end{prop}
+         \begin{proof}
+         \begin{enumerate}
+             \item $\alpha$についてtransfinite induction. $\alpha=0$のとき明らか.
+             
+             $\alpha=\beta+1$とかけるとき, $R_\alpha=\mathfrak{P}(R_\beta)$である. 任意に$x\in y\in R_\alpha$をとると, $x\in y\subset R_\beta$, よって$x\in R_\beta$. 帰納法の仮定より$R_\beta$は推移的で, よって$x \subsetneq R_\beta$. よって$x\in \mathfrak{P}(R_\beta)=R_\alpha$. 従って$R_\alpha$は推移的.
+             
+             $\alpha$が極限順序数のとき. 任意に$x\in y\in R_\alpha$とすれば, ある$\beta<\alpha$が存在して$x\in y\in R_\beta$. 帰納法の仮定より$R_\beta$は推移的だから, $x\in R_\beta\subset R_\alpha$. したがって$R_\alpha$は推移的.
+             \item 今示したことから明らか.
+             \item $\alpha$について$\beta+1$からのtransfinite induction. $\alpha=\beta+1$のとき明らか.
+             
+             $\alpha=\gamma+1$とかけるとき, 帰納法の仮定より$R_\beta\in R_\gamma$. 推移性から, $R_\beta\subsetneq R_\gamma$. よって$R_\beta\in \mathfrak{P}(R_\gamma)=R_\alpha$.
+             
+             $\alpha$が極限順序数のとき. $R_\beta\in R_\beta+1\subset \bigcup_{\gamma<\alpha}R_\gamma=R_\alpha$. よって示された.
+             
+             \item $R_\alpha$の推移性と今示したことから明らかである.
+             \item 今示したことから明らか.
+             \item $x\in y\in R_{{\rm rank}(y)+1}=\mathfrak{P}(R_{{\rm rank}(y)})$より, $x\in R_{{\rm rank}(y)}$. したがって, 今示したことから${\rm rank}(x)<{\rm rank}(y)$.
+         \end{enumerate}
+         \end{proof}
+         \begin{prop}
+             $\alpha \in \textbf{WF}$であり, ${\rm rank}(\alpha)=\alpha$.
+         \end{prop}
+         \begin{proof}
+            $\alpha$についてtransfinite induction. 帰納法の仮定より, $\alpha=\set{\beta|\beta<\alpha}\subset\bigcup\set{R_{\beta+1}|\beta<\alpha}\subset R_\alpha$となるから, $\alpha\in R_{\alpha+1}$. したがって, $\alpha\in \textbf{WF}$であり, ${\rm rank}(\alpha)\leq\alpha$.
+            
+            任意の$\beta<\alpha$に対し, $\beta\in\alpha$だから$\beta={\rm rank}(\beta)<{\rm rank}(\alpha)$. よって$\alpha={\rm sup}_{\beta<\alpha}\beta\leq{\rm rank}(\alpha)$となる. 従って$\alpha={\rm rank}(\alpha)$.
+         \end{proof}
+         \begin{prop}
+            $x\in \textbf{WF}$とする. このとき, ${\rm rank}(x)={\rm sup}\set{{\rm rank}(y)+1|y\in x}$.
+         \end{prop}
+         \begin{proof}
+            $\alpha ={\rm sup}\set{{\rm rank}(y)+1|y\in x}$とする.
+            
+            任意に$y\in x$とすれば, ${\rm rank}(y)+1\leq{\rm rank}(x)$だったから, ${\rm rank}(x)\geq{\rm sup}\set{{\rm rank}(y)+1|y\in x}$. 逆に, $x\subset R_\alpha$が簡単にわかるから, $x\in R_{\alpha+1}$. よって${\rm rank}(x)\leq \alpha$. よって${\rm rank}(x)=\alpha$.
+         \end{proof}
+         \begin{lem}\label{wflem}
+            $\forall x(x\in \textbf{WF}\leftrightarrow x\subset \textbf{WF})$.
+         \end{lem}
+         \begin{proof}
+            （$\rightarrow$）\textbf{WF}の推移性からわかる.
+            （$\leftarrow$）$\alpha = {\rm sup}\set{{\rm rank}(y)+1|y\in x}$とする. （$x$が集合であるから, 右辺の${\rm sup}$は存在する.）$x\subset R_\alpha$であるから, $x\in R_{\alpha+1}$. よって$x\in \textbf{WF}$.
+         \end{proof}
+         \begin{prop}
+            任意の集合$A$に対して, $A$を含む推移的な集合であって, 最小のものが存在する. これを$A$の\textbf{推移閉包}といい, ${\rm trcl}(A)$で表す.
+         \end{prop}
+         \begin{proof}
+            $\omega$までのtransfinite recursionによって, $A_0 = A, A_{n+1}=\bigcup A_n$と定め, ${\rm trcl}(A)=\bigcup_{n\in \omega}A_n$とする. 構成より$A\subset {\rm trcl}(A)$である. 
+            
+            任意に$x\in y\in {\rm trcl}(A)$とすれば, ある$n\in\omega$について$y\in A_n$となり, このとき$x\in A_{n+1}$だから$x\in {\rm trcl}(A)$. よって${\rm trcl}(A)$は推移的である. 
+            
+            任意に$A \subset T$なる推移的集合$T$をとる. 数学的帰納法により$\forall n\in\omega(A_n\subset T)$がわかる. よって, ${\rm trcl}(A)\subset T$であるから, 最小性が言えた.
+         \end{proof}
+         \begin{prop}
+            （正則性）$\textbf{V}=\textbf{WF}$.
+         \end{prop}
+         \begin{proof}
+            $\textbf{V}\subset \textbf{WF}$をいえばよい. そこで, 任意に$x\in \textbf{V}$をとる. $T={\rm trcl}(x)$とおく.
+            
+            $T\subset \textbf{WF}$である.
+            \begin{framed}
+                もし$T\not\subset \textbf{WF}$であれば, $S=T-\textbf{WF}\neq\varnothing$. 正則性公理より, $\exists a\in S(a\cap S=\varnothing)$. 任意の$z\in a$をとる. $T$の推移性から$z\in T$で, $a$の取り方から$z \not\in S$. 従って$z\in \textbf{WF}$. すなわち, $a\subset WF$. \ref{wflem}より, $a\in \textbf{WF}$. しかし$a\in S$だからこれは矛盾である.
+            \end{framed}
+            そこで, $x\subset T\subset \textbf{WF}$であるから, \ref{wflem}より$x\in \textbf{WF}$. よって示された.
+         \end{proof}
+         
+    \cleardoublepage
+    
+    \section{基数論}
+    \subsection{定義と性質}
+        集合の濃度とは, 順序数よりも「荒っぽい」集合の元の個数の数え方である. 2つの集合に全単射があれば, その元の個数は同じであると考えて, それによる同値関係の「同値類」として基数を定める, というのが素朴なアプローチであった. しかし, 各同値類は真クラスとなってしまうから, このアプローチはill-definedである. この難点を回避するために, 集合$X$の濃度を「$X$と全単射が存在する最小の順序数」と定めてみよう. 以下では, その理論展開を紹介する. この方法だと, 基数が順序数の部分クラスとして定義されるから, 最初からwell-orderが入っていて非常に便利である.
+        
+         基数論の展開には選択公理を多用することに注意しよう.（順序数論では必要なかった.）
+        
+        \begin{defn}
+            集合$u, v$が\textbf{等濃}であるとは, $u$から$v$への全単射が存在することをいい, $u \sim v$で表す. 
+        \end{defn}
+        \begin{prop}
+            等濃であることは, 同値関係である.
+        \end{prop}
+        \begin{defn}
+            集合$u$の\textbf{濃度}とは, $u$と等濃な順序数のうち最小のものであり, $\abs{u}$で表す. 
+            
+            この定義はwell-definedである. 実際整列可能定理から, $u$と等濃な順序数は少なくとも1つ存在する.
+        \end{defn}
+        \begin{defn}
+            集合の濃度を\textbf{基数}といい, 基数クラスを\[\textbf{Card}(x)\equiv(\exists u(x=\abs{u}))\]と定める. また, 無限基数クラスを\[\textbf{InCard}(x)\equiv(\textbf{Card}(x)\land x\not\in\omega)\]と定める. これらは\textbf{Ord}の部分クラスであるから, 順序の制限によって自然にwell-orderedクラスとなる.
+            
+            濃度が無限基数である集合を\textbf{無限集合}, そうでない集合を\textbf{有限集合}という.
+        \end{defn}
+        \begin{lem}
+            $\alpha$を順序数, $a\subset\alpha$とする. このとき, $\exists \beta\leq\alpha(a\sim\beta)$.
+        \end{lem}
+        \begin{proof}
+            $a$は制限でwell-orderが入るから, \ref{ordinalthm}よりある順序数$\beta$との順序同型$f\colon \beta\to a$がある.
+            $\forall \gamma\in\beta(\gamma\leq f`\gamma)$である. （もしそうでなければ, $\gamma>f`\gamma$となる最小の$\gamma$をとれば, 最小性から$f`\gamma\leq f`(f`\gamma)$だがこれは順序保存に矛盾する.） よって$\beta\leq\alpha$である.
+        \end{proof}
+        \begin{prop}
+            以下が成立.
+            \begin{enumerate}  
+                \item $\alpha\in \textbf{Ord}\to \alpha\geq\abs{\alpha}$.
+                \item $x \sim y \leftrightarrow \abs{x}=\abs{y}$.
+                \item $x\subset y \to \abs{x}\leq\abs{y}$.
+                \item $x$から$y$への単射が存在$\leftrightarrow \abs{x}\leq\abs{y}$.
+                \item $x\neq\varnothing$とする. このとき, $y$から$x$への全射が存在$\leftrightarrow\abs{x}\leq\abs{y}$
+                \item （Bernsteinの定理）$f\colon x\to y$, $g\colon y\to x$が単射なら$x \sim y$.
+                \item $x\in \textbf{Card}\leftrightarrow x=\abs{x}$.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            定義から, $x \sim \abs{x}$であることに注意する.
+            \begin{enumerate}
+                \item $\alpha\sim\alpha$ゆえ, 最小性より$\alpha\geq\abs{\alpha}$.
+                \item $x \sim y$なら, $\abs{x}\sim x\sim y\sim \abs{y}$だから, 最小性より$\abs{x}\leq\abs{y}, \abs{y}\leq\abs{x}$となり$\abs{x}=\abs{y}$. 逆に$\abs{x}=\abs{y}$なら$x\sim \abs{x}\sim \abs{y}\sim y$だからよい.
+                \item $y\sim \abs{y}$だから, 全単射$f\colon y\to\abs{y}$がある. これによる$x$の像$f``x$は, $\abs{y}$の部分集合となる. 前補題から$f``x$はある順序数$\beta<\abs{y}$と同型だが, $\abs{x}=\abs{f``x}=\abs{\beta}\leq\beta\leq\abs{y}$.
+                \item 単射$f\colon x\to y$があるとする. $x\sim f`x\subset y$より, $\abs{x}\leq\abs{y}$. 逆に$\abs{x}\leq\abs{y}$ならば$x\sim\abs{x}\subset\abs{y}\sim y$だから, これをつないで単射$x\to y$を得る.
+                \item 今示したことから, 単射の存在との同値性を言えばいい. retractionとsectionがそれぞれ全射, 単射なのは簡単にわかるから, いえた.
+                \item $\abs{x}\leq\abs{y}\land\abs{x}\geq\abs{y}$なので, $\abs{x}=\abs{y}$.
+                \item （$\rightarrow$）$\exists u(x=\abs{u})$より, $x=\abs{u}=\abs{\abs{u}}=\abs{x}$. 2つ目の等号では$u\sim\abs{u}$を用いた. （$\leftarrow$）by def.
+            \end{enumerate}
+        \end{proof}
+        \begin{cor}
+            相異なる基数$\kappa, \lambda$は等濃でない. このことを標語的に言えば, 「基数は等濃の同値類である」.
+        \end{cor}
+        \begin{proof}
+            $\kappa=\abs{\kappa}, \lambda=\abs{\lambda}$であり, かつ$\kappa \sim \lambda\leftrightarrow\abs{\kappa}=\abs{\lambda}$であるから.
+        \end{proof}
+        \begin{cor}
+            （鳩ノ巣論法）集合$a, b$は$\abs{a}>\abs{b}$をみたすとする. このとき, 任意の関数$f\colon a\to b$に対しある$y\in b$があって, $f`x=y$となる$x$が少なくとも2つ存在する.
+        \end{cor}
+        \begin{proof}
+            命題を否定すれば, 単射である$f$が存在することになる. すると$\abs{a}\leq\abs{b}$であり矛盾.
+        \end{proof}
+        \begin{cor}\label{supcardiscard}
+            基数からなる集合$C\subset \textbf{Card}$の上限${\rm sup}C$は基数.
+        \end{cor}
+        \begin{proof}
+            $\kappa = {\rm sup}C$とおく. $\abs{\kappa}<\kappa$と仮定すると, 上限の定義からある$\lambda\in C$によって$\abs{\kappa}<\lambda$となる. しかし$\lambda\subset\kappa$であるから, $\lambda=\abs{\lambda}\leq\abs{\kappa}<\lambda$となり矛盾. 従って$\abs{\kappa}=\kappa$であり, 基数.
+        \end{proof}
+        \begin{prop}
+            $a\sim b\to \mathfrak{P}(a)\sim\mathfrak{P}(b)$.
+        \end{prop}
+        \begin{proof}
+            $f\colon a\to b$を仮定から得られる全単射とする. このとき$F\colon \mathfrak{P}(a)\to\mathfrak{P}(b)$を, $F`x=f``x$で定義すればこれが全単射となる.
+        \end{proof}
+        \begin{prop}
+            $\abs{a}<\abs{\mathfrak{P}(a)}$.
+        \end{prop}
+        \begin{proof}
+            単射$x\mapsto\{x\}$があるので$\abs{a}\leq\abs{\mathfrak{P}(a)}$. また全単射$f\colon a\to\mathfrak{P}(a)$が存在したとする. 全射性から$\exists b\in a(f`b=\set{x\in a|x\not\in f`x}\in\mathfrak{P}(a))$. しかし, $b\in f`b$ならば$b\not\in f`b$, $b\not\in f`b$ならば$b\in f`b$となり矛盾. よって, 全単射は存在せず, $\abs{a}\neq\abs{\mathfrak{P}(a)}$.
+        \end{proof}
+        \begin{prop}
+            \textbf{Card}, \textbf{InCard}は真クラス.
+        \end{prop}
+        \begin{proof}
+            \textbf{Card}が集合ならば, $\alpha=\bigcup \textbf{Card}$として$\abs{\mathfrak{P}(\alpha)}$を考えると, これは任意の基数より真に大きな基数であり, 不合理である. よって, \textbf{Card}は真クラス. 
+            
+            \textbf{InCard}が集合ならば, \textbf{Card}$\subset\textbf{InCard}\cup\omega$も集合となり不合理. よって\textbf{InCard}は真クラス.
+        \end{proof}
+        
+        \begin{prop}
+            $m, n\in\omega$について, $m\sim n \leftrightarrow m=n$. また, $\omega$の元はすべて基数である.
+        \end{prop}
+        \begin{proof}
+            $m\sim n\to m=n$を$n$の数学的帰納法で示す. $n=0$のとき, $n=\varnothing$だから$m\sim n$なら$m=\varnothing=n$となるしかない. $n=k+1$とかけるとき, 特に$n\neq\varnothing$だから$m\neq\varnothing$. そこで$m=p+1$とかける. 
+        
+            $p+1\sim k+1$であるから, $p\sim k$である.
+            \begin{framed}
+                全単射$f\colon p+1\to k+1$がとれる. $f\restriction_p$の$f^{-1}`k$における値を$f`p$と変えてやれば, $p$から$k$への全単射が得られる.
+            \end{framed}
+            帰納法の仮定より$p=k$. よって$m=n$.
+            
+            いま$\abs{n}\leq n$であり, 今示したことから$\abs{n}\not<n$. よって$\abs{n}=n$, すなわち$n$は基数である.
+        \end{proof}
+        \begin{prop}
+            $\omega$は基数である. 従って最小の無限基数である.
+        \end{prop}
+        \begin{proof}
+        $\omega = {\rm sup}_{n<\omega}n$であるから, \ref{supcardiscard}より従う. 
+        最小の無限基数なのは定義からただちにわかる.
+        \end{proof}
+        \begin{defn}
+            $\omega$と等濃な集合を\textbf{可算集合}という. また, 可算集合か有限集合である集合を\textbf{高々可算集合}という. 高々可算でない集合を, \textbf{非可算無限集合}という.
+        \end{defn}
+        \begin{prop}
+            任意の無限集合は, 可算集合を含む.
+        \end{prop}
+        \begin{proof}
+            無限集合は, $\omega$以上の順序数への全単射$f$がある. そこで, $f^{-1}``\omega$を考えればよい.
+        \end{proof}
+        \begin{prop}
+            （Dedekind-infinite）集合が無限集合であることには, ある真部分集合と等濃であることが必要十分である.
+        \end{prop}
+        \begin{proof}
+            $X$を無限集合とする. 可算部分集合$A=\set{a_0, a_1, \dots}$をとる. $X$とその真部分集合$X-\{a_0\}$の間に, $X-A$の元は動かさず, $a_i\mapsto a_{i+1}$とする関数をつくればこれが全単射を与える. よって言えた.
+            
+            逆に, $X$を有限集合とする. 任意の真部分集合$A$をとる. $a\in X-A$がある. $\abs{A}$から$A$への全単射をとり, $\abs{A}+1$から$A\cup\{a\}$への全単射をつくると, $A\cup\{a\}\subset X$より$\abs{A}<\abs{A}+1=\abs{A\cup\{a\}}\leq\abs{X}<\omega$. よって$X$と$A$は等濃でない. 
+        \end{proof}
+        \begin{defn}
+            \textbf{InCard}はwell-ordered真クラスなので, \ref{ordisounique}, \ref{ordinalthm2}より\textbf{Ord}からの順序同型が一意に存在する. これを\[\aleph\colon \textbf{Ord}\to\textbf{InCard}\]とし, \textbf{アレフ関数}という. $\aleph`\alpha$のことを単に$\aleph_\alpha$と書く. $\aleph_\alpha$が順序数であることを強調したい場合は$\omega_\alpha$とも書く. 
+            
+            基数を$\aleph_\alpha$の形で書いたとき, $\alpha$が後続型順序数か極限順序数であるかに応じて, \textbf{後続型基数}, \textbf{極限基数}という.
+            
+            \begin{itemize}
+                \item $\beth_0 = \aleph_0 =\omega$.
+                \item $\beth_{\alpha+1}=\abs{\mathfrak{P}(\beth_\alpha)}$.
+                \item $\beth_\gamma = {\rm sup}_{\beta<\gamma}\beth_\beta$. （$\gamma$は極限順序数）
+            \end{itemize}
+            なるtransfinite recursionにより定まる関数を\[\beth\colon \textbf{Ord}\to \textbf{InCard}\]とし, \textbf{ベート関数}という. \ref{supcardiscard}より, この定義はwell-definedであることがわかる.
+        \end{defn}
+        \begin{lem}
+            極限順序数$\gamma$に対し, $\aleph_\gamma = {\rm sup}_{\beta<\gamma}\aleph_\beta$.
+        \end{lem}
+        \begin{proof}
+            \ref{supcardiscard}より, 右辺は無限基数である. よって, 右辺はある順序数$\alpha\geq\gamma$によって$\aleph_\alpha$とかける.
+            
+            $\aleph_\gamma$は$\set{\aleph_\beta|\beta<\gamma}$の上界の元であるから, 上限の定義より$\aleph_\alpha\leq\aleph_\gamma$. アレフ関数は順序同型だから, $\alpha\leq\gamma$. 従って$\alpha=\gamma$となり, 示された.
+        \end{proof}
+        \begin{prop}
+            $\aleph_\alpha\leq\beth_\alpha$.
+        \end{prop}
+        \begin{proof}
+            $\alpha$についてtransfinite induction. $\alpha=0$ではby def.
+            
+            $\alpha=\beta+1$とかけるとき, $\aleph_\alpha\leq\beth_\alpha<\beth_{\alpha+1}$であるから, $\aleph$の定義から $\aleph_{\alpha+1}\leq\beth_{\alpha+1}$となる.
+            
+            $\alpha$が極限順序数のとき, $\aleph_\alpha={\rm sup}_{\beta<\alpha}\aleph_\beta\leq{\rm sup}_{\beta<\alpha}\beth_\beta=\beth_\alpha$となる. よって言えた.
+        \end{proof}
+        \begin{rem}
+            \textbf{一般連続体仮説, generalized continuum hypothesis}とは$\aleph=\beth$という主張のことで, GCHと書く.
+            
+            \textbf{連続体仮説, continuum hypothesis}とは$\aleph_1=\beth_1$という主張のことで, CHと書く.
+            
+            我々の集合論の体系では証明も反証もされていない. 実は, これらの命題は「集合論が無矛盾であれば, 証明も反証もできない命題である」ことが知られている. このような命題を独立命題という. （この主張の正確な意味については, \cite{kunenset}, \cite{arai}などを参照.）
+            
+            「証明も反証もできないのであれば, それを集合論の公理の中に入れてしまっても問題は生じない. そうしてしまえばいいのでは？」と思うかもしれない. 実際, 何を「真理」だと思うかは個人の哲学的な問題である. しかし, 独立命題$A, B$があったとして$A\land B$は独立命題でないかもしれないことに注意が必要である. 安易に独立命題を公理に入れていくと, 他の独立だった命題が証明可能（あるいは反証可能）になってしまいうる. だからむしろ, 我々が調べるべきなのは, 独立命題たちの間の含意のネットワークである. これが数学基礎論における集合論の一大関心である.
+        \end{rem}
+    \subsection{基数算術}
+        集合の直和, 直積などの操作で濃度がどう変化するかを調べるのは, 応用上重要である. これを基数算術として定式化する. 基数算術と順序数算術は\textbf{違う}ことに注意しよう. たとえば, $\omega+\omega$は順序数算術としては$\omega\cdot2$だが, 基数算術としては$\omega$である.  
+        \begin{notation}
+            この節以降, 断りなく和, 積, 冪の記法を用いた場合基数の演算によるものとし, 順序数の演算によるものはその都度指摘する.
+            
+            また, $\kappa, \lambda, \nu$は基数を表すものとする.
+        \end{notation}
+        \begin{defn}
+            $J$で添字づけられた基数の族$\set{\kappa_j}_{j\in J}$に対し, その\textbf{和}を\[\sum_{j\in J}\kappa_j = \abs{\coprod_{j\in J}\kappa_j}\]その\textbf{積}を\[\bigotimes_{j\in J}\kappa_j = \abs{\prod_{j\in J}\kappa_j}\]とする.
+            
+            基数$\kappa, \lambda$に対し, これを$2$で添字づけられた基数の族と思って和, 積を定め, $\kappa+\lambda, \kappa\cdot\lambda$と書く. また, その\textbf{冪}を\[\kappa^\lambda = \abs{\set{f|f\colon \lambda\to\kappa}}\]とする. 
+        \end{defn}
+        \begin{rem}
+            基数の等式, 不等式を示せば, 同型$x\sim \abs{x}$を通じてその濃度をもつ集合たちについての主張を得られる. また, 集合の同型$x\sim y$があればこれを通じて他の集合たちについての主張を得られる. このようなことは今後断りなく用いる.
+            
+            例えば, $A, B$の2項直積と添字づけられた族としての直積は自然な同型があるから, 濃度についての主張について$A\times B$が「どちらの意味での直積か」は問題にならない（どちらでもよい）.
+        \end{rem}
+        \begin{prop}
+            基数演算について, 以下が成立.
+            \begin{enumerate}
+                \item 添字づけられた和, 積はその添字づけの順番によらず一定である. すなわち, 全単射$\phi\colon J\to J$により和, 積の順序を入れ替えても演算の結果はかわらない. 特に, $\kappa+\lambda=\lambda+\kappa, \kappa\cdot\lambda=\lambda\cdot\kappa$.
+                \item 添字づけられた和, 積は, その添字集合のdisjointな分割$J=\bigcup_{k\in K} I_k$があるとき, 各成分$I_k$で演算してからそれらに渡って演算しても結果は変わらない. 特に, $\kappa+(\lambda+\nu)=(\kappa+\lambda)+\nu, \kappa\cdot(\lambda\cdot\nu)=(\kappa\cdot\lambda)\cdot\nu$.
+                \item $\lambda\cdot(\sum\kappa_j)=\sum(\lambda\cdot\kappa_j)$. 特に, $\lambda\cdot(\kappa_1+\kappa_2)=\lambda\cdot\kappa_1+\lambda\cdot\kappa_2$.
+                \item $(\bigotimes\kappa_j)^\lambda=\bigotimes(\kappa_j^\lambda)$. 特に, $(\kappa_1\cdot\kappa_2)^\lambda=\kappa_1^\lambda\cdot\kappa_2^\lambda$.
+                \item $\lambda^{\sum\kappa_j}=\bigotimes(\lambda^{\kappa_j})$. 特に, $\lambda^{\kappa_1+\kappa_2}=\lambda^{\kappa_1}\cdot\lambda^{\kappa_2}$.
+                \item $(\kappa^\lambda)^\nu=\kappa^{\lambda\cdot\nu}$.
+                \item $\sum_{j\in J}\kappa=\kappa\cdot\abs{J}$.
+                \item $\bigotimes_{j\in J}\kappa=\kappa^{\abs{J}}$.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            濃度の一致をいうには, 具体的に全単射を構成できればよい. 全て自然に構成できる.
+            \begin{enumerate}
+                \item 和. $\langle j, t\rangle \mapsto \langle \phi`j, t\rangle$で同型. 積. 同様.
+                \item 和. 包含を$\iota\colon I_k\to J$とすれば, $\langle k, \langle i_k, t\rangle \rangle\mapsto \langle \iota`k, t \rangle$により$\coprod_{k\in K}\coprod_{i_k\in I_k}\kappa_{i_k} \sim \coprod_{j\in J}\kappa_j$である. $\sum_{i_k\in I_k}\kappa_{i_k}\sim\coprod_{i_k\in I_k}\kappa_{i_k}$だから, 結局$\sum_{k\in K}\sum_{i_k\in I_k}\kappa_{i_k} = \sum_{j\in J}\kappa_j$となる. 積. 同様.
+                \item $\langle x, \langle j, t\rangle \mapsto \langle j, \langle x, t\rangle \rangle$で同型.
+                \item 射影$p_i\colon \prod_{j\in J}\kappa_j\to \kappa_i$とする. $f \mapsto (j\mapsto f\circ p_j)$で同型.
+                \item 入射$\iota_i\colon \kappa_i\to\coprod_{j\in J}\kappa_j$とする. $f \mapsto (j\mapsto f\circ\iota_j$で同型.
+                \item $f \mapsto (\langle x, y\rangle \mapsto (f`x)`y)$によって$\set{f|f\colon \nu\to \set{g|g\colon \lambda\to\kappa}}\to \set{h|h\colon \nu\times\lambda\to\kappa}$の同型を得る. $\set{g|g\colon \lambda\to\kappa}\sim\kappa^\lambda$, $\nu\times\lambda\sim\nu\cdot\lambda$の同型をかませてやれば所望の同型$\set{f|f\colon \nu\to\kappa^\lambda}\to\set{h|h\colon\lambda\cdot\nu\to\kappa}$を得る.
+                \item $\coprod_{j\in J}\kappa\sim\kappa\times J$を$\langle j, x\rangle \mapsto \langle x, j\rangle$なる同型で言えるから, $\kappa\cdot\abs{J}\sim \kappa\times J$から従う.
+                \item $\prod_{j\in J}\kappa\sim \set{g|g\colon J\to\kappa}$を$f \mapsto f$なる同型で言えるから, $\set{g|g\colon J\to\kappa}\sim \kappa^{\abs{J}}$から従う.
+            \end{enumerate}
+        \end{proof}
+        \begin{prop}
+            $\kappa\leq\lambda$とする. 以下が成立.
+            \begin{enumerate}
+                \item $\kappa+\nu\leq\lambda+\nu$.
+                \item $\kappa\cdot\nu\leq\lambda\cdot\nu$.
+                \item $\kappa^\nu\leq\lambda^\nu$.
+                \item $\nu^\kappa\leq\nu^\lambda$.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            濃度の大小は, 単射の存在と同値であった. $\kappa\leq\lambda$より, 包含写像$f\colon \kappa\to\lambda$（単射）がある.
+            \begin{enumerate}
+                \item $\kappa$成分の元を$\langle 0, x\rangle \mapsto \langle 0, f`x\rangle$で送り, $\nu$成分の元を動かさない単射$\kappa\coprod\nu\to\lambda\coprod\nu$がある.
+                \item $\langle x, y\rangle \mapsto \langle f`x, y\rangle$によって単射$\kappa\times\nu\to\lambda\times\nu$を得る.
+                \item 単射$g\mapsto f\circ g$がある.
+                \item $\nu=0$のときは自明だから省く. $g\colon \kappa\to\nu$を, 「$\kappa$の元は$g$で送り, $\lambda-\kappa$の元は0に送る」写像に送れば単射を得る.
+            \end{enumerate}
+            不等号を真の不等号にできないことは, 有限基数を用いた反例で容易にわかる.
+        \end{proof}
+        \begin{prop}
+            $\forall j\in J(\kappa_j<\lambda_j)$とする. このとき, $\sum\kappa_j<\bigotimes\lambda_j$.
+        \end{prop}
+        \begin{proof}
+            任意の関数$f\colon \coprod_{j\in J}\kappa_j\to\prod_{j\in J}\lambda_j$が全射でないことを言えばよい. 射影, 入射を$p_j, \iota_j$とする.
+            
+            $\kappa_j<\lambda_j$であるから, $f_j\colon \kappa_j\to\lambda_j, x\mapsto p_j`(f`(\iota_j`x))$は全射でない. よって$f_j$の終域に含まれない元$y_j$がある. そこで$y=(y_j)_{j\in J}\in \prod_{j\in J}\lambda_j$とすれば, 構成より$f$の終域に$y$は入っていない. ゆえに$f$は全射でない.
+        \end{proof}
+        \begin{prop}
+            2つの有限基数に対し, 基数としての和, 積, 冪は順序数としてのそれと一致する.
+        \end{prop}
+        \begin{proof}
+            $m, n$を有限基数とする. 和のみ示す. ここだけ, 基数の和を$\oplus$で表すことにする.
+            
+            $m\oplus n=m+n$を$n$について数学的帰納法で示す. $n=0$のとき, $n=\varnothing$だから$m\coprod 0\sim m=m+0$. よって$m\oplus n=m+n$.
+            
+            $n=k+1$とかけるとき, $k+1=k\cup\{k\}$に注意すれば$m\coprod n\sim m\coprod k\coprod 1\sim m+k\coprod1\sim m+k+1=m+n$. よって$m\oplus n=m+n$. よって示された.
+        \end{proof}
+        \begin{lem}
+            無限基数は極限順序数である.
+        \end{lem}
+        \begin{proof}
+            もし後続型なら, $\kappa=\alpha\cup\{\alpha\}$とかける. $\omega\leq\alpha$だから, 全単射$\kappa\to\alpha$として$n\mapsto n+1, \alpha\mapsto 0, \beta\mapsto\beta(\beta\geq\omega)$がとれる. しかし$\abs{\kappa}<\kappa$となり矛盾である.
+        \end{proof}
+        \begin{prop}
+            無限基数$\kappa$に対し, $\kappa\cdot\kappa=\kappa$.
+        \end{prop}
+        \begin{proof}
+            $\kappa$についてtransfinite induction. （正確に言えば, $\kappa=\aleph_\alpha$としたときの$\alpha$についてtransfinite inductionである.）$\kappa$未満の無限基数について成り立っているとする. すると, 任意の順序数$\alpha<\kappa$に対し$\abs{\alpha\times\alpha}=\abs{\alpha}\cdot\abs{\alpha}<\kappa$. （最後の不等号は, $\alpha$が有限順序数なら明らか. 無限順序数なら帰納法の仮定が使える.）
+            
+            $\prec$を辞書式順序として, $\kappa\times\kappa$上に, \[\langle \alpha, \beta\rangle\lhd\langle \gamma, \delta\rangle \leftrightarrow {\rm max}(\alpha, \beta)<{\rm max}(\gamma, \delta) \lor ({\rm max}(\alpha, \beta)={\rm max}(\gamma, \delta)\land(\langle \alpha, \beta\rangle\prec\langle \gamma, \delta\rangle))\]で$\lhd$を定めると, これはwell-order.
+            \begin{framed}
+                順序であることは, 簡単にわかる.
+            
+                任意に空でない部分集合$S\subset \kappa\times\kappa$をとる. $\set{{\rm max}(\alpha, \beta)|\langle \alpha, \beta\rangle\in S}$の最小元を$\gamma$とする. $S$の元であって, 成分の${\rm max}$が$\gamma$となるものは
+                \begin{enumerate}
+                    \item $\langle \alpha, \gamma\rangle(\alpha<\gamma)$型.
+                    \item $\langle \gamma, \alpha\rangle(\alpha<\gamma)$型.
+                    \item $\langle \gamma, \gamma\rangle$型.
+                \end{enumerate}
+                の3通りがあり得て, この順に$\lhd$-大きい. 1型が空でなければ, そのうち最も$\alpha$が小さい元が$S$の$\lhd$-最小元である. 1型が空なら, 2型が空でなければ, そのうち最も$\alpha$が小さい元が$S$の$\lhd$-最小元である. 2型が空なら, 3型が$\lhd$-最小元である.　（これらが全て空ということは有り得ない.）
+                
+                結局最小元がとれるので, $\lhd$はwell-order.
+            \end{framed}
+            
+            どの$\langle \alpha, \beta\rangle\in \kappa\times\kappa$も, それより$\lhd$-小な元は高々$\abs{{\rm max}(\alpha, \beta)+1\cdot{\rm max}(\alpha, \beta)+1}$個しかない. これは$\kappa$より小さい.（このことの証明に, $\kappa$が後続型順序数でないことと帰納法の仮定を用いた.） 言い換えれば, このwell-ordered setの任意の始切片は$\kappa$未満の順序型をもつ. よって, ${\rm type}(\kappa\times\kappa, \lhd)\leq\kappa$である. 
+            
+            従って$\abs{\kappa\times\kappa}\leq\kappa$である. 逆向きの不等号は明らかである.
+        \end{proof}
+        \begin{cor}
+            片方が無限基数で, 両方とも$0$でない基数の組に対し$\kappa+\lambda=\kappa\cdot\lambda={\rm max}(\kappa, \lambda)$
+        \end{cor}
+        \begin{proof}
+            積. ${\rm max}(\kappa, \lambda)\leq\kappa\cdot\lambda\leq{\rm max}(\kappa, \lambda)\cdot{\rm max}(\kappa, \lambda)={\rm max}(\kappa, \lambda)$より, $\kappa\cdot\lambda={\rm max}(\kappa, \lambda)$.
+            
+            和. ${\rm max}(\kappa, \lambda)\leq\kappa+\lambda\leq{\rm max}(\kappa, \lambda)+{\rm max}(\kappa, \lambda)={\rm max}(\kappa, \lambda)\cdot 2\leq{\rm max}(\kappa, \lambda)\cdot{\rm max}(\kappa, \lambda)={\rm max}(\kappa, \lambda)$より, $\kappa+\lambda={\rm max}(\kappa, \lambda)$.
+        \end{proof}
+        \begin{prop}\label{cardlem}
+            $\kappa$を無限基数とする. 高々$\kappa$濃度の高々$\kappa$個の集合の和は, 高々$\kappa$の濃度をもつ.
+        \end{prop}
+        \begin{proof}
+            $\abs{J}\leq\kappa, \forall j\in J(\abs{X_j}\leq\kappa)$とする. 単射$f\colon J\to \kappa$, $g_j\colon X_j\to \kappa$をとる. また, $\bigcup_{j\in J}X_j$の元$x$に対し, $x\in X_j$である番号$j$を与える選択関数$h$をとっておく.
+            
+            $\bigcup_{j\in J}X_j\to \kappa\times\kappa, x\to \langle f`(h`x), g_j`x\rangle$は単射だから, $\abs{\bigcup_{j\in J}X_j}\leq\kappa\cdot\kappa=\kappa$.
+        \end{proof}
+        \begin{prop}
+            $2^\lambda=\abs{\mathfrak{P}(\lambda)}$.
+        \end{prop}
+        \begin{proof}
+            $f\mapsto f``1$が全単射を与える.
+        \end{proof}
+        \begin{prop}
+            $\kappa$を無限基数とする. $\kappa$の有限部分集合は$\kappa$個ある.
+        \end{prop}
+        \begin{proof}
+            $\kappa$の$n$元集合の個数$\kappa_n$は, $\kappa\cdot\dots\cdot\kappa\geq\kappa_n\geq\kappa$より$\kappa_n=\kappa$個である. 有限部分集合の個数$\lambda$は\ref{cardlem}より$\kappa\geq\lambda\geq\kappa$と評価でき, よって$\kappa$個である.
+        \end{proof}
+        
+    \subsection{正則基数}
+        順序数の共終数とは, その順序数を下から追いかけた時に追いつける最短のルートの順序型である, といえる. これはその順序数の「追いつきやすさ」を表しているといえる. 
+        
+        極限順序数がその共終数と一致する場合, 正則であるという. このような順序数は振る舞いが良い. 例えば, $\aleph_\omega = {\rm sup}\aleph_n$のように, ある基数$\kappa$が$\kappa$未満の基数を$\kappa$未満回足し合わせたときに$\kappa$にたどり着けてしまう, という現象が起こりうる. $\kappa$が正則なら, こういった異常事態は防ぐことができる.
+        
+        \begin{defn}
+            $\alpha, \beta$を順序数とする. 
+            \begin{itemize}
+                \item $f\colon \alpha\to\beta$が\textbf{共終関数}とは, ${\rm Rng}(f)$が$\beta$で非有界, すなわち$\forall \gamma\in\beta\exists \delta\in\alpha(f`\delta\geq\gamma)$であることをいう.
+                \item $\beta$の\textbf{共終数}とは, そこから$\beta$への\textbf{共終関数}が存在するような最小の順序数である. ${\rm cf}(\beta)$と書く. 恒等関数は共終関数だから, 共終数は必ず存在する.
+                \item 順序数$\beta$が\textbf{正則}とは, 極限順序数でありかつ$\beta={\rm cf}(\beta)$をみたすことをいう.
+                \item 基数$\kappa$が\textbf{特異}とは, 順序数として正則でないことをいう.
+            \end{itemize}
+        \end{defn}
+        \begin{prop}
+        以下が成立. 
+            \begin{enumerate}
+                \item ${\rm cf}(\beta)\leq\beta$.
+                \item ${\rm cf}(0)=0, {\rm cf}(\beta+1)=1$. 極限順序数の共終数は極限順序数.
+                \item 順序保存な共終関数$f\colon {\rm cf}(\beta)\to\beta$が存在する.
+                \item $\alpha$を極限順序数とする. 順序保存な共終関数$f\colon \alpha\to\beta$があれば, ${\rm cf}(\alpha)={\rm cf}(\beta)$.
+                \item ${\rm cf}({\rm cf}(\beta))={\rm cf}(\beta)$.
+                \item 正則順序数は, 基数である.
+                \item 後続型基数は正則.
+                \item 極限基数$\aleph_\alpha$に対し, ${\rm cf}(\aleph_\alpha)={\rm cf}(\alpha)$.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            \begin{enumerate}
+                \item 恒等関数が共終関数だから.
+                \item 今示したことから, 0の共終数は0. また後続型順序数については, $0\mapsto \beta$とすればこれが共終関数. もし極限順序数$\beta$の共終数が後続型なら, $0$は有り得ないから${\rm cf}(\beta)=\alpha+1$とかける. 共終関数$\alpha+1\to \beta$の$\alpha$への制限も共終関数になっているはずである. （$\beta$は極限順序数であるから, 最大元を持たない. だから, この関数の共終性に$\alpha$は寄与していない.）これは共終数の最小性に矛盾する. 
+                
+                \item 共終関数$f\colon {\rm cf}(\beta)\to\beta$に対し, $g\colon{\rm cf}(\beta)\to\beta$を${\rm cf}(\beta)$までのtransfinite recursionによって$g`\gamma={\rm max}(f`\gamma, {\rm sup}_{\delta<\gamma}((g`\delta)+1))$と定める.
+                
+                これが$\beta$への関数であれば, 定め方から順序保存な共終関数であることはただちに従う. ある$\gamma$に対し${\rm sup}_{\delta<\gamma}((g`\delta)+1)\geq\beta$となると仮定し矛盾を導く. そのようなもののうち最小の$\gamma<{\rm cf}(\beta)$をとる. $g`\gamma>\beta$であれば上限の定義からある$\delta<\gamma$が存在して$(g`\delta)+1>\beta$. $g`\delta\geq\beta$となり最小性に矛盾する. よって, $g`\gamma={\rm sup}_{\delta<\gamma}((g`\delta)+1)=\beta$となる. すると, これは$\gamma$から$\beta$への共終関数であるから, ${\rm cf}(\beta)\leq\gamma$となり矛盾. よって言えた. 
+                
+                \item 共終関数${\rm cf}(\alpha)\to \alpha$と$f$を合成すると共終関数である. よって定義より${\rm cf}(\beta)\leq{\rm cf}(\alpha)$. 
+                
+                $g\colon {\rm cf}(\beta)\to\beta$を共終関数とし, $h\colon {\rm cf}(\beta)\to\alpha$を$h`\gamma = {\rm min}\set{\eta\in\alpha|f`\eta>g`\gamma}$として定める. $\alpha$が極限順序数で, $f$が共終関数だから右辺の集合は空でなく, $h$はwell-defined.
+                
+                任意に$\alpha$の元$x$をとる. $g$は共終関数だから, ある$y\in{\rm cf}(\beta)$によって$g`y\geq f`x$となる. このとき$h`y={\rm min}\set{\eta\in\alpha|f`\eta>g`y}$であり, $f$の順序保存性より$\set{\eta\in\alpha|f`\eta>g`y}$は$x$を下界にもつ. 従って$h`y\geq x$. よって$h$は共終関数で, ${\rm cf}(\alpha)\leq{\rm cf}(\beta)$. 以上より${\rm cf}(\alpha)={\rm cf}(\beta)$.
+                
+                \item 順序保存な共終関数${\rm cf}(\beta)\to\beta$, ${\rm cf}({\rm cf}(\beta))\to{\rm cf}(\beta)$をとる. この合成は共終関数となっているから, ${\rm cf}(\beta)\leq{\rm cf}({\rm cf}(\beta))$である. 逆向きの不等号はすでに1で言った. よって${\rm cf}({\rm cf}(\beta))={\rm cf}(\beta)$.
+                
+                \item 正則順序数$\kappa$をとる. $\abs{\kappa}\sim\kappa$であり, この同型は明らかに共終関数であるから${\rm cf}(\kappa)\leq\abs{\kappa}$である. ところが$\abs{\kappa}\leq\kappa={\rm cf}(\kappa)$であるから, $\abs{\kappa}=\kappa$. よって基数である.
+                
+                \item $\aleph_0$は正則である. （極限順序数の共終数は, それ以下の極限順序数だった.）また, $\aleph_{\alpha+1}$が正則でなければ, その共終数は$\aleph_\alpha$以下. そこからの共終関数があるとすると, 順序数の上限は和だったから, 高々$\aleph_\alpha$濃度の高々$\aleph_\alpha$個の集合の和が$\aleph_{\alpha+1}$の濃度を持つことになり矛盾する. よって, 正則.
+                
+                \item 順序保存な共終関数$\alpha\to\aleph_\alpha$として$\aleph$がある. （共終関数であることは, $\alpha$が極限順序数であるからわかる.） よって先ほど示したことにより, ${\rm cf}(\aleph_\alpha)={\rm cf}(\alpha)$.
+        \end{enumerate}
+        \end{proof}
+        \begin{prop}
+            $\kappa$を正則基数とする. $\kappa$未満個の$\kappa$未満の濃度をもつ集合の和の濃度は$\kappa$未満.
+        \end{prop}
+        \begin{proof}
+            $\abs{J}<\kappa, \forall j\in J(\abs{X_j}<\kappa)$とする.  $\forall j\in J(\abs{X_j}\in\kappa)$であるから, $\{\abs{X_j}\}_{j\in J}$は関数$J\to \kappa$を定める. $\kappa$の正則性から, これは共終関数になり得ない. （いま整列可能定理から, $J$を$\kappa$未満の順序数と思って共終関数という言葉を用いた.） よって, ${\rm sup}_{j\in J}\abs{X_j}<\kappa$.
+            
+           \ref{supcardiscard}に注意すれば, $\lambda = {\rm max}({\rm sup}_{j\in J}\abs{X_j}, \abs{J}) < \kappa$は基数である. そこで, 今考えている$X_j$たちは, $\lambda$以下個の$\lambda$以下の濃度をもつ集合ということになる. この集合の和の濃度は$\lambda$以下なので, 特に$\kappa$未満である.
+        \end{proof}
+        \begin{rem}
+            特異基数$\kappa$に対しては, この命題の反例が構成できる. 共終関数$f\colon{\rm cf}(\kappa)\to\kappa$をとり, $J={\rm cf}(\kappa), X_j = f`j$とすればこれは$\kappa$未満個の$\kappa$未満の濃度をもつ集合族を与えるが, この和は$\kappa$となる. 
+            
+            よってこの命題は, 正則基数の特徴づけになっている.
+        \end{rem}
+        \begin{prop}
+            （Königの補題）無限基数$\kappa$に対し, $\lambda\geq{\rm cf}(\kappa)$とすれば$\kappa^\lambda > \kappa$.
+        \end{prop}
+        \begin{proof}
+            任意の関数$f\colon \kappa\to\set{g|g\colon \lambda\to\kappa}$をとる.
+            
+            共終関数$h\colon \lambda\to\kappa$をとれる. そこで, 関数$G\colon\lambda\to\kappa$を, \[G`\alpha\in (\kappa-\set{(f`\mu)`\alpha|\mu<h`\alpha})\]となるよう定めよう. 濃度差があるから右辺は常に空でない. よってwell-definedである.
+            
+            ある$\nu\in\kappa$が存在して$f`\nu = G$と仮定する. このとき任意の$\alpha\in\lambda$に対し, $(f`\nu)`\alpha=G`\alpha\not\in \set{(f`\mu)`\alpha|\mu<h`\alpha}$であるから, $\nu\geq h`\alpha$. $h$は共終関数だから, このような$\nu$は存在しないので矛盾.
+            
+            よって$G\not\in {\rm Rng}(f)$. すなわち, $f$は全射たり得ない. よって$\kappa^\lambda > \kappa$.
+        \end{proof}
+        \begin{cor}
+            無限基数$\kappa$に対し, ${\rm cf}(2^\kappa)>\kappa$.
+        \end{cor}
+        \begin{proof}
+            もし${\rm cf}(2^\kappa)\leq\kappa$ならば, Königの補題より$(2^\kappa)^\kappa>2^\kappa$となる. しかし, $(2^\kappa)^\kappa=2^{\kappa\cdot\kappa}=2^\kappa$であるから矛盾.
+        \end{proof}
+        \begin{defn}
+            基数$\kappa$が\textbf{弱到達不能基数}であるとは, 正則な極限基数であることをいう.
+            
+            基数$\kappa$が\textbf{強到達不能基数}であるとは, 正則で非可算かつ強極限的であることをいう. ここで, 基数が\textbf{強極限的}とは, $\forall \lambda<\kappa(2^\lambda<\kappa)$という性質をみたすことをいう.
+        \end{defn}
+        \begin{rem}
+            到達不能基数は、「集合論が無矛盾ならば, 存在を証明できない」ことが知られている. （詳細は\cite{arai}等を参照.）
+        \end{rem}
+        \begin{prop}
+            強到達不能基数ならば, 弱到達不能基数である. 
+        \end{prop}
+        \begin{proof}
+            強到達不能基数$\kappa=\aleph_\alpha$をとる. 任意の$\beta<\alpha$に対し, $\aleph_\alpha=\kappa>2^{\aleph_\beta}\geq \aleph_{\beta+1}$であるから$\beta+1<\alpha$. よって$\alpha$は極限順序数.     
+        \end{proof}
+        \begin{prop}
+                $\kappa$が弱到達不能基数ならば, $\kappa=\aleph_\kappa$. $\kappa'$が強到達不能基数ならば, $\kappa'=\beth_{\kappa'}$.
+        \end{prop}
+        \begin{proof}
+            弱到達不能基数について. $\kappa=\aleph_\alpha$とすれば, $\kappa={\rm cf}(\aleph_\alpha)={\rm cf}(\alpha)\leq\alpha$. よって$\kappa\leq\aleph_\kappa\leq\aleph_\alpha=\kappa$. よって$\kappa=\aleph_\kappa$.
+            
+            強到達不能基数について. $\kappa'\leq\beth_{\kappa'}={\rm sup}\set{\beth_\alpha|\alpha<\kappa'}$. transfinite inductionにより簡単に$\forall \alpha<\kappa'(\beth_\alpha<\kappa')$がわかる. （後続型のケースは強到達不能基数の定義から, 極限順序数のケースは正則基数の定義から従う.） よって$\beth_{\kappa'}\leq\kappa'$. 逆の不等号はtransfinite inductionにより簡単に示される. （後続型のケースは冪が濃度を大きくすることから, 極限順序数のケースは上限の性質についての議論から従う.） よって$\kappa'=\beth_{\kappa'}$.
+        \end{proof}
+        \begin{defn}
+            集合$U$が（自明でない）\textbf{Grothendieck Universe}であるとは,
+            \begin{itemize}
+                \item $U$は推移的である.
+                \item $x, y\in U \to \{x, y\}\in U$. すなわち, 対に閉じている.
+                \item $x \in U\to \mathfrak{P}(x)\in U$. すなわち, 冪に閉じている.
+                \item $J\in U, f\colon I\to U$とする. このとき, $\bigcup_{j\in J}f`j \in U$. すなわち, 添字和に閉じている.
+                \item $\omega\in U$.
+            \end{itemize}
+            を満たすことである. 最後の条件は, 空集合や累積階層$R_\omega$を外すために入れてある.
+        \end{defn}
+        \begin{lem}\label{guiscardclosed}
+            $U$を自明でないGrothendieck Universeとする. このとき, $\forall x\in U(\abs{x}\in U)$.
+        \end{lem}
+        \begin{proof}
+            $x\in U$とする. $\textbf{Ord}-U$の最小元を$\alpha$とする. （\textbf{Ord}は真クラスだから, 最小元は常にとれる. ）$U$の推移性より, $\alpha$未満の順序数は全て$U$の元であり, $\alpha$以上の順序数は全て$U$の元でない.
+            
+            $x$が有限集合のとき, $\abs{x}\in\omega\in U$より自明である. 以下, $x$は無限集合とする. （このとき$\abs{x}$は極限順序数であることに注意する.）
+            
+            全単射$g\colon x\to \abs{x}$をとり, $f\colon x\to U$を$g`y<\alpha$ならば$f`y=g`y$, そうでなければ$f`y=0$として定める. もし$\abs{x}\geq\alpha$であれば, $f$は$x$から$\alpha$への共終関数となり, 添字和は$\bigcup_{y\in x}f`y = \alpha \in U$となる. これは矛盾である. よって, $\abs{x}<\alpha$であり, 従って$\abs{x}\in U$. 
+        \end{proof}
+        \begin{prop}
+            $U$が自明でないGrothendieck Universeであることは, ある強到達不能基数$\kappa$によって$U=R_\kappa$と表されることと同値である.
+        \end{prop}
+        \begin{proof}
+            強到達不能基数$\kappa$に対し, $U=R_\kappa$は自明でないGrothendieck universeである.
+            \begin{framed}
+                推移性. 累積階層は推移的であった. 
+                
+                対. $x, y\in U$とすれば${\rm rank}(x)<\kappa, {\rm rank}(y)<\kappa$であるから, ${\rm rank}(\{x, y\})={\rm max}({\rm rank}(x)+1, {\rm rank}(y)+1)<\kappa$. よって$\{x, y\}\in R_\kappa$.
+                
+                冪. $x\in U$とすれば, ある$\alpha<\kappa$に対し$x\in R_\alpha$. 推移性から$x\subset R_\alpha$. よって簡単に$\mathfrak{P}(x)\in \mathfrak{P}(\mathfrak{P}(R_\alpha))=R_{\alpha+2}\subset R_\kappa$とわかる.
+                
+                添字和. 任意の$x\in U$に対し, ある$\alpha<\kappa$に対し$x\in R_\alpha$. 推移性から$x\subset R_\alpha$であるから, $\abs{x}\leq\abs{R_\alpha}$.
+                
+                ところで, $\beta$についてのtransfinite inductionにより, 任意の$\beta<\kappa$に対し$\abs{R_\beta}<\kappa$であることがわかる. （実際,  後続型のケースは$\kappa$が強極限的だから, 極限順序数のケースは$\kappa$が正則基数だから$\kappa$未満個の$\kappa$未満濃度の集合の和が$\kappa$未満濃度であることを用いればよい.） 以上より, $\abs{x}\leq\abs{R_\alpha}<\kappa$. 
+                
+                さて本題に戻ろう. $J\in U, f\colon J\to U$とする. ${\rm rank}(\bigcup_{j\in J}f`j)={\rm sup}\set{{\rm rank}(y)+1|y\in \bigcup_{j\in J}f`j}$と計算できる. ここで$\bigcup_{j\in J}f`j$は今までに示したことにより, $\kappa$未満個の$\kappa$未満濃度の集合の和であるから, その濃度は$\kappa$未満である.
+                
+                ${\rm sup}\set{{\rm rank}(y)+1|y\in \bigcup_{j\in J}f`j}=\kappa$となったとしよう. $\bigcup_{j\in J}f`j$を適当な$\kappa$未満の順序数$\gamma$型に整列する. $y\mapsto {\rm rank}(y)+1$なる関数から, 共終関数$\gamma\to\kappa$が作れることになる. このことは, $\kappa$が正則基数であることに矛盾する.  よって${\rm rank}(\bigcup_{j\in J}f`j)={\rm sup}\set{{\rm rank}(y)+1|y\in \bigcup_{j\in J}f`j}<\kappa$であり, $\bigcup_{j\in J}f`j)\in R_\kappa$である.
+                
+                非自明性. ${\rm rank}(\omega)=\omega<\kappa$だから, $\omega\in R_\kappa$.
+            \end{framed}
+            
+            一方, $U$が非自明なGrothendieck Universeであれば, ある強到達不能基数$\kappa$によって$U=R_\kappa$と表示される.
+            \begin{framed}
+                $\textbf{Ord}-U$の最小元を$\kappa$とする. 推移性から, $\kappa$未満の順序数は全て$U$の元であり, $\kappa$以上の順序数は全て$U$の元でない.
+                
+                $\kappa$は極限順序数である. もし後続型で$\kappa=\alpha+1$と書ければ$\alpha\in U$であり, よってGrothendieck Universeの定義から$\kappa=\alpha\cup\{\alpha\}\in U$となり矛盾する.
+                
+                $\kappa$は正則順序数である. （自動的に, 正則基数である.） もしそうでなければ, ${\rm cf}(\kappa)<\kappa$だから, ${\rm cf}(\kappa)\in U$. よって共終関数に対しその添字和を考えると, $\kappa\in U$であることがわかる. これは矛盾である.
+                
+                $\kappa$は強極限的である. 任意に基数$\lambda<\kappa$をとる. $\lambda\in U$だから, $\mathfrak{P}(\lambda)\in U$. \ref{guiscardclosed}より$\abs{\mathfrak{P}(\lambda)}=2^\lambda\in U$. よって$2^\lambda<\kappa$.
+                
+                $\omega\in U$だから$\kappa$は非可算であり, よって$\kappa$は強到達不能基数.
+                
+                任意の$\alpha<\kappa$に対し, $R_\alpha\in U$であることは, transfinite inductionによって簡単にわかる. 実際, 後続型のケースではGrothendieck Universeが冪に閉じているから良く, 極限順序数のケースではGrothendieck Universeが添字和に閉じているから良い. よって, $R_\kappa\subset U$である.
+                
+                もし$R_\kappa\subsetneq U$であれば, 正則性公理からある$z\in U-R_\kappa$であって$z\cap U-R_\kappa = \varnothing$なるものがとれる. $U$の推移性から$z\subset U$であるから, $z\subset R_\kappa$でなければならない. また\ref{guiscardclosed}より$\abs{z}<\kappa$である. さて${\rm rank}(z)={\rm sup}\set{{\rm rank}(y)+1|y\in z}$であるが, $\kappa$の正則性からこの値は$\kappa$未満でなくてはならない. 即ち, $z\in R_\kappa$であるが, これは矛盾である. よって, $U=R_\kappa$となる.
+            \end{framed}
+        \end{proof}
+        \cleardoublepage
+    
+    \section{応用}
+    この章では, 位相, 代数, 測度, 圏の知識を仮定する. また, インフォーマルな記法（順序対を$(a, b)$と表すなど）を用いる.
+    \subsection{$\nat, \zah, \quo, \rea$}
+        数学を展開する上で, もっとも基本的な集合として$\nat, \zah, \quo, \rea$が挙げられる. まず, これらの台集合, その上の順序構造, 代数構造などを定義する. そして成り立つ簡単な性質をチェックする. 例えば, Euclidの互除法, $n$進展開といった整数論的な性質は, 今回の定式化では自明なことではなくきちんと証明しなければいけない. しかし, そのための準備として順序数の演算を調べておいたのだった.
+        
+    \subsubsection{順序位相の準備}
+        \begin{notation}
+            位相空間の分離公理について, regular（正則）, normal（正規）などは$T_1$を含める意味で用いる. $T_3, T_4$といったとき$T_1$は含めないものとする.
+        \end{notation}
+        \begin{defn}
+            $X$を全順序集合とする. $X$上の\textbf{順序位相}とは, $(a, \infty) = \set{x\in X|x>a}, (-\infty, a)=\set{x\in X|x<a}, (-\infty, \infty)=X$全体を準開基として生成される位相のことをいう. 簡単な議論により, これは$(a, b), (a, \infty), (-\infty, a), (-\infty, \infty)$ で表される部分集合全体を開基にもつ位相であることがわかる.
+        \end{defn}
+        \begin{defn}
+            $X$を全順序集合とする. $X$が\textbf{順序完備}であるとは, $X$の任意の空でない部分集合が上限と下限を持つことを言う. 特に全体集合を考えることで, $X$が順序完備かつ空でないならば最小元, 最大元をもつ.
+        \end{defn}
+        \begin{defn}
+            $X$を全順序集合とする. $X$の\textbf{Dedekind cut}とは, $A, B\subset X, A\neq \varnothing, B\neq\varnothing, A\cup B = X, A\cap B=\varnothing, \forall a\in A, b\in B(a\leq b)$なる組$\langle A, B\rangle$のことである.
+            
+            $X$が\textbf{Dedekind完備}とは, 任意の$X$のDedekind cut$\langle A, B\rangle$に対し$A$の上限と$B$の下限が存在し一致することをいう.
+        \end{defn}
+        \begin{defn}
+            $X$を全順序集合とする. 
+            
+            $S\subset X$が\textbf{凸}とは, \[\forall a, b, t\in X(a\in S\land b\in S\land a<t<b\to t\in S)\]であることをいう. 
+            
+            $S\subset X$が\textbf{区間}とは,　$(a, b), (a, \infty), (-\infty, a), [a, b]=\set{x\in X|a\leq x \leq b}, [a, \infty)=\set{x\in X|a\leq x},\\ (-\infty, a]=\set{x\in X|x\leq a}, (-\infty, \infty)$のいずれかの形をしていることをいう. 両端の形に応じて, 開区間, 閉区間などという.
+            
+            区間は凸だが, 凸ならば区間とは言えない.
+            
+            簡単な議論により, ある点を共有する凸集合たちの和は凸であることがわかる. このことにより, $A\subset X$の\textbf{凸成分分解}を次のように定義する.
+            \begin{itemize}
+                \item 各点$x\in A$に対し, $\bigcup \set{S|S\mbox{は凸集合}\land x\in S}$は$x$を含む$A$の凸部分集合として最大のものである. これを$x$の\textbf{凸成分}という. $x$を省略して単に凸成分ともいう.
+                \item $A$上の関係$x\sim y$を, $x$の凸成分と$y$の凸成分が一致することと定めると, これは同値関係をなす. この同値関係による$A$の直和分割を$A$の\textbf{凸成分分割}という.
+           \end{itemize}
+        \end{defn}
+        \begin{defn}   
+            位相空間$X$に対し, $A, B\subset X$が\textbf{separated}とは, $A\cap \overline{B} = \overline{A}\cap B=\varnothing$であることをいう. separatedならば特にdisjointである.
+            
+            位相空間$X$が\textbf{$T_5$}分離公理\footnote{全部分正規ともいう.}をみたすとは, 任意のseparatedな集合$A, B$に対し, あるdisjointな開集合$O_A, O_B$が存在して$A\subset O_A, B\subset O_B$となることをいう. disjointな閉集合はseparatedであるから, $T_5$ならば$T_4$である.
+            
+            位相空間$X$が\textbf{completely normal}であるとは, $T_5T_1$であることをいう. 
+        \end{defn}
+        \begin{prop}
+            $X$を全順序集合とする. $X$上の順序位相はcompletely normalである.
+        \end{prop}
+        \begin{proof}
+            第一に, $X$は$T_1$である. 実際, 各点$x\in X$に対し$\{x\}=X-((-\infty, x)\cup(x, \infty))$であるから, シングルトン$\{x\}$は閉集合.
+            
+            第二に, $X$は$T_5$である. このことを示すには, separatedな部分集合$A, B$に対しそのdisjointな近傍$U, V$がとれることを言えばよい.
+            
+            任意にseparatedな部分集合$A, B$をとる. ここで, \[A^*=\bigcup\set{[a, b]|a\in A, b\in A, [a, b]\cap \overline{B}=\varnothing}\]\[B^*=\bigcup\set{[a, b]|a\in B, b\in B, [a, b]\cap \overline{A}=\varnothing}\]とおく. $A$の各元$a$に対し, $a\in [a, a]\subset A^*$であるから$A\subset A^*$. 同様に, $B\subset B^*$.
+            
+            定義より, $A^*\cap\overline{B}=\varnothing, \overline{A}\cap B^*=\varnothing$である. また, $A^*\cap B^*=\varnothing$である.
+            \begin{framed}
+                $p\in A^*\cap B^*$がとれたとする. ある$a, b\in A, c, d\in B$が存在して$p\in [a,  b]\cap[c, d]$かつ$[a, b]\cap \overline{B}=[c, d]\cap \overline{A}=\varnothing$である. ところが, $c, d\not\in [a, b], a, b\not\in [c, d]$である. $a, b, c, d$の並び順を全て考えると, $[a, b]\cap[c, d]=\varnothing$となるしかないことがわかる. これは$p$の取り方に矛盾する.
+            \end{framed}
+            実は, $A^*, B^*$はseparatedである.
+            \begin{framed}
+            まず, $\overline{A^*}\subset A^*\cup\overline{A}$であることを示そう. 
+            
+            任意に$p\not\in A^*\cup\overline{A}$をとる. $p$は$A$の外点であるから, 順序位相の開基の形からある$s, t\in X\cup \{\pm \infty\}$が存在して, $p\in (s, t)$となる. ここで$(s, t)$は$A$とdisjointな開区間である.
+            
+            ここでもし$(s, t)\cap A^*\neq\varnothing$と仮定すれば, その元を$q$としてある$a, b\in A$が存在して$q\in [a, b]$かつ$[a, b]\cap\overline{B}=\varnothing$となる. $a, b, s, t$の並び順を全て考えると, $s, t$の取り方から$a\leq s<t\leq b$となるほかない. $p\in (s, t)\subset [a, b]$であるから, $p\in A^*$となり矛盾. よって, $(s, t)\cap A^*=\varnothing$である.
+            
+            このことは, $p$が$A^*$の外点であることを意味する. よって, $p\not\in \overline{A^*}$. 以上より, $\overline{A^*}\subset A^*\cup\overline{A}$がわかった. 
+            
+            そこで, $\overline{A^*}\cap B^*\subset (A^*\cup \overline{A})\cap B^*=(A^*\cap B^*)\cup (\overline{A}\cap B^*)$となるが, この右辺は以前見たことによって空集合である. よって, $\overline{A^*}\cap B^*=\varnothing$. 同様にして, $A^*\cap \overline{B^*}=\varnothing$. このことが, $A^*, B^*$がseparatedであるということであった.
+            \end{framed}
+            
+            さて, ここで$A^*, B^*, X-(A^*\cup B^*)$の凸成分分解をそれぞれ$\bigcup_\alpha A_\alpha, \bigcup_\beta B_\beta, \bigcup_\gamma C_\gamma$と表すことにして, $M=\{A_\alpha\}_\alpha\cup\{B_\beta\}_\beta\cup\{C_\gamma\}_\gamma$とおく. すると$M$には$X$の全順序から自然に定まる全順序が入る. （正確には, $S, T\in M$に対し$S<T$とはある元$s\in S, t\in T$が存在して$s<t$であるという風に定める. これがwell-definedであることは, 各$M$の元が凸であるという事実から従う.） 
+            
+            $C_\gamma$の元$k_\gamma$を各$\gamma$ごとにとっておく.（各凸成分は空でないから可能である.） 
+
+            $A_\alpha$が$M$の\textbf{良い元}であるとは, $A_\alpha$が最大元をもち, かつその最大元の直後元が$X$上存在せず, かつ$A_\alpha$が$M$の最大元ではないことと定める. 
+            
+            このとき, $A_\alpha$が良い元ならば, ある$C_\gamma$が存在して$A_\alpha$の$M$上直後元となる.
+            \begin{framed}
+                $A_\alpha$を良い元とする. $p$を$A_\alpha$の最大元とする. このとき$p\in A^*$である. （実は$p\in A$である. $A^*=\bigcup\set{[a, b]|\dots}$であったから, $p\not\in A$ならばある$a<p<b$によって$p\in[a, b]$となっているはずだが, すると$p$の凸成分は$b$も含むはずである. これは$p$が$p$の凸成分の最大元であることに矛盾する.） $A^*, B^*$はseparatedだから$p$は$B^*$の外点. よって, 順序位相の開基の形からある$s, t\in X\cup\{\pm\infty\}$が存在して, $p\in (s, t)$となる. ここで$(s, t)$は$\overline{B^*}$とdisjointな開区間である.
+                
+                $(p, t)\neq \varnothing$. 実際, $A_\alpha$が$M$の最大元でなく, $t$が$p$の直後元でないことが良い元であることから従う.
+                
+                $(p, t), A^*$はdisjoint. 実際, もし$q\in (p, t)\cap A^*$なら, $q\in [a, b], [a, b]\cap\overline{B}=\varnothing$なる$a, b\in A$が存在する. ここで$a\leq p$ならば, $p<q\leq b$であるから$A_\alpha\cup [p, b]$が$p$を含む$A_\alpha$より大きな凸集合となる. これは凸成分の最大性に反するので矛盾. よって$p<a$となるしかない. $p\in A$であったから, $[p, a]\subset A^*$となる. （$(s, t)$は$\overline{B^*}$とdisjointだから, 特に$\overline{B}$とdisjointである. よって, $A^*$の定義の条件をみたす. ）これは$p$が$p$の凸成分の最大元であることに矛盾する. いずれにしろ矛盾するので, 結局$(p, t)\cap A^* = \varnothing$である.
+                
+                以上より, $(p, t)$は$A^*, B^*$と交わらないので$X-(A^*\cup B^*)$に含まれる. これは空でない凸集合なので, 適当な元$r\in (p, t)$をとって$r$の凸成分をとって, それを$C_\gamma$とすればこれが所望の直後元である.
+            \end{framed}
+            良い元である$A_\alpha$の直後元のことを, $C_{\alpha^+}$と表すことにする. また, 今の主張は$A$と$B$を入れ替えたり大小を入れ替えたりすることで, 同様の結論を得ることができる. その際の$A_\alpha$の直前元のことを$C_{\alpha^-}$, $B_\beta$の直後元, 直前元のことを$C_{\beta^+}$, $C_{\beta^-}$と表すことにする.
+            
+            \begin{leftbar}
+            さて, 当初の目的を思い出そう. $A, B$のdisjointな近傍$U, V$を取りたいのだったが, $A\subset A^*, B\subset B^*$に対して近傍$U, V$を取れれば十分である. $A^*=\bigcup_\alpha A_\alpha$と凸成分分解されているから, 各$A_\alpha$に対し性質の良い近傍$U_\alpha$が取れれば, $U=\bigcup_\alpha U_\alpha$としてやることで$U$を構成できそうである. $A_\alpha$は凸であるから, その「左側」$J_\alpha$と「右側」$I_\alpha$を付け足すことで, $U_\alpha=J_\alpha\cup A_\alpha \cup I_\alpha$として実現できそうである.
+            
+            この$I_\alpha$をどうとるかが問題であるが, 良い元$A_\alpha$に対しては直後元$C_{\alpha^+}$があるのだから, $I_\alpha = ({\rm max}A_\alpha, k_{\alpha^+})$とできる. 良くない元については, $I_\alpha=\varnothing$とすると実は大丈夫である.（というより, $I_\alpha=\varnothing$だと「まずい」ものを, 良い元と呼んでいたわけである.）
+            
+            $J_\alpha$については, 大小を反転させて全く同じ議論をすればよい. このようにして$U$を構成して, 同様に$V$を構成すると, 実はdisjointになっていることがわかる. それを実際に検証してみよう.
+            \end{leftbar}
+            
+            各$\alpha$に対し, $A_\alpha$が良い元ならば$I_\alpha=({\rm max}A_\alpha, k_{\alpha^+})$とし, そうでなければ$I_\alpha=\varnothing$と定める. $A_\alpha$が反転順序の意味で良い元ならば$J_\alpha=(k_{\alpha^-}, {\rm min}A_\alpha)$とし, そうでなければ$J_\alpha=\varnothing$とする. 各$\beta$に対しても同様に, $I_\beta, J_\beta$を定める. $U_\alpha = J_\alpha\cup A_\alpha\cup I_\alpha, V_\beta = J_\beta\cup B_\beta\cup I_\beta$とし, $U=\bigcup_\alpha U_\alpha, V=\bigcup_\beta V_\beta$とする.
+            
+            $U_\alpha$は開集合であることを示す.
+            \begin{framed}
+                各元が内点であることを言えばよいが, $I_\alpha, J_\alpha$の元は明らかに内点であり, $A_\alpha$の最大, 最小でない元も内点である. よって, 調べるべきは良い元でない場合の$A_\alpha$の最大元, 最小元だけとなる.
+                
+                良い元でない$A_\alpha$がシングルトンである場合は, その唯一の元が最大元かつ最小元となる. このとき, （「最大元$p$が存在し, $X$の最大元である」あるいは「最大元$p$が存在し, その直後元$p'$が存在する」）かつ（「最小元$q$が存在し, $X$の最小元である」あるいは「最小元$q$が存在し, その直前元$q'$が存在する」）ことになる. 各場合に応じて, $(-\infty, \infty), (-\infty, p'), (q', \infty), (q', p')$を選べばこの元は$U_\alpha$の内点となる.
+                
+                以下シングルトンでない, 良い元でない$A_\alpha$について考える.
+                最大元をもつ, 良い元でない$A_\alpha$においては, 「最大元$p$が存在し, $X$の最大元である」あるいは「最大元$p$が存在し, その直後元$p'$が存在する」となる. いずれの場合も最大元でない適当な元$a$をとっておき, $(a, \infty), (a, p')$を選べば最大元は$U_\alpha$の内点となる.
+                 最小元をもつ, 良い元でない$A_\alpha$においては, 「最小元$q$が存在し, $X$の最小元である」あるいは「最小元$q$が存在し, その直前元$q'$が存在する」となる. いずれの場合も最小元でない適当な元$a$をとっておき, $(-\infty, a), (q',  a)$を選べば最小元は$U_\alpha$の内点となる.
+            \end{framed}
+            同様にして, $V_\beta$も開集合である. よって, $U, V$は開集合である.
+            
+            もし$U, V$がdisjointでなければ, ある$U_\alpha\cap V_\beta\neq\varnothing$. $A_\alpha, B_\beta$はdisjointであるから, $I_\alpha, J_\alpha, I_\beta, J_\beta$の中にdisjointでない2つが存在することになる. 一般性を失わず$I_\alpha\cap J_\beta\neq\varnothing$としてよい. これが起こり得るのは, $I_\alpha$と$J_\beta$がともに同一の$C_\gamma$の部分集合である場合のみだが, その場合であっても$I_\alpha=({\rm max}A_\alpha, k_\gamma), J_\beta=(k_\gamma, {\rm min}B_\beta)$であり, disjointである. これは矛盾である. 結局, $U, V$はdisjointであり, よって示された.
+        \end{proof}
+        \begin{prop}
+            $X$を全順序集合とする. $X$上の順序位相がコンパクトであるには, 順序完備であることが必要十分である.
+        \end{prop}
+        \begin{proof}
+            必要性. 対偶を示す. $X$が順序完備でなければ, ある空でない$A\subset X$が存在して, 上限あるいは下限を持たない. 一般性を失わず, 上限を持たないとしてよい. $A'$を$A$の上界とする. $X$の開被覆として, $\set{(-\infty, a)}_{a\in A}\cup \set{(b, \infty)}_{b\in A'}$がとれる. 上限が存在しないことから, これは有限部分被覆を持たない. よって$X$はコンパクトでない.
+            
+            十分性. $X$を順序完備とする. $X$が空ならば明らかにコンパクトであるから, $X$は空でないとする. このとき, $m={\rm min}X, M={\rm max}X$が存在する. $\mathfrak{U}$を$X$の任意の開被覆とする.
+            
+            $S=\set{y\in X|[m, y) \mbox{は} \mathfrak{U} \mbox{のある有限部分によって被覆される} }$とする. $m\in S$であるから$S\neq\varnothing$, よって$a={\rm sup}S$がとれる. $\mathfrak{U}$は被覆だから, ある$U\in \mathfrak{U}$が存在して$a\in U$となる. 
+            
+            もし$a\neq M$であれば, 順序位相の定義から, ある$x, y\in X$が存在して$a\in (x, y)\subset U$. （$a=M$であれば, $y=\infty\not\in X$となることに注意せよ. ） $x, y$を含む$\mathfrak{U}$の元を$U_x, U_y$とすれば, $[m, x)$の部分被覆に$U_x, U, U_y$を加えることで$y\in S$となる. しかし$a<y$であるから, $a$の取り方に矛盾する.
+            
+            よって, $a=M$であり, $M\in S$がわかる. よって, $X$はコンパクト.
+        \end{proof}
+        \begin{prop}
+            $X$を空でない全順序集合とする. 以下は同値である.
+            \begin{enumerate}
+                \item $X$上の順序位相は連結である.
+                \item $X$の任意の元に直後元, 直前元がなく, 上に有界な空でない部分集合は上限を持ち, 下に有界な空でない部分集合は下限を持つ.
+                \item $X$はDedekind完備である.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            （$1\to 2$）もし$X$のある元$a$に直後元$a'$があれば, $X=(-\infty, a]\cup[a', \infty)$となる. これは連結性に反する. 直前元についても同様の議論ができる.
+            
+            また$X$のある上に有界な空でない部分集合$S$が上限を持たないとする. $S'$を$S$の上界とする. $U=\bigcup_{s\in S}(-\infty, s)$, $V=\bigcup_{t\in S'}(t, \infty)$として, $X=U\cup V$となる. これは連結性に反する. 下に有界な空でない部分集合についても同様の議論ができる.
+            
+            （$2\to 3$）任意のDedekind cut $\langle A, B\rangle$をとる. $a = {\rm sup}A, b={\rm inf}B$とおく. （これは仮定より存在する.） もし$a<b$であれば, $a$と$b$の間の元は存在しないから$a, b$は直後元の関係にある. しかしこれは仮定に反する. またDedekind cutと上限, 下限の性質から$a>b$となることは有り得ない. よって, $a=b$.
+            
+            （$3\to 1$）$U, V$を, $X=U\cup V$なる空でないdisjointな開集合として矛盾を導く.
+            
+            $u\in U, v\in V, u<v$として一般性を失わない. $E$を$U$における$u$の凸成分とし, $A=E\cup(-\infty, u)$, $B=X-A$とする. $\langle A, B\rangle$はDedekind cutであることがわかる. そこで, $p = {\rm sup}A ={\rm inf}B$がとれる.
+            
+            $p\in A$と仮定する. $p\in E\subset U$となるから, 順序位相の定義よりある$x\in X\cup\{-\infty\}, y\in X$によって$p\in(x, y)\subset U$となる. $E$は凸成分だから, その最大性から$p$は$(x, y)$の最大値でなければならない. すなわち, $y$は$p$の直後元である. Dedekind完備性から「直後元が存在しないこと」は簡単に出るので, 矛盾である.
+            
+            よって, $p\in B$となるしかない. もし$p\in U$であれば順序位相の定義よりある$x, y\in X\cup\{\pm\infty\}$によって$p\in (x, y)\subset U$となる. すると$(x, y)\cap E\neq\varnothing$がわかるから$p\in E\subset A$となり矛盾. よって$p\in V$. 順序位相の定義よりある$x\in X, y\in X\cup\{\infty\}$によって$p\in (x, y)\subset V$となる. $x<p$であるから$x\in A$. よって$(x, y)\cap E\neq\varnothing$. すなわち$U\cap V\neq\varnothing$となり矛盾である.
+            
+            結局, $X$は連結である.
+        \end{proof}
+        \begin{rem}
+            $X$を全順序集合とし, $A\subset X$とする. $A$には「制限順序の定める順序位相」と「順序位相の相対位相」の2種類の位相が入るが, 一般にこれは一致しない. 例えば, $(-\infty, 0)\cup \{1\}\subset \rea$において$\{1\}$が開集合かどうかが上の2つの位相で異なる.
+        \end{rem}
+    \subsubsection{$\nat$}
+        \begin{defn}
+            \textbf{自然数}$\nat$を, 台集合$\omega$の上に$\omega$の順序, 加法, 乗法をもつ集合として定める.
+        \end{defn}
+        \begin{rem}
+            順序数演算の節で調べておいたことにより, 演算は結合的単位的可換であり, 順序と整合する. また, $m>n$のとき差が, 一般のケースで商, 余りが一意に存在した.（これらが$\omega$に閉じていることは容易に証明できる.）
+        \end{rem}
+    \subsubsection{$\zah$}
+        \begin{defn}
+            台集合$\nat\coprod(\nat-\{0\})$に以下の順序, 和, 積を考えたものを\textbf{（有理）整数}$\zah$という. $\zah$の元のうち, $\langle 0, n\rangle$の形のものを\textbf{非負整数}$n$, $\langle 1, n\rangle$の形のものを\textbf{負整数}$-n$と表記する.
+            
+            写像$\nat\to\zah, m\mapsto \langle 0, m\rangle$のことを\textbf{自然な包含}という. 
+            
+            順序を, $\nat$の順序をもとに
+            \begin{itemize}
+                \item 負整数$-m$と負整数$-n$について, $-m>-n \leftrightarrow m<n$.
+                \item 非負整数$m$と非負整数$n$について, $m>n \leftrightarrow m>n$.
+                \item 非負整数$m$と負整数$-n$について, 常に$m>-n$.
+            \end{itemize}
+            として定めるとwell-definedな全順序であり, 自然な包含について$\nat$の順序と整合する.
+            
+            和を, $\nat$の和をもとに
+            \begin{itemize}
+                \item 負整数$-m$と負整数$-n$について, $(-m)+(-n)=-(m+n)$.
+                \item 非負整数$m$と非負整数$n$について, $m+n=m+n$.
+                \item 非負整数$m$と負整数$-n$について, $m\geq n$なら一意的な差$m+(-n)=m-n$, $m\leq n$なら一意的な差$m+(-n)=-(n-m)$.
+            \end{itemize}
+            として定めるとこれはwell-definedな結合的単位的可換な和であり, 自然な包含について$\nat$の和と整合する.
+            
+            積を, $\nat$の積をもとに
+            \begin{itemize}
+                \item 負整数$-m$と負整数$-n$について, $(-m)(-n)=mn$.
+                \item 非負整数$m$と非負整数$n$について, $mn=mn$.
+                \item 非負整数$m$と負整数$-n$について, $m(-n)=-(mn)$.
+            \end{itemize}
+            として定めるとこれはwell-definedな結合的単位的可換な積であり, 自然な包含について$\nat$の積と整合する.
+            
+            しかも和と積は分配法則を満たし, これにより$\zah$は単位的可換環の構造を持つ.
+        \end{defn}
+        \begin{prop}
+            $\zah$はEuclid環である. 従って, PID, UFDである.
+        \end{prop}
+        \begin{proof}
+            $\zah$が整域であることは, 積の定義と0でない順序数の積が0でないことから明らかである.
+            
+            写像$\abs{\cdot}\colon\zah-\{0\}\to\nat, n\mapsto n, (-n)\mapsto n$を絶対値と呼ぶことにする. 絶対値により, $\zah$がEuclid環となることを見よう.
+            
+            $a, b\in \zah, b\neq 0$とする. $a, b$が非負のときは, $a$を$b$で割った商を$q$, 余りを$r$とすることで$a=qb+r$とかける. $0\leq r<b$であるから, $\abs{r}<\abs{b}$である.
+            
+            $a$が非負, $b$が負のときは, $a$を$-b$で割った商を$q$, 余りを$r$とすることで$a=q(-b)+r$とかける. また, $0\leq r<(-b)$. よって, $\abs{r}<\abs{b}$.
+            
+            残りの場合も符号を反転させてやれば得られる. よって, 示された.
+        \end{proof}
+        \begin{rem}
+            Euclid環がPIDであることの証明（例えば, \cite{yukie}）では, $\nat$の部分集合が常に最小元を持つことを用いている. これは$\nat$がwell-orderedであるから可能である.
+        \end{rem}
+        \begin{rem}
+            $\zah$において, 単元は1, -1のみである. これは場合分けによって積が絶対値を保つことを示し, 1より大きな順序数が何かとの積で1になることはないという事実を用いればわかる.
+            
+            今と同じ論法によって, 素元（UFD上既約元と同値）は, エラトステネスの篩を用いて$\pm 2, \pm 3, \pm 5\dots$と計算することができる. 非負の素元を\textbf{素数}という. $\zah$の（素数からなる）素元分解のことを, \textbf{素因数分解}という. UFDの一般論により, 素因数分解は$0$以外の元に存在し, 一意である.
+            
+            Euclidの互除法（正確にはtransfinite inductionを用いよ）により, $GCD(x, y)=1$となる2数$x, y$に対し$(x)+(y)=(1)$が成り立つ.
+        \end{rem}
+        \begin{prop}
+            $\zah$は単位的可換環と（1を保つ）環準同型のなす圏において始対象である.
+        \end{prop}
+        \begin{proof}
+            任意の環$R$に対し, 写像$f\colon \zah\to R$を, $\omega$までのtransfinite recursionによって$0\mapsto 0_R, n+1\mapsto f(n)+1_R, -(n+1)\mapsto f(-n)-1_R$と定める.
+            
+            これが環準同型なのはtransfinite inductionによってわかり, 一意なことはそうなるしかないことがtransfinite inductionによって示される.
+        \end{proof}
+        \begin{rem}
+            よくある論法として, $n\mapsto 1+\dots +1(n \mbox{ times})$として写像を定める, というものがあるがこれは本当はrecursionによって定めているのである. これがwell-definedであることは, 本当はtransfinite recursionの証明をそのまま追わなければいけないのだが, 普通なんとなく「アリ」だと思って飛ばしてしまうものである.
+            
+            このように, $\nat, \zah$の性質は順序数としての構成が非常に深く関わっている. こういった事実を理解しておくことは, 曖昧さを排した数学を行う上で大事である.
+        \end{rem}
+    \subsubsection{$\quo$}
+    
+        \begin{defn}
+            $\zah$の全商体（構成を1つ固定しておく）に以下の順序を考えたものを\textbf{有理数}$\quo$という. $\quo$の元は, $m\in \zah, n\in \zah_{>0}$によって$m/n$と表示することができる.
+            
+            局所化の構造射$\zah\to\quo, m\mapsto m/1$のことを\textbf{自然な包含}という.
+        
+            有理数$m/n, p/q (n>0, q>0)$に対し, $m/n>p/q \leftrightarrow mq>pn$と定めるとwell-definedな全単射となり, 自然な包含の下で$\zah$の順序と整合する.
+        \end{defn}
+        \begin{prop}
+            $\quo$は$a<b\to a+c<b+c$, $a, b>0 \to ab>0$をみたす.
+        \end{prop}
+        \begin{proof}
+            $a, b, c$をそれぞれ$a_1/a_2, b_1/b_2, c_1/c_2$（分母は正整数, 分子は整数）という形で書き, 「通分」して考えれば整数における順序の性質よりただちに明らかである.
+        \end{proof}
+        \begin{defn}
+            順序集合が稠密とは, $\forall x, y(x<y\to \exists z(x<z<y))$なること.
+        \end{defn}
+        \begin{prop}
+            （$\quo$の順序の特徴づけ）$\quo$の順序は, 可算稠密で最大元, 最小元を持たない. 逆に, 可算稠密で最大元, 最小元を持たない順序集合は, $\quo$と順序同型となる.
+        \end{prop}
+        \begin{proof}
+            前半. 可算であることは, 全射 $\zah\times(\nat-\{0\})\to\quo, (a, b)\mapsto a/b$の存在から明らか. $p, q\in\quo\to p+1, p-1, (p+q)/2\in\quo$であるから, 残りの性質もわかる.
+            
+            後半を示そう. $A$を可算, 稠密, 最大元最小元を持たないとする. 可算性より全単射$a\colon \omega\to A$が存在する. 同様に, $r\colon \omega\to \quo$も存在するから, これによって$A$, $\quo$の元を$a_n, r_n$と表す.
+            
+            順序同型$f$を次のようにrecursionで構成する. まず, $a_0$の行き先を$r_0$とする. 続けて, 次のステップを繰り返す.
+            \begin{framed}
+                $a_i$たちの中で, まだ行き先の決まっていない最小の$i$をとる. 稠密で最大元最小元がないということから, $a_i$の行先候補となる$r_j$は存在する.（ここで行先候補とは, $a_i\mapsto r_j$とした時点で構成されている「途中の$f$」が, その始域から終域への関数として順序同型となるような$r_j$のことである.） そこで, そのような$j$の中で最小の$j$をとり, $a_i\mapsto r_j$とする. 
+                
+                続けて, $r_i$たちの中で, まだ送られ元の決まっていない最小の$i$をとる. 稠密で最大元最小元がないということから, $r_i$の送られ元候補となる$a_j$は存在する. （ここで送られ元候補とは, $a_j\mapsto r_i$とした時点で構成されている「途中の$f$」が, その始域から終域への関数として順序同型となるような$a_j$のことである.） そこで, そのような$j$の中で最小の$j$をとり, $a_j\mapsto r_i$とする. 
+            \end{framed}
+            これにより定まる関数$f$は, 順序同型となる. 全単射となることは, ステップを$n$回繰り返した時点で$a_1\dots a_n$の行き先と$r_1\dots r_n$の送られ元が決定していることからわかる. $f, f^{-1}$が順序保存でなければ, 途中のあるステップで順序保存でなくなっているはずである. しかし構成からそれは有り得ない. よって示された.
+        \end{proof}
+        
+    \subsubsection{順序体の準備}
+        \begin{defn}
+            体といったとき, ここでは零環でない可換体を表すことにする.
+        
+            加法, 乗法, 順序の入った集合が\textbf{順序体}であるとは, それが体であり, 全順序集合であり, かつ$a<b\to a+c<b+c$, $a, b>0 \to ab>0$をみたしているものとする.
+            
+            順序体から順序体への体準同型が\textbf{順序体の準同型}であるとは, それが順序保存であることをいう. 
+            順序体から順序体への体準同型が\textbf{順序体の同型}であるとは, それが全射かつ順序体の準同型であることをいう. 明らかにこれは, 順序体の準同型でありかつ順序体の準同型である逆写像が存在することと同値である.
+            
+            順序体の準同型は, その像への順序体の同型となる.
+        \end{defn}
+        \begin{defn}
+            順序体$K$上の絶対値$\abs{\cdot}\colon K\to K$を, $x\mapsto x$ (0以上のとき), $x\mapsto -x$ (0未満のとき)と定める. 
+            
+            簡単な議論により
+            \begin{itemize}
+                \item $0\leq \abs{x}$.
+                \item $x\leq \abs{x}, -x\leq \abs{x}$.
+                \item $x=0 \leftrightarrow \abs{x}=0$.
+                \item $\abs{xy}=\abs{x}\abs{y}$.
+                \item $\abs{x+y}\leq\abs{x}+\abs{y}$.
+            \end{itemize}
+            がわかる.
+            
+            中心$x\in K$, 半径$r\in K_{\geq 0}$の\textbf{開球}を, $U(x, r) =\set{y|\abs{y-x}<r}=(x-r, x+r)$として定める.
+        \end{defn}
+        \begin{defn}
+            加法, 乗法, 位相の入った集合$K$が\textbf{位相体}\footnote{通常, ほかに密着位相でないことを課すが, 本稿では位相体論に深入りしないため課さないでおく.}であるとは, 体であり, 加法$+\colon K\times K\to K$, 加法逆元$-\colon K\to K$, 乗法$\cdot\colon K\times K\to K$, 乗法逆元$\cdot^{-1}\colon K-\{0\}\to K$が連続写像であるものとする.
+        \end{defn}
+        \begin{prop}
+            順序体の順序位相は, 次の開基によって生成される位相と一致する.
+            
+            \[\set{U(x, r)|x\in K, r\in K_{\geq 0}}\]
+        \end{prop}
+        \begin{proof}
+            開基の条件, 交叉に閉であることをみる. $U(x, r)\cap U(y, s)$は, $x-r, x+r, y-s, y+s$の位置関係に応じて$\varnothing, U(x, r), U(y, s), U((x+r+y-s)/2, (x+r-y+s)/2), U((y+s+x-r)/2, (y+s-x+r)/2)$のいずれかであるから, 開球の交叉は開球である.
+            
+            開球による位相は, 開区間を生成できる. 実際$(a, \infty)=\bigcap\set{U(x, x-a)|x\in (a, \infty)}, (-\infty, a)=\bigcap\set{U(x, a-x)|x\in (-\infty, a)}, (-\infty, \infty)=(-\infty, 0)\cup U(0, 1)\cup(0, \infty)$とすればよい.
+            
+            順序位相は, 開球を生成する. 実際$U(x, r)=(x-r, x+r)$である.
+            
+            よって2つは一致する.
+        \end{proof}
+        \begin{prop}
+            順序体は, その順序位相によって位相体となる.
+        \end{prop}
+        \begin{proof}
+            順序位相は開球で生成されることに注意する. 演算が, 各点で連続であることを指摘する.
+            
+            加法. 点$(x, y)$における連続性を言う. $x+y$の近傍基として$\set{U(x+y, r)|r\in K_{\geq 0}}$がとれるから, 任意の$r\in K_{\geq 0}$をとって$x+y$の近傍$U(x+y, r)$について考える. $(x, y)$の近傍として$U(x, r/2)\times U(y, r/2)$をとると, この像が$U(x+y, r)$に含まれる. よって, 言えた.
+            
+            乗法. 点$(x, y)$における連続性を言う. $xy$の近傍基として$\set{U(xy, r)|r\in K_{\geq 0}}$がとれるから, 任意の$r\in K_{\geq 0}$をとって$xy$の近傍$U(xy, r)$について考える. $m={\rm min}(\abs{r/3y}, \abs{r/3x}, r/3, 1)$とおく. $(x, y)$の近傍として$U(x, m)\times U(y, m)$をとると, この像が$U(xy, r)$に含まれる. よって, 言えた.
+            
+            加法逆元. $x\mapsto -x$は, $x\mapsto (-1)x$と同じなので乗法の連続性から従う.
+            
+            乗法逆元. 点$x$における連続性を言う. $x^{-1}$の近傍基として$\set{U(x^{-1}, r)|r\in K_{\geq 0}}$がとれるから, 任意の$r\in K_{\geq 0}$をとって$x^{-1}$の近傍$U(x^{-1}, r)$について考える. $m={\rm min}(\abs{rx^2/2}, \abs{x/2})$とおく. $x$の近傍として$U(x, m)$をとると, この像が$U(x^{-1}, r)$に含まれる. よって, 言えた.
+        \end{proof}
+        \begin{prop}
+            $\quo$は順序体である.
+        \end{prop}
+        \begin{proof}
+            すでに順序体の公理が成り立っていることを示したのだった. 
+        \end{proof}
+        \begin{prop}
+            任意の順序体$K$には, $\quo$からの一意な順序体準同型が存在する. これを通じて$\quo\subset K$であると思う.
+        \end{prop}
+        \begin{proof}
+            順序体の標数は0である. 実際, $1>0$より$1+\dots+1>0$であるから, $1+\dots+1\neq 0$となる. そこで, 始対象$\zah$からの一意な環準同型$f$は, 0以外の元を$K-\{0\}$に移す. そこで局所化の普遍性により, $\quo$からの一意な環準同型が存在する.
+            
+            これが順序保存であることは,  $f$が順序保存であることから「通分」することでわかる.
+        \end{proof}
+        \begin{defn}
+            順序体$K$が\textbf{アルキメデス的}とは, 任意の$K$の元よりも大きい自然数が存在することである. すなわち, \[\forall x\in K \exists n\in \nat\subset\quo (x<n)\]
+            ただし, 前命題によって$\quo\subset K$と思っている.
+        \end{defn}
+        \begin{prop}
+            順序体$K$について, 以下は同値.
+            \begin{enumerate}
+                \item $K$はアルキメデス的.
+                \item $\forall x\in K \exists q\in\quo (x<q)$.
+                \item $\forall x\in K_{>0} \exists q\in \quo (0<q<x)$.
+                \item $\forall x, y\in K (x<y\to \exists q\in\quo (x<q<y))$.
+                \item $\forall x, y\in K_{>0} (x<y\to \exists n\in\nat (y<nx))$.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            1, 2, 3, 5の同値性は簡単な順序体の操作と$\quo$の元が（整数/1以上の整数）で書けることを用いればよい. また, $4\to 3$は簡単である. 
+            
+            （$3\to 4$）背理法を用いる. ある$x<y$について, $(x, y)$には有理数が含まれないと仮定し矛盾を導く. 仮定より$0<q<y-x$なる有理数$q$が取れる.
+            
+            $y>0$である場合と, $x<0$である場合で場合分けを行う.
+            
+            $y>0$であると仮定する. 任意に$n\in\nat$をとる. $y\leq m/n$となる最小の$m\in\nat$をとる. （このような$m$がとれるのは, $y>0$という仮定, $\nat\to\quo, m\mapsto m/n$という写像の存在, $\nat$の整列性から出る.） 最小性から, $(m-1)/n\leq x$となるしかないが, $0<y-x\leq 1/n$.
+            
+            すると, $0<q<1/n$が任意の$n$について成り立つことになる. 一方$q=a/b (a, b\in \nat-\{0\})$と書けるから, $q>1/(b+1)$となり矛盾する.
+            
+            $x<0$である場合は, $-m/n\leq x$となる最小の$m\in\nat$をとることによって, 全く同様に矛盾する. よって示された.
+        \end{proof}
+        \begin{cor}
+            アルキメデス的順序体において, 相異なる2元の間には可算個の有理数がある.
+        \end{cor}
+        \begin{proof}
+            $x, y$を相異なる2元とする. この間に有理数$q_0$が存在することは今示したばかりである.
+            
+            そこでそのような有理数の取り方を選択公理で固定しておく. recursionにより, $x, q_n$の間の有理数$q_{n+1}$をとっていけば所望の$\nat$個の有理数が手に入った.
+        \end{proof}
+        \begin{cor}
+            アルキメデス的順序体において, 任意の元は有理数でいくらでも近似できる. すなわち, \[\forall x\in K \forall r \in K_{>0} \exists q\in \quo (q\in U(x, r))\]
+        \end{cor}
+        \begin{cor}
+            アルキメデス的順序体の位相は可分である.
+        \end{cor}
+    \subsubsection{$\rea$}
+        \begin{defn}
+            有理数の点列$(x_n)_{n\in\nat}$が\textbf{有理Cauchy列}とは, $\forall q\in\quo_{>0} \exists M\in\nat \forall m, n\in \nat_{>M} (-q<x_m-x_n<q)$なることをいう.
+            
+            有理数の点列$(x_n)_{n\in\nat}$が$r\in\quo$に\textbf{収束する}とは, $\forall q\in\quo_{>0} \exists M\in\nat \forall n\in\nat_{>M} (r-q<x_n<r+q)$なることをいう.
+
+            $\quo^\nat$を直積環とし, その元を有理数の点列$\nat\to\quo$と思う. 有理数からなるCauchy列全体のなす部分環を$A$とし, $I$を0に収束する$A$の元全体のなす$A$のイデアルとする. 剰余環$A/I$（構成を1つ固定しておく）に以下の順序を考えたものを\textbf{実数}$\rea$と定める.
+            
+            $(x_n)_{n\in\nat}\in A$が表す$A/I$の元を, $[(x_n)_{n\in\nat}]\in A/I$で表す.
+            
+            写像$\quo\to\rea, r\mapsto[(r)_{n\in\nat}]$を\textbf{自然な包含}という.
+        
+            順序を, $[(a_n)_{n\in\nat}] < [(b_n)_{n\in\nat}]$とは$\exists q\in\quo_{>0}\exists M\in\nat \forall n\in\nat_{>M} (a_n+q<b_n)$として定める. これは自然な包含の下で$\quo$の順序と整合する.
+       \end{defn}
+        \begin{prop}
+            $\rea$はアルキメデス的順序体となる. 
+        \end{prop}
+        \begin{proof}
+            $A$は, $\quo^\nat$の乗法単位元を含む, 加法乗法に閉じた部分集合であるから, 部分環である. $I$は, 加法と$A$倍に閉じているから, $A$のイデアルである. さらに, 実は極大イデアルである.
+            \begin{framed}
+                極大性を示すには, 任意の$x=[(x_n)_{n\in\nat}]\in A-I$に対し$y=[(y_n)_{n\in\nat}]\in I$をとって$ax+by=1 (a, b, 1\in A)$とできればよい.
+                
+                $x$は0に収束しない有理Cauchy列なのだから, 簡単な議論により$\exists q\in\quo_{>0}, M\in\nat \forall n>M (x_n>q \lor -x_n>q)$となることがわかる. $y$を第$M$項まで$1$, それ以降の項で$0$をとる数列の同値類であると定める. $b$を$1$の定数数列の同値類と定める. $a$を第$M$項まで$0$, それ以降の項で$a_n=1/x_n$となる数列の同値類であると定める. （ここで, $x_n\neq 0$となっていることが用いられている.）
+                
+                すると$ax+by=1$となる. よって, $I$は極大である.
+            \end{framed}
+            よって, $A/I$は体である.
+            
+            また, 順序はwell-definedであり, 全順序となる.
+            \begin{framed}
+                well-definedであること. $a=[(a_n)_{n\in\nat}]=[(a_n')_{n\in\nat}]$, $b=[(b_n)_{n\in\nat}]=[(b_n')_{n\in\nat}]$とする. $\exists q\in\quo_{>0}\exists M\in\nat \forall n\in\nat_{>M} (a_n+q<b_n)$であるとする.
+                
+                前提の$q\in\quo_{>0}, M\in\nat$をとる. いま, $(a_n'-a_n)_{n\in\nat}$は0に収束するから, ある$M_1\in\nat$以降の項では$\abs{a_n'-a_n}<q/3$と評価できる. 同様に$(b_n'-b_n)_{n\in\nat}$はある$M_2\in\nat$以降の項では$\abs{b_n'-b_n}<q/3$と評価できる.
+                
+                そこで, 不等式評価により${\rm max}(M, M_1, M_2)$以降の項では$a_n'+q/3<b_n'$が成り立つ. よって$\exists q\in\quo_{>0}\exists M\in\nat \forall n\in\nat_{>M} a_n'+q<b_n'$となるから, well-definedであるのはわかった.
+                
+                これが順序となることは容易にわかる.
+                
+                全順序であること. $a\neq b$をとり,$a=[(a_n)_{n\in\nat}], b=[(b_n)_{n\in\nat}]$とする. $(a_n-b_n)_{n\in\nat}$は$A-I$の元であるから, 先ほどの議論により$\exists q\in\quo_{>0}, M\in\nat \forall n>M (a_n-b_n>q \lor b_n-a_n>q)$となる. いずれの場合にしろ, $a<b$であるか$a>b$であるから, 示された. 
+            \end{framed}
+            
+            順序と演算は整合し, 順序体となる.
+            \begin{framed}
+                示すべきは順序体の公理の$a\leq b\to a+c\leq b+c$, $a, b\geq 0 \to ab\geq 0$の2つである. 前者は, $a, b, c$の代表元をとって議論すれば$\quo$の場合に帰着する. 後者は, $a>0, b>0\to ab>0$を示せば十分だが, $a, b$の代表元の数列をとったときに十分先で0から離れた正有理数値を取り続けることを指摘すれば, やはり$\quo$の場合に帰着する.
+            \end{framed}
+            
+            実数のアルキメデス性を見ておく. 任意の実数を$x=[(x_n)_{n\in\nat}]$とおく. $(x_n)_{n\in\nat}$は有理Cauchy列だから, 有界である. よってこれを上から抑える有理数$q$がとれるが, $x<q+1$となることは順序の定義から明らかである. 
+        \end{proof}
+        \begin{lem}\label{cauchy}
+            実数の点列$(x_n)_{n\in\nat}$が\textbf{実Cauchy列}とは, $\forall q\in\quo_{>0} \exists M\in\nat \forall m, n\in \nat_{>M} (-q<x_m-x_n<q)$なることをいう.
+            
+            実数の点列$(x_n)_{n\in\nat}$が$r\in\rea$に\textbf{収束する}とは, $\forall q\in\quo_{>0} \exists M\in\nat \forall n\in\nat_{>M} (r-q<x_n<r+q)$なることをいう.
+            
+            このとき, 実Cauchy列は収束する.
+        \end{lem}
+        \begin{proof}
+            まず2つ準備する.
+            
+            1つ目. 有理, 実Cauchy列$(x_n)$は, 部分列$(y_n)$をうまくとって$\abs{y_m-y_n}<2^{-{\rm min}(m, n)}$とできる. これを\textbf{良い}Cauchy列と呼ぶことにする.
+            \begin{framed}
+                Cauchy列の定義から, それより先では$2^{-(n+1)}$しか変動しない$k_n\in\nat$がとれる. しかも, この$(k_n)$を狭義単調増加にとることができる.（増加しない部分は$+1$するよう置き換えてrecursionすればよい.） そこで, $y_n = x_{k_n}$として定めればよい. よって示された.
+            \end{framed}
+            
+            2つ目. 実数$z=[(z_n)]$に対し$\abs{z}=[(\abs{z_n})]$となる.
+            \begin{framed}
+                一般に3角不等式$\abs{a}-\abs{b}\leq\abs{a-b}$が成り立つから, $(\abs{z_n})$も有理Cauchy列であることに注意する.
+                
+                $z$が正のとき. $0<z$の定義から, $(z_n)$は十分遠方で常に正となり, $z_n=\abs{z_n}$となる. よって, $\abs{z}=z=[(z_n)]=[(\abs{z_n})]$.
+                
+                $z$が負のときも同様.
+                
+                $z$が0のとき. $(z_n)$は0に収束する有理Cauchy列となる. $\abs{z_n-0}=\abs{\abs{z_n}-0}$であるから, $(\abs{z_n})$も0に収束する. よって示された.
+            \end{framed}
+            
+            実Cauchy列$(x_n)$をとる. $(x_n)$の良い部分列$(a_n)$をとる. 各$a_n$に対し, 良い代表元$a_n=[(b_k^n)_k]$をとる. このとき, $c_n = b_n^n$とすれば$(c_n)$は有理Cauchy列である.
+            \begin{framed}
+                $m>n$とする. 
+                
+                まず$\abs{b_m^m-b_m^n}<2^{2-m}+\abs{a_m-a_n}$であることを示す. $\abs{a_m-a_n}=[(\abs{b_k^m-b_k^n})_k]$である.
+                
+                $p>m$とすれば, $\abs{b_m^m-b_m^n}-\abs{b_p^m-b_p^n}\leq\abs{b_m^m-b_m^n-b_p^m+b_p^n}\leq\abs{b_m^m-b_p^m}+\abs{b_p^n-b_m^n}<2^{1-m}$. すなわち, $\abs{b_m^m-b_m^n}+2^{1-m}<2^{2-m}+\abs{b_p^m-b_p^n}$である. よって, 順序の定義より $\abs{b_m^m-b_m^n}<2^{2-m}+\abs{a_m-a_n}$となる.
+                
+                $\abs{c_m-c_n} = \abs{b_m^m-b_n^n} \leq \abs{b_m^m-b_m^n}+\abs{b_m^n-b_n^n}< 2^{2-m}+\abs{a_m-a_n}+2^{-n}< 2^{2-n}+2^{-n}+2^{-n}<2^{3-n}$. これは, $(c_n)$がCauchyであることを表す.
+            \end{framed}
+            
+            実は, 実Cauchy列$(x_n)$は, 実数$c=[(c_n)]$に収束する.
+            \begin{framed}
+                Cauchy列の部分列が収束すれば, 元のCauchy列も同じ点に収束する. よって, $(a_n)$が$c$に収束することを言えばよい.
+                
+                $\abs{a_n-c}=[(\abs{b_m^n-b_m^m})]$であり, 前項から$m>n$とすれば$\abs{b_m^n-b_m^m}<2^{3-n}$. そこで$n$を十分大きくとれば, いくらでも$\abs{a_n-c}$は小さくなる. これが収束の定義であった.
+            \end{framed}
+            
+            よって示された.
+        \end{proof}
+        \begin{prop}
+            $\rea$は順序集合としてDedekind完備である.
+        \end{prop}
+        \begin{proof}
+            Dedekind完備性を示すには, 同値な条件, 「直前元直後元が存在せず, 上に有界な空でない部分集合は上限を持ち, 下に有界な空でない部分集合は下限を持つ」ことを示せばよい. $a$の直後元$a'$があれば, $(a+a')/2$が順序体の性質から間の元となり矛盾する. よって, 直後元は存在しない. 直前元も同様. また上限の存在を示せば下限の存在も同様であるから, 上限の存在だけ指摘する. 
+            
+            任意に上に有界な空でない部分集合$S\subset \rea$をとる. $S$の上界を$S'$とし, $x\in S, y\in S'$をとる. $S$に最大値がある場合は自明だから, $S$に最大値がない場合を考えよう. このとき, $x\not\in S', y\not\in S$, $x<y$である.
+            
+            $a_n^k = y- \frac{k}{2^n}(y-x) \, (0\leq k\leq 2^n, n\geq 1)$とおく. $k$が大きくなるに従って$a_n^k$は小さくなり, $a_n^0 = y\in S', a_n^{2^n}=x\not\in S'$だから, $k_n$以下の$k$について$a_n^k\in S'$, $k_n+1$以上の$k$について$a_n^k\not\in S'$となる$k_n$が存在する.
+            
+            $b_n = a_n^{k_n}$として, 実数列$(b_n)_{n\in\nat}$を定める. このとき, $b_{n+1}=a_{n+1}^{k_{n+1}}\in S'$かつ, $a_{n+1}^{k_{n+1}+1}\not\in S'$. $a_n^{k_n}=a_{n+1}^{2k_n}\in S'$かつ, $a_n^{k_n+1}=a_{n+1}^{2k_n+2}\not\in S'$であるから, $k_{n+1}=2k_n$あるいは$k_{n+1}=2k_n+1$のいずれかである.　よって, $b_n-b_{n+1}=0$あるいは$b_n-b_{n+1}=\frac{y-x}{2^{n+1}}$.
+            
+            今行った$(b_n)$に対する評価$\abs{b_n-b_{n+1}}\leq\frac{y-x}{2^{n+1}}$により, これが実Cauchy列であることは帰納法で明らかである. そこで, \ref{cauchy}により収束先$b$が存在する.
+            
+            この$b$は上界の収束先であるから上界であり, しかも$b_n$の単調減少性から, 任意の$b_n$より小さい. $b_n$の構成の仕方とアルキメデス性から, $b$が$S$の上限であることが確かめられる.
+        \end{proof}
+        \begin{prop}
+            Dedekind完備な順序体は$\rea$に順序体同型である. さらに, その順序体同型を与える写像は一意.
+        \end{prop}
+        \begin{proof}
+            \cite{sugiura}のように, 実数の理論展開は構成に依存せず, Dedekind完備順序体という公理のみでできる. そこで通常の解析はすでに行ったものとしてよい. Dedekind完備順序体$K, K'$が与えられたときこれらが順序体同型であることを示せば十分である.
+            
+            $\quo$からの一意的な順序体準同型があるから, これによって$K$の有理数を$K'$の有理数に対応させる写像$f$が一意的に得られる. また, 実数論における結果として, 「任意の実数は（特に, 片側から漸近する）有理点列の収束先として書ける」ことが知られているから, $F\colon K\to K'$を$x={\rm lim}x_n\mapsto {\rm lim}f(x_n)$（$x_n$は$x$に収束する有理点列の1つ）として定めることができる.
+            
+            $F$がwell-definedなこと. まず$(f(x_n))$は$K'$でのCauchy列となっているから収束する. もし$x={\rm lim}x_n ={\rm lim}y_n$ならば${\rm lim}(x_n-y_n)=0$であるから, ${\rm lim}f(x_n)-{\rm lim}f(y_n)={\rm lim}(f(x_n)-f(y_n))=0$だから行先は同じ.
+            
+            $F$が順序体同型であること. 極限が存在する場合に極限と演算は交換し, $f$は演算を保つから, 体準同型となる. また全射性は, 送りたい先の元に収束する有理点列を引き戻してその収束先を考えれば明らかである. 順序を保つことだが, $x<y$ならば$x<r<s<y$なる有理数$r, s$が存在するから$F(x)\leq F(r)=f(r)<f(s)=F(s)\leq F(y)$.（$x$に下から漸近する有理点列をとって議論. $y$も同様.） よって, $F(x)<F(y)$となり示された.
+            
+            $F$が一意であること. 有理数の送り方は一意である. $K$の各元$x$は一意的な$\quo\subset K$のDedekind cutを定める. $F(x)$が定める$\quo\subset K'$のDedekind cutは一意的に$K'$の元$x'$を定めるから, 順序保存性から$x\mapsto x'$とするしかない. よって, 示された.
+        \end{proof}
+        \begin{rem}
+            このことによって, $\rea$はDedekind完備順序体として特徴づけられる. そこで, 一旦Dedekind完備順序体が存在することが示されれば, 適当なものを$\rea$であると定めてしまっても問題ない. \footnote{ほかにも, $\quo$を最小の順序体としてみたり, $\zah$を環の圏の始対象としてみたりなどいろいろな普遍性による定義を採用することができるだろう.}（例えば, \cite{sugiura}は$\rea$の存在をファクトとしている.） 以後, $\rea$がどのような構成だったかは忘れることとする. 
+        \end{rem}
+        
+        \begin{prop}
+            $\rea$を実数体とする. これは順序位相の下で位相体をなし, その位相はcompletely normal, 連結, 局所連結, 第二可算, 局所コンパクト, パラコンパクト. 
+        \end{prop}
+        \begin{proof}
+            順序体だから位相体であり, 順序位相なのでcompletely normal. Dedekind完備なので連結. $\set{U(x, r)|x, r\in \quo, r>0}$が開基をなすことがアルキメデス性よりわかるので, 第二可算.
+            
+            局所連結性を示すには, 開区間が一般に連結であることを言えばよい. 閉区間は${\rm id}$と定数関数の組み合わせによる$\rea$の連続像として表現できるから連結で, 開区間は閉区間の可算拡大列の和として書けるから連結.
+            
+            (Heine-Borel) $\rea$の部分集合について, 以下は同値. 有界閉集合であること, コンパクトであること, 点列コンパクトであること.
+            \begin{framed}
+                第二可算空間の部分空間は第二可算であり, 位相空間の一般論により第二可算性の下でコンパクトと点列コンパクト性は同値である. コンパクトならば有界（やさしい）で閉（ハウスドルフ性）. また有界閉ならば点列コンパクトである. 実際有界性から縮小区間列（Bolzano-Weierstrassの証明と同じ論法）を使って収束先を作ることができ, 閉であることから収束先が元の集合に含まれることが言える. 区間縮小法は, 有界単調列の収束（Dedekind完備性からただちにわかる）により示すことができる.
+            \end{framed}
+            
+            そこで$[x-1, x+1]$はコンパクトであるから, 局所コンパクト. 今まで示したことから, Lindelöf, regularなのでパラコンパクト.
+        \end{proof}
+        \begin{rem}
+            $\rea$を定義に含めたいくつかの性質がある. 例えば, 弧状連結性, 完全正則性, 距離化可能性などである. これらの整備に用いる事実は,
+            \begin{itemize}
+                \item $[0,1]$は連結である.
+                \item Cauchy列が収束する, 上限特性といった初等的な事実.
+                \item 位相空間上の実数値連続関数は, 和, 積, ${\rm max}$, 加法逆元, 乗法逆元をとっても連続である.
+                \item 位相空間上の実数値連続関数の一様収束極限は連続である.
+            \end{itemize}
+            であるから, 循環論法を避けるにはまずこれらを示さなければならない. 
+        \end{rem}
+        \begin{prop}
+            $\abs{\rea}=\beth_1=2^{\aleph_0}$.
+        \end{prop}
+        \begin{proof}
+            各実数$r\in \rea$は, それぞれ$\quo$のDedekind cutに対応するから, $\rea$の濃度は $\quo$の冪集合の濃度で抑えられる.
+            
+            一方, $\nat$から$\set{0, 1}$への関数全体は$2^{\aleph_0}$の濃度をもつが, $f\colon\nat\to\set{0, 1} \mapsto 0.f(0)f(1)\dots$（10進表記）という対応によって$\rea$への単射が得られる. よって示された.
+        \end{proof}
+        
+    \subsection{recursionの応用}
+        transfinite recursionを実際の数学に応用するにあたって, 重要な例が2つある. 1つ目は, 何らかの構造が生成される際に, その構造特有の事情によって生成の仕方がrecursionによって記述される場合である. これは, 生成される構造の濃度を決定するのに役に立つため, 重要である. 今回は測度論でおなじみの$\sigma$-algebraの形を調べてみる. 2つ目は, 通常Zornの補題で済ませる議論をrecursionに置き換える方法である. これはZornの補題でもできることなので, 新規性はない. しかし, 直感的な議論ができることがrecursionの強みであり, これを知っておくことは重要である. 今回は線形空間の基底の存在を証明するのに使う. 通常であれば, 「基底候補」のなす帰納的順序集合の極大元をとるのであったが$\dots$
+        
+    \subsubsection{$\sigma$-algebraの生成}
+        \begin{prop}
+            $X$を集合とし, $B_0$を$X$の部分集合族とする. recursionにより, 
+            \begin{itemize}
+                \item $B_{\alpha+1}=(B_\alpha$の元たちの高々可算和, 高々可算交叉, 補集合により得られる集合全体). ただし0個交叉と0個和はそれぞれ$X, \varnothing$を意味するものとする.
+                \item $B_\beta=\bigcup_{\alpha<\beta}B_\alpha$($\beta$は極限順序数).
+            \end{itemize}
+            と定めると$B_{\aleph_1}=B_{\omega_1}$は$B_0$によって生成される$\sigma-$algebraである.
+        \end{prop}
+        \begin{proof}
+            $B_0$が生成する$\sigma-$algebraを$\mathfrak{B}$とおく.
+            
+            $B_{\omega_1}\subset \mathfrak{B}$であることは, inductionにより明らかである. よって$B_{\omega_1}$が$\sigma-$algebraであることを示せば十分である.
+            
+            明らかに$\varnothing, X\in B_1\subset B_{\omega_1}$である. また, $A\in B_{\omega_1}$ならば, ある$\beta<\omega_1$が存在して$A\in B_\beta$であるから, $A^c\in B_{\beta+1}\subset B_{\omega_1}$. よって補集合に閉じている. また, $A_1, A_2, \dots \in B_{\omega_1}$ならば, ある$\beta_1, \beta_2, \dots <\omega_1$が存在して$A_i\in B_{\beta_i}$であるから, $\bigcup A_i, \bigcap A_i\in A_{\sup\beta_i+1}$. ここで$\omega_1$は後続型基数なので, 正則基数. そこで高々可算な順序数の可算個の和は可算であり, $\sup\beta_i+1<\omega_1$となる. よって, $\bigcup A_i, \bigcap A_i\in B_{\omega_1}$. よって, 高々可算和, 高々可算交叉に閉じている. よって示された. 
+        \end{proof}
+        
+        \begin{cor}
+           今の状況で$B_0$が連続体濃度ならば, $\mathfrak{B}$は連続体濃度である.
+        \end{cor}
+        \begin{proof}
+            $\abs{B_\alpha}=2^{\aleph_0}$を$\alpha$の$\omega_1$までのinductionによって示す. 0のときは明らか.
+            
+            後続型順序数の場合. $\abs{B_\alpha}=2^{\aleph_0}$を仮定し, $\abs{B_{\alpha+1}}=2^{\aleph_0}$を示す. $B_{\alpha+1}$の元は, $B_\alpha$の元の高々可算和, 高々可算交叉, 補集合全体である. 高々可算個の元の取り方は, $\abs{B_\alpha}^{\aleph_0}=(2^{\aleph_0})^{\aleph_0}=2^{\aleph_0}$で抑えられることに注意すれば, 容易に$\abs{B_{\alpha+1}}=2^{\aleph_0}$であることがわかる.
+            
+            極限順序数の場合, 連続体濃度を持つ集合の高々$\omega_1$個の和は連続体濃度で抑えられるから, わかる.
+        \end{proof}
+        
+    \subsubsection{線形空間の基底の存在}
+        \begin{prop}
+            線形空間$V$には, 基底が存在する.
+        \end{prop}
+        \begin{proof}
+            $V$にwell-orderを入れて, その元を$x_\alpha$の形で書く. $V$の基底が存在しないとすれば, $e_\alpha$を$V-{\rm span}_{\beta<\alpha}e_\beta\neq\varnothing$の最小元としてtransfinite recursionすれば\textbf{Ord}個の線形独立な元が取れる. しかし$V$は集合であるから置換公理に矛盾する.
+        \end{proof}
+    \subsection{圏論にありがちなこと}
+        集合論以外で基礎論的な問題にあたる瞬間というと, 圏論が挙げられる. \footnote{代数幾何でも似たような問題があるようだが, 詳しくないので述べない.}圏論では具体例として, 集合と写像のなす圏\textbf{Set}, 位相空間と連続写像のなす圏\textbf{Top}, 群と群準同型のなす圏\textbf{Grp}などを扱うことがある. また, 純粋な圏論においても,  米田の補題といった基本的な命題を主張するために\textbf{Set}を用いることがある. 
+        
+        しかしすでにみたように, 集合全体の集まりは真クラスを成すから, 我々の集合論の体系ではこれらの状況を体系の上の言葉で正確に述べることはできない. これは, 単に記述に難があるという問題では済まされない. 例えば, 真クラスサイズの圏から真クラスサイズの圏への関手の全体は, もはや記述することすらできないのである.
+        
+        通常, このような問題は「本質的でない問題」として適当に処理される（あるいは, 処理したつもりになって先に進む）. 例えば, ここで考えているのは\textbf{ベルナイス=ゲーデル公理系}で圏はその意味でのクラスだとか, 圏は集合ではなく\textbf{集まり}だとかと言ったりする. しかしこれは問題の本質的な解決になっていなさそうである.
+        
+        この問題に対する主流の答えは, 集合論の公理に新たな公理を付け加えるというものである.\footnote{反映原理を用いた方法も考えられている. この方法では, 「集合全体の集まり」を意味する定数記号$s$を体系に付け加え, 適切な公理を追加した状態で数学を行うようだ. 詳しくないのでこれ以上は述べない.}
+        
+        \begin{defn}
+            \textbf{Grothendieck Universeの存在公理}とは, 「任意の集合に対し, それを含むGrothendieck Universeが存在する.」という主張のこと.
+        \end{defn}
+        \begin{rem}
+        4章で調べたことにより, この公理は「任意の順序数に対し, それより大きい強到達不能基数が存在する」ことと同値である. 強到達不能基数のなす順序数の部分クラスを整列順序づければわかるように, これは「強到達不能基数のなす順序数の部分クラスが真クラスを成す」ことと同値である. よって, この公理は強到達不能基数が大量に存在することを主張する.
+        
+        この公理を付け加えることにより, 集合論が矛盾を生じ得るかということは今のところ分かっていない. また, この公理を付け加えることが妥当に思えるかは, ほかの集合論の公理に比べてそれほど自明ではない. 
+        
+        $\omega$も正則強極限的であり, ほとんど強到達不能基数のようなものである. 無限公理のことを強到達不能基数を1つ認める公理だと思うなら, より多くの強到達不能基数の存在を認めてもいいような気がしないでもない.
+        
+        また, 数学を展開するのに必要なGrothendieck Universeの個数が本当に真クラスサイズ個であるかも疑問である. 有限個, あるいは可算個, $\omega_1$個存在すれば通常の数学には「事足りる」かもしれない. これは哲学的な問題なので, 各人の納得いく定式化を考えるべきである.
+        \end{rem}
+        
+        Grothendieck Universeの存在公理を認めると, 圏論を次のように定式化できる.
+        
+        \begin{defn}
+            \textbf{圏}とは, 集合${\rm Ob}, {\rm Hom}(A, B)_{A, B\in {\rm Ob}}$, 関数Domain$\colon$ Mor$\to$ Ob, Codomain$\colon$ Mor$\to$ Ob, identity$\colon$ Ob$\to$ Mor, 合成関数$\circ$の組のことである.
+            
+            圏がGrothendieck Universe $U$に対し$U$-categoryであるとは, ${\rm Ob}\subset U, \forall A, B\in {\rm Ob}({\rm Hom}(A, B)\in U)$であること. 
+            
+            圏がGrothendieck Universe $U$に対し$U$-smallであるとは, $U$-categoryであり, かつ${\rm Ob}\in U$であること.
+        \end{defn}
+        \begin{defn}
+            $U$をGrothendieck Universeとする. $U$-Setとは, ${\rm Ob}=U$, ${\rm Hom}(A, B) =\set{f\colon A\to B}$に自然な演算を定めた圏のこと. 明らかに$U$-categoryである.
+            
+            $U$-Top, $U$-Grpなどを$U$の元である位相空間, 群からなる圏とする. 明らかに$U$-categoryである.
+        \end{defn}
+        \begin{prop}
+            任意の圏は, あるGrothendieck Universe $U$に対する$U$-smallとなる.
+        \end{prop}
+        \begin{proof}
+            圏は集合だから, これを元として持つGrothendieck Universeをとれる. これが所望の$U$であることは簡単である.
+        \end{proof}
+        
+        \begin{rem}
+            圏論を他の数学に応用したいときは, Grothendieck Universeを1つ固定して$U$-Set, $U$-Top, $U$-Grpなどを考えればよい. もし$U$-category性を崩すような操作（例えば, 一般に$U$-categoryの間の関手圏は$U$-categoryとならない）を考えたい場合は, より大きなGrothendieck Universeを取り直せばよい. もっとも, 実はGrothendieck Universeを考えなくとも, 圏論における定理の証明を実際の対象に対して繰り返すことで十分な場合が多い.
+            
+            純粋圏論を調べたい場合は, 圏が集合であることから基礎論的な事項は気にしなくて済む. 一方で, ふつうsmallなどの言葉で記述される部分（例えば, 圏論的極限を考える際の添字圏の大きさなど）についてそれが「どのGrothendieck Universe-small」なのかに注意しなければならない.
+        \end{rem}
+    \subsection{位相空間の反例}
+        順序数を用いる, 有名な位相空間の性質を調べよう. 
+        
+    \subsubsection{Ordinal space}
+        \begin{defn}
+            $\gamma$を極限順序数とする. 
+            
+            $\gamma=[0, \gamma), \gamma+1=[0, \gamma]$に順序位相を入れたものをそれぞれ\textbf{Open Ordinal space}, \textbf{Closed Ordinal space}という. 
+        \end{defn}
+        \begin{prop}
+            $\gamma<\omega_1$とする. 以下が成立.
+            \begin{enumerate}
+                \item Ordinal spaceはcompletely normal.
+                \item $[0, \omega_1]$は第1可算でなく, 可分でなく, 第2可算でない.
+                \item $[0, \omega_1)$は第1可算だが, 可分でなく, 第2可算でない.
+                \item $[0, \gamma], [0, \gamma)$は第1可算, 可分, 第2可算.
+                \item $[0, \gamma], [0, \omega_1]$はコンパクト.
+                \item $[0, \gamma), [0, \omega_1)$はコンパクトでないが, 局所コンパクト.
+                \item $[0, \omega_1)$は可算コンパクト, 点列コンパクトだが, メタコンパクトでなく, パラコンパクトでなく, Lindelöfでなく, $\sigma$コンパクトでない.
+                \item 任意の$[0, \omega_1), [0, \omega_1]$上実連続関数は, ある$\beta<\omega_1$以上のところで定数関数となる.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            \begin{enumerate}
+                \item 順序位相はcompletely normalだった.
+                \item $\omega_1$の可算近傍基$(U_n)$をとれたとする. 順序位相の形から, $(a_n, \omega_1]\subset U_n$なる$a_n<\omega_1$がある. $\omega_1$の正則性から, $\sup a_n <\omega_1$である. $b = \sup a_n+1$とすると$(b, \omega_1]$の形の近傍を$(U_n)$は生成できない. これは近傍基であることに矛盾する. 以上より, $[0, \omega_1]$は第1可算でない.
+                
+                $\omega_1$の可算稠密集合$S$が存在したとすると, $S-\{\omega_1\}$の上界について$\omega_1$の正則性から$\sup S<\omega_1$が成り立つ. よって$(\sup S+1, \omega_1)$には$S$の元が存在せず, 稠密性に矛盾する. 以上より, $[0, \omega_1]$は可分でない.
+                
+                第2可算なら可分だから, 第2可算でない.
+                \item $[0, \omega_1]$は第1可算である. 実際, 各点$\alpha\in[0, \omega_1)$の可算近傍基として$\set{(\beta, \alpha+1)|\beta<\alpha}$がとれる.
+                
+                可分でないことは2の証明とほとんど同様である. 第2可算でないことも同様.
+                \item 第2可算であることは, 開基として$\set{(\alpha, \beta)}$ がとれるから. 第1可算, 可分性はその系である.
+                
+                \item 任意の空でない部分集合について, その最小元は整列性から存在し, 上限は順序数の和として与えられるから存在する. よって順序完備であり, コンパクト. （$\gamma$が極限順序数でなくとも成り立つ.）
+                
+                \item 極限順序数であるから, $\set{[0, \alpha)|\alpha<\gamma}$は有限部分被覆をもたない. 一方で, 各点$p$は$[0, p+1]$をコンパクト近傍として持つ.
+                
+                \item 特に$[0, \omega_1]$は可算コンパクトなので, 任意の点列が接触点を持つ. よって$[0, \omega_1)$の点列は$[0, \omega_1]$に接触点を持つが, $\omega_1$の正則性から$\omega_1$が接触点になることは有り得ない. よって$[0, \omega_1)$の点列はその中で接触点を持ち, よって可算コンパクト.
+                
+                第1可算性の下で点列コンパクトと可算コンパクトは同値である.
+                
+                可算コンパクトメタコンパクト空間はコンパクトとなるから, メタコンパクトではない. パラコンパクトならメタコンパクトなので, パラコンパクトではない. Lindelöfかつ可算コンパクトならコンパクトなので, Lindelöfでない. $\sigma$コンパクトならLindelöfなので, $\sigma$コンパクトでない.
+                
+                \item $f\colon [0, \omega_1)\to\rea$を連続関数とする.任意の$n$に対し, ある$a_n<\omega_1$が存在して, 任意の$b>a_n$に対し$\abs{f(b)-f(a_n)}<1/n$を満たすことを示そう.
+                
+                ある$n$が存在して, 任意の$a<\omega_1$に対しある$b>a$が存在して$\abs{f(b)-f(a)}\geq1/n$となると仮定しよう. recursionにより$\abs{f(a_{n+1})-f(a_n)}\geq1/n$を満たす増加列$(a_n)$を構成する. $\sup a_n<\omega_1$において$f$が不連続となることが, 上限の定義からわかる. これは矛盾である.
+                
+                そこで, 任意の$b>a_n$に対し$\abs{f(b)-f(a_n)}<1/n$を満たすような$(a_n)$をとる. この上限$\sup a_n<\omega_1$より大きい点では, 任意の$n$に対して$1/n$より小さな変化しか許されないが, それはすなわち定数となることを意味する. よって示された. $f\colon [0, \omega_1]\to\rea$の場合は全く同じである.
+            \end{enumerate}
+        \end{proof}
+        \begin{rem}
+            $[0, \omega_1]$はcompletely normalだが, perfectly normalでない位相空間の例を与える. ここに位相空間が\textbf{perfectly normal}とは, $T_1, T_4$かつ任意の閉集合が$G_\delta$集合であることをいう.
+            
+            このことを示すには, 閉集合$\{\omega_1\}$が$G_\delta$でないことを言えば十分であるが, それは$\omega_1$の正則性からただちに従う.
+        \end{rem}
+    \subsubsection{Long Line}
+        \begin{defn}
+            \textbf{Long Line}\footnote{Long LineのことをLong Rayと呼ぶこともある. その場合, Long LineはLong Rayを2つを「逆向きにつなぎ合わせた」空間を意味する.} $L$とは, $[0, \omega_1)\times[0, 1)$に辞書式順序を入れた集合に順序位相を考えた位相空間のこと. ただしここで$[0, 1)$とは実数の区間を意味する.
+            
+            \textbf{Extended Long Line} $L^*$とは, $L$に最大元を加えた集合に順序位相を考えた位相空間のこと.
+        \end{defn}
+        \begin{lem}
+            任意の$\omega_1$未満の順序数に対し, $(0, 1)\cap\quo$への順序保存写像が存在する.
+        \end{lem}
+        \begin{proof}
+            $\omega_1$までのtransfinite inductionによる. 
+            0の場合, 自明である. 
+            
+            0でない後続型順序数$\alpha+1$の場合, $[0, \alpha)$を$(0, 1/2)\cap\quo$に送り, $[\alpha, \alpha+1)$（シングルトンである）を例えば$3/4$に送ってやれば$(0, 1)\cap\quo$への順序保存写像を得る.
+            
+            極限順序数$\gamma<\omega_1$の場合. $\gamma$の共終数は$\omega$となるから, 順序保存写像$f\colon \omega\to\gamma$が存在する. そこで, $[0, f(0)), [f(0), f(1)), [f(1), f(2)), \dots$と$[0, \gamma)$を分割し, 各区間を適切にスケーリングして$(0, 1/2)\cap\quo, (1/2, 3/4)\cap\quo, (3/4, 7/8)\cap\quo, \dots$へ順序保存に送る. これにより$(0, 1)\cap\quo$への順序保存写像を得る.
+        \end{proof}
+        \begin{prop}
+            以下が成立.
+            \begin{enumerate}
+                \item $L$はcompletely normalである. 可算コンパクトだが, Lindelöfでなく, メタコンパクトでない. また, 第1可算だが, 可分でない. 弧状連結である. 
+                \item $L^*$はcompletely normalである. コンパクトである. 第1可算でなく, 可分でない. 連結だが, 弧状連結でない.
+                \item $L-\{0\}$は局所1次元ユークリッド空間的, $T_2$だが, パラコンパクトでない. すなわち, パラコンパクトとは限らない1次元位相多様体である.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            積の元$(\alpha, 0)\in L, L^*$のことを単に$\alpha$ということにする. （実際には, 直積というよりは$\omega_1$個の単位区間$[0, 1]$がならんだ「長い直線」を想像しているからである.）
+            
+            順序位相の性質から, $L, L^*$はcompletely normalである. 
+            
+            $L^*$はコンパクトである. これを示すには順序完備性を言えばよい. 任意の空でない部分集合の下限, 上限は順序数の整列性と実数区間の上限, 下限性質から存在することがわかる.
+            
+            $L$は可算コンパクトである. これは点列の接触点について, Ordinal spaceの場合と似た議論をすればよい. また$L$はコンパクトでない. このことは$L$に最大元がないことからわかる. よって$L$はLindelöfでなく, メタコンパクトでない.
+            
+            $L$は第1可算である. 極限順序数$\gamma$に可算近傍基がとれるかだけが非自明だが, これは$\gamma$の共終数が$\omega$であることからとれる共終関数$f\colon\omega\to\gamma$を用いて$\set{(f(n), \gamma+1/n)|n\in\nat}$としてやればよい. 一方で, $L^*$は第1可算でない. $\omega_1$に可算近傍基が存在しないことを指摘すればよいが, それはOrdinal spaceと同様の議論である. $L, L^*$が可分でないことも, Ordinal spaceと同様の議論でよい. 
+            
+            $L$が弧状連結であることを示すためには, 任意の点$p=(\alpha, r)\in L$が0と弧でつなげることを言えばよい. 0から$\alpha$までが弧でつなげることは, 補題を用いて各順序数を有理点に対応させればわかる. $\alpha$から$p$をつなぐのは容易である. 
+            
+            $L^*$は連結であることを示す. 自然な包含$L\to L^*$が像への同相になっていることを, 開な連続単射であることを直接開基の形をチェックすることで示せる. そこで$L$の像は連結であり, その閉包として得られる$L^*$も連結である.
+            
+            $L^*$が弧状連結でないことは, 背理法による. 弧$f\colon [0, 1]\to L^*, f(0)=\omega_1, f(1)=0$が存在すると仮定する. $x = \inf \set{r\in[0, 1]|\omega_1 \not\in f([r, 1])}$とする. （この集合は1を含むので空でなく, 下に有界であることに注意.） $x$に下から漸近する, $f$での送り先が$\omega_1$である点列がとれる. 連続性から, $f(x)=\omega_1$である. 一方, $x$に上から漸近する, $f$での送り先が$\omega_1$でない点列がとれる. この点列はある順序数$\beta<\omega_1$で抑えることができるから, 連続性から$f(x)\neq\omega_1$となる. これは矛盾である.
+            
+            $L-\{0\}$は$L$の部分空間なので当然$T_2$である. 局所1次元ユークリッド空間的であることを示そう. 極限順序数$\gamma$において非自明だが, 補題から, 開区間への同相を構成することができる. また, 簡単な議論により$L-\{0\}$は弧状連結なので連結, よって強局所コンパクトな$L-\{0\}$において$\sigma$コンパクト性とパラコンパクト性は同値となる. もし$L-\{0\}$がパラコンパクトならば, $L$は$\sigma$コンパクトとなり, Lindelöfでないことに矛盾する.
+            \end{proof}
+        \begin{rem}
+            始点を除いたLong Lineは, パラコンパクトとは限らない位相多様体の例を与えている. 
+        \end{rem}
+    \subsubsection{Tychonoff Plank}
+        \begin{defn}
+            \textbf{Tychonoff Plank} $T$とは, 直積位相空間$[0, \omega_1]\times[0, \omega]$のこと.
+            
+            \textbf{Deleted Tychonoff Plank} $T_\infty$とは, $T$から1点$(\omega_1, \omega)$を抜いた部分位相空間のこと.
+        \end{defn}
+        \begin{prop}
+            以下が成立. 
+            \begin{enumerate}
+                \item $T$はコンパクト$T_2$で, 特にnormal. 
+                \item $T_\infty$はregularだが, normalでない.
+                \item 任意の連続関数$f\colon T_\infty\to\rea$に対し, ある$\alpha<\omega_1$が存在し, 各$i \in[0, \omega]$に対し$f\restriction_{[\alpha, \omega_1]\times\{i\}}$が定数関数となっている. このときの定数をそれぞれ$x_i$とおくと, $x_\omega = \lim x_i$となる.
+            \end{enumerate}
+        \end{prop}
+        \begin{proof}
+            \begin{enumerate}
+                \item 直積でコンパクト, $T_2$性は保たれるので,$T$はコンパクト$T_2$. よってnormalである.
+                \item $T$はnormalなのでregular, よってその部分空間である$T_\infty$もregularである. 
+                
+                一方で, $T_\infty$はnormalでない. 2つのdisjointな閉集合$A=\set{(\omega_1, n)|n\in[0, \omega)}$, $B=\set{(\alpha, \omega)|\alpha\in[0, \omega_1)}$を考えよう. 任意に$A$の近傍$U$をとる. $U$は各点$(\omega_1, n)$の近傍であるから, ある$a_n<\omega_1$が存在して, $\set{(x, n)|a_n<x\leq\omega_1}\subset U$となる. $a=\sup a_n<\omega_1$をとると, $(a, \omega_1]\times[0, \omega]-\{(\omega_1, \omega)\}\subset U$である. そこで, $B$の点$(\sup a_n+1, \omega)$の任意の近傍は, $U$と交わる. これは, $A$と$B$がdisjointな近傍で分離できないことを意味するから, $T_\infty$はnormalでない.
+                
+                \item $f$をとる. $[0, \omega_1]\times\{i\}$は$[0, \omega_1]$と同相であり, $[0, \omega_1)\times\{\omega\}$は$[0, \omega_1)$と同相である. （直積位相の一般論）
+                
+                $f$のそれらへの制限を考えると, 連続なので十分先で定数となる. 各$i$に対し$a_i<\omega_1$以後定数になるとすると, $\alpha=\sup a_i+1<\omega_1$とおくことで所望のものとなっている.
+                
+                $f\restriction_{\{\alpha\}\times[0, \omega]}$は連続で, $f(i)=x_i$. また$\{\alpha\}\times[0, \omega]$は$[0, \omega]$と同相なので, $\omega$での連続性から$x_\omega=\lim x_i$となる.
+            \end{enumerate}
+        \end{proof}
+        \begin{rem}
+            実は$T_5$分離公理は, 任意の部分空間が$T_4$であることと同値であることが知られている. よって, Tychonoff Plankはnormalだがcompletely normalでない空間の例を与えている.
+        \end{rem}
+    \subsubsection{Tychonoff Corkscrew}
+        \begin{defn}
+            順序数$\gamma$に対し, 全順序集合$A_\gamma$を
+            \[A_\gamma = \{0^-, 1^-, \dots , \gamma, \dots , 1^+, 0^+\}\]
+            と定める. 左の方が小さく, 右にある方が大きいとして順序を定める.
+            
+            位相空間$C, C'$を, 順序位相の入った$A_\gamma$について
+            \[C = A_{\omega_1}\times A_\omega - [\omega_1, 0^+]\times\{\omega\}\]
+            \[C'= A_{\omega_1}\times A_\omega - [0^-, \omega_1]\times\{\omega\}\]
+            と定める. $C$は, Tychonoff Plank4枚分の大きさを持つ, Cの字型の図形である. （横の長さが$\omega_1$ 2個分, 縦の長さが$\omega$ 2個分であり, 真ん中の点と, そこを始点とする半直線が除かれている. ） $C'$は, $C$をひっくり返した図形である.
+            
+            $C, C'$の下部とは, $A_{\omega_1}\times[0^-, \omega)$の部分, 上部とは$A_{\omega_1}\times(\omega, 0^+]$の部分のこととする.
+            
+            $C, C'$のコピーをそれぞれ$\zah$個用意し, $C^{(m)}, C'^{(m)} (m\in \zah)$と呼ぶ.
+            
+            この$\zah$個の$C, C'$のコピーたちのなす直和空間に対して, $C^{(m)}$の下部と$C'^{(m)}$の下部を, $C^{(m)}$の上部と$C'^{(m+1)}$の上部を自然に同一視することでできた商位相空間のことを, $S$と呼ぶ. この図形は, 上下に$C, C'$が互い違いに連なっている螺旋構造をしている.\footnote{コルクを抜くための栓抜き(corkscrew)に似ている, と思う人もいるかもしれない. だから, Tychonoff Corkscrewと呼ばれている.}
+            
+            $S$に2点, $\infty, -\infty$を加えたものを$X$とする. この空間の位相を, 元々の$S$の開集合のほかに
+            \[\{\infty\}\cup \bigcup_{m>N} (C^{(m)}\cup C'^{(m)})\]
+            \[\{-\infty\}\cup \bigcup_{m<N} (C^{(m)}\cup C'^{(m)})\]
+            の形で書ける集合を含めた集合を開基として生成する. この$X$を, \textbf{Tychonoff Corkscrew}という. これは, $S$に上方向の無限遠点と, 下方向の無限遠点を付け加えた空間である. 
+        \end{defn}
+        \begin{prop}
+            $X$はregularであるが, completely regularでない.
+        \end{prop}
+        \begin{proof}
+            自然な写像$C^{(m)}\to X$, $C'^{(m)}\to X$が開埋め込みになっていることが, 位相の形をよく見てみるとわかる. このことにより, $S\subset X$の局所的な情報を調べたいときは, $C^{m}$を調べればよい. 無限遠点の情報は, その近傍系が特徴的なので調べやすい. また, $S$の位相構造は, 無限遠点を付け加える前と後で変わっていないことに注意せよ.
+            
+            $A_{\omega_1}, A_{\omega}$は順序完備なので, コンパクトハウスドルフである. そこで$A_{\omega_1}\times A_{\omega}$はコンパクトハウスドルフであり, regular. その部分空間なので, $C, C'$もregular. 
+            
+            実は, $X$もregularとなる.
+            \begin{framed}
+                $\{\infty\}, \{-\infty\}$は閉集合であり, $S$は局所的に$C, C'$と同相である. このことからすべてのシングルトンが閉集合であることがわかり, $X$は$T_1$である.
+                
+                正則であることを示す. 任意の$x\in X$とその近傍$x\in O\subset X$に対し, ある近傍$x\in U$がとれて, $\overline{U}\subset O$となることを示せばよい. まず$x=\infty$の場合を考えよう. このとき$O$はcorkscrewのあるところから上全てを含んでいることになる. $\bigcup_{m>N} (C^{(m)}\cup C'^{(m)})\subset O$とすれば, $U=\{\infty\}\cup\bigcup_{m>N+1} (C^{(m)}\cup C'^{(m)})$をとることで$\overline{U}\subset O$となる. $x=-\infty$の場合も同様である.
+                
+                よって, $x\in S$である場合が非自明である. $x$が$C^{(0)}$の点$(\alpha^-, \beta^-)$である場合をまず考えよう. $x$の近傍$O$をとる. $C^{(0)}$の$[0^-, (\alpha+1)^-)\times[0^-, (\beta+1)^-)$部分を$E$とすると, $E$は$X$の開集合である. よって$O\cap E$は$x$の近傍である. そこで$C$がregularであることから, $x\in U\subset {\rm cl}_C(U)\subset O\cap E$となる$U$がとれる. （ここで${\rm cl}_C$は$C$における閉包作用を表す.）
+                
+                ここで$E$を設置しておいたことにより, ${\rm cl}_X(U)\subset {\rm cl}_X(E)\subset C$を満たすから, ${\rm cl}_X(U)={\rm cl}_X(U)\cap C = {\rm cl}_C(U)\subset O$. （2つ目の等号は, 部分空間の部分集合に対し常に成り立つ位相の一般論である.）そこで$U$が所望のものである.
+                
+                $x$が一般の点である場合は, それが属している$C^{(m)}, C'^{(m)}$を考え, 対応する$E$を設置すれば同様に議論できる.
+            \end{framed}
+            
+            ところが, $X$はcompletely regularではない.
+            \begin{framed}
+                任意の連続関数$f\colon X\to \rea$に対し, $f(\infty)=f(-\infty)$であることを示せば, $\{\infty\}$と$\{-\infty\}$を関数で分離できないことになり,  完全正則でないことが従う. よって, これを示そう.
+                
+                Deleted Tychonoff Plank上の実連続関数は,  ある$\alpha<\omega_1$よりも端に寄ると, 各$[\alpha, \omega_1]\times\{i\}$上で定数となってしまうのだった. そして, その定数を$x_i$とおけば, $x_\omega = \lim x_i$となるのだった.
+                
+                $S$はDeleted Tychonoff Plankを$4 \zah$個くっつけた形となっている. 各Plankに対しその上への$f$の制限に対し$\alpha$をとり, その上限をとる. この値を$\beta<\omega_1$とする. すると, Corkscrewの第一成分が$\beta^-$以上$\beta^+$以下の部分では, 常に$f$が「横方向に定数」となっていることがわかる.
+                
+                $C^{(m)}$の点$(\beta^-, i)$を$p^{(m)}_i$, $C'^{(m)}$の点$(\beta^+, i)$を$q^{(m)}_i$とする. このとき, \[f(p^{(m)}_\omega)=\lim f(p^{(m)}_{i^-})=\lim f(q^{(m)}_{i^-})=f(q^{(m)}_\omega)\]
+                \[f(p^{(m)}_\omega)=\lim f(p^{(m)}_{i^+})=\lim f(q^{(m+1)}_{i^+})=f(q^{(m+1)}_\omega)\]
+                であるから, 
+                \[\dots=f(p^{(-2)}_\omega)=f(p^{(-1)}_\omega)=f(p^{(0)}_\omega)=f(p^{(1)}_\omega)=f(p^{(2)}_\omega)=\dots\]
+                となる. よって, $\infty$における$f$の連続性から, \[f(\infty)=f(p^{(0)}_\omega)\]
+                となるしかない. 一方, $-\infty$における$f$の連続性から, \[f(-\infty)=f(p^{(0)}_\omega)\]となるから, 示された.
+            \end{framed}
+        \end{proof}
+        \begin{rem}
+            regularだがcompletely regularでない位相空間の例は少ない. そのうち最も有名なものがTychonoff Corkscrewである.
+            
+            \textbf{Doubled Tychonoff Corkscrew}とは, 文字通りTychonoff Corkscrewの点を「2個にした」空間である. すなわち, 集合$X\coprod X$の上の位相を, 自然な写像$X\coprod X\to X$による始位相として定めた空間である. この空間は$T_1$性を失うが「自然な対応」によって$T_3, T_{3.5}$性を保つので, $T_3$だが$T_4, T_1$でない空間の例を得ることができる. \footnote{一般に$T_0$性のみを失った例が欲しい時, 空間を「2倍する」ことは有力な方法である.}
+        \end{rem}
+    \subsubsection{Dieudonné Plank}
+        \begin{defn}
+            \textbf{Dieudonné Plank} $D$とは, 台集合としては$T_\infty$を用いるが, その上の位相としては
+            \begin{itemize}
+                \item $[0, \omega_1)\times[0, \omega)$の各点$p$に対して, $\{p\}$.
+                \item $U_\alpha(\beta)=\set{(\beta, \gamma)|\alpha<\gamma\leq\omega}$.
+                \item $V_\alpha(\beta)=\set{(\gamma, \beta)|\alpha<\gamma\leq\omega_1}$.
+            \end{itemize}
+            たち全体を開基とする位相を考えた位相空間のこと.
+        \end{defn}
+        \begin{prop}
+            $D$はメタコンパクトだが, 可算パラコンパクトでない. 特に, パラコンパクトでない.
+        \end{prop}
+        \begin{proof}
+            $D$の任意の開被覆をとる. 各点$x\in D$に対し, $x\in [0, \omega_1)\times[0, \omega)$であれば$\{x\}$, $x$の第1成分が$\omega_1$であれば適当な$U_\alpha(\beta)$, $x$の第2成分が$\omega$であれば適当な$V_\alpha(\beta)$を, 開被覆の細分となるようにとる. このようにして作った細分は,　1つの点を高々3回しか含まない. よってこれは点有限細分となっている. すなわち, $D$はメタコンパクト.
+            
+            逆に, $U_{-1} = [0, \omega_1)\times [0, \omega]$, $U_n = V_0(n) (n\geq 0)$により定まる可算開被覆$(U_n)$を考えよう. 任意の$(U_n)$を細分する被覆$\mathfrak{V}$は, 局所有限になりえないことが次のようにしてわかる. 点$(\omega_1, n)$を含む$\mathfrak{V}$の元は, ある$V_{\alpha_n}(n)$の形の集合を包含している. そこでそのような$\alpha_n$をとる. $\eta = \sup \alpha_n<\omega_1$とすれば, 点$(\eta, \omega)$において局所有限性が破れている.
+        \end{proof}
+    \newpage
+    
+    \begin{thebibliography}{99}
+        \bibitem{matsuzaka} 松坂和夫, 『集合・位相入門』, 岩波書店, 1968.
+        \bibitem{kunenfound} ケネス・キューネン, 『キューネン　数学基礎論講義』（藤田博司訳）, 日本評論社, 2016.
+        \bibitem{kunenset} ケネス・キューネン, 『集合論　独立性証明への案内』（藤田博司訳）, 日本評論社, 2008.
+        \bibitem{tanaka} 田中尚夫, 『公理的集合論』, 培風館, 1982.
+        \bibitem{arai} 新井敏康, 『数学基礎論』, 岩波書店, 2011.
+        \bibitem{takeuti} G.Takeuti and W.M.Zaring, Introduction to Axiomatic Set Theory, Springer-Verlag New York, 1971.
+        \bibitem{category} M.Kashiwara and P.Schapira, Categories and Sheaves, Springer-Verlag Berlin Heidelberg, 2006.
+        \bibitem{top} L.A.Steen and J.A.Jr.Seebach, Counterexamples in Topology, Springer-Verlag New York, 1978.
+        \bibitem{yukie} 雪江明彦, 『代数学2 環と体とガロア理論』, 日本評論社, 2010.
+        \bibitem{sugiura} 杉浦光夫, 『解析入門 I』, 東京大学出版会, 1980.
+        \bibitem{card} Mathematics Stack Exchange, Why a Grothendieck universe contains cardinalities of all its elements? 
+        
+        https://math.stackexchange.com/questions/2477758/why-a-grothendieck-universe-contains-cardinalities-of-all-its-elements
+        \bibitem{ness} Mathematics Stack Exchange, Grothendieck universes and their connections to set theory and geometry
+        
+        https://math.stackexchange.com/questions/2451299/grothendieck-universes-and-their-connections-to-set-theory-and-geometry
+        \bibitem{sigma} Mathematics Stack Exchange, Cadinality Borel $\sigma$-algebra
+        
+        https://math.stackexchange.com/questions/831236/cardinality-borel-sigma-algebra
+        \bibitem{nasnin} 演習問題の解答
+        
+        http://tenasaku.com/academia/answers/index.html
+        \bibitem{nasss} 原隆, 実数の構成に関するノート
+        
+        http://www2.math.kyushu-u.ac.jp/~hara/lectures/06/realnumbers.pdf
+        
+    \end{thebibliography}
+    ウェブサイトなどは$\mbox{\today}$にアクセスした.
+    
+    全体を通じ, \cite{kunenfound}, \cite{kunenset}, \cite{tanaka}, \cite{arai}, \cite{takeuti}を参照した. 
+    
+    冒頭で述べた通り, 併読する参考書として\cite{kunenfound}, \cite{kunenset}を勧める. 本文の理論展開は\cite{tanaka}をベースにおいてある. 5章は私の知っている関連分野をなるべく多く挙げてみた.
+    
+    数学基礎論に関心がある人は, 本稿に引き続いて読むものとして\cite{arai}を勧める. 
+\end{document} 
